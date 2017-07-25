@@ -1,0 +1,84 @@
+{extend name="public/base"/}
+{block name="body"}
+<div class="main-box clearfix">
+    <header class="main-box-header clearfix">
+        <div class="pull-left">
+            <h2>
+                {if condition="!isset($info)"}
+                新增图文回复
+                {else/}
+                编辑图文回复
+                {/if}
+            </h2>
+        </div>
+    </header>
+    <form class="form form-horizontal" action="" method="post" enctype="multipart/form-data" >
+
+        <div class="form-group">
+            <label class="col-lg-2 control-label">关键词：</label>
+            <div class="col-lg-6 col-sm-10">
+                <input required type="text" name="keyword" value="{$keyword.keyword|default=''}" autocomplete="off" placeholder="请输入关键词" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">标题：</label>
+            <div class="col-lg-6 col-sm-10">
+                <input required type="text" name="title" value="{$keyword.title|default=''}" autocomplete="off" placeholder="请输入标题" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">URL：</label>
+            <div class="col-lg-6 col-sm-10">
+                <input required lay-verify="url" type="text" name="url" value="{$keyword.url|default=''}" autocomplete="off" placeholder="请输入url" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">封面图片</label>
+            <div class="col-lg-6 col-sm-10">
+                {if condition="!isset($keyword)"}
+                <?php $keyword = array(); ?>
+                {/if}
+                {:widget('common/Form/show',array(array('name'=>'pic','type'=>'image'),$keyword))}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">简介：</label>
+            <div class="col-lg-6 col-sm-10">
+                <textarea required name="desc" placeholder="请输入图文简介" class="form-control" >{$keyword.desc|default=''}</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label"></label>
+            <div class="col-lg-6 col-sm-10">
+                <input type="hidden" value="{$keyword.id|default=''}" name="kid">
+                <button type="submit" class="btn btn-success submit-btn ajax-post" target-form="form">确认提交</button>
+                <button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}
+
+{block name="script"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/webuploader/webuploader.css">
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.custom.js"></script>
+<script type="text/javascript">
+    {present name="info['id']"}
+    Sent.setValue("allow_publish", {$info.allow_publish|default=1});
+    Sent.setValue("check", {$info.check|default=0});
+    Sent.setValue("model[]", {$info.model|json_encode} || [1]);
+    Sent.setValue("model_sub[]", {$info.model_sub|json_encode} || [1]);
+    Sent.setValue("type[]", {$info.type|json_encode} || [2]);
+    Sent.setValue("display", {$info.display|default=1});
+    Sent.setValue("reply", {$info.reply|default=0});
+    Sent.setValue("reply_model[]", {$info.reply_model|json_encode} || [1]);
+    {/present}
+    $(function(){
+        $("input[name=reply]").change(function(){
+            var $reply = $(".form-group.reply");
+            parseInt(this.value) ? $reply.show() : $reply.hide();
+        }).filter(":checked").change();
+    });
+</script>
+{/block}

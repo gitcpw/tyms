@@ -1,0 +1,69 @@
+{extend name="public/base"/}
+{block name="body"}
+<div class="main-box clearfix">
+    <header class="main-box-header clearfix">
+        <div class="pull-left">
+            {if condition="!isset($info)"}
+            <h2>新增菜单</h2>
+            {else/}
+            <h2>编辑菜单</h2>
+            {/if}
+        </div>
+        <div class="pull-right"></div>
+    </header>
+    <form class="form form-horizontal" action="{$suburl}" method="post" enctype="multipart/form-data" >
+        <div class="form-group">
+            <label class="col-lg-2 control-label">上级菜单：</label>
+            <div class="col-lg-6 col-sm-10">
+                <select name="pid" class="form-control" >
+                    <option value="0" {if condition="isset($info) && $info['pid'] eq 0"}selected{/if}>顶级菜单</option>
+                    {volist name="parents" id="vo" key="val"}
+                        <option {if condition="isset($info) && $info['pid'] eq $vo['id']"}selected{/if} value="{$vo['id']}">{$vo.name}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">菜单名称：</label>
+            <div class="col-lg-6 col-sm-10">
+                <input required type="text" name="name" id="w_token" value="{$info.name|default=''}" autocomplete="off" placeholder="请输入菜单名称" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">菜单类型：</label>
+            <div class="col-lg-6 col-sm-10">
+                <select name="type" class="form-control">
+                    <?php foreach($typeArr as $key=>$val){ ?>
+                        <option {if condition="isset($info) && $info['type'] eq $key"}selected{/if} value="{$key}">{$val}</option>
+                    <?php } ?>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">菜单URL：</label>
+            <div class="col-lg-6 col-sm-10">
+                <input required lay-verify="url" type="text" name="value" value="{$info.value|default=''}" autocomplete="off" placeholder="请输入菜单URL" class="form-control">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-2 control-label">排序</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" name="sort" value="{$info.sort|default=0}" style="width: 60%">
+                <span class="help-block">（用于显示的顺序）</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-2 control-label"></label>
+            <div class="col-lg-6 col-sm-10">
+                {if condition="isset($info)"}
+                    <input type="hidden" name="id" value="{$info.id}">
+                {/if}
+                <button type="submit" class="btn btn-success submit-btn ajax-post" target-form="form">确认提交</button>
+                <button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}

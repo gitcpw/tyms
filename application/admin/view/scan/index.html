@@ -1,0 +1,75 @@
+{extend name="public/base"/}
+    {block name="body"}
+
+<div class="main-box clearfix">
+    <header class="main-box-header clearfix">
+        <div class="pull-left">
+            <a href="{:url('md5_creat')}" class="btn btn-danger">
+                <i class="fa fa-plus-square"></i>
+                生成MD5
+            </a>
+            <a href="{:url('scan_report')}" class="btn btn-danger">
+                <i class="fa fa-file-text-o"></i>
+                查杀报告
+            </a>
+        </div>
+    </header>
+    <div class="main-box-body clearfix">
+        <form action="{:URL('public_update_config')}" method="post" class="form form-horizontal">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td width="90">查杀目录</td>
+                    <td style="text-align: left;border-left: 1px solid #e7ebee;">
+                        <ul id="file" style="list-style:none; height:190px;overflow:auto;width:100%;">
+                            <?php
+                                    $dir = $file= '';
+                                    foreach ($list as $v){
+                                        $filename = basename($v);
+                                        if (is_dir($v)) {
+                                            $dir  .= '<li><div class="checkbox"><label><input type="checkbox" name="dir[]" value="'.$v.'" '.(isset($scan['dir']) && is_array($scan['dir']) && !empty($scan['dir']) && in_array($v, $scan['dir']) ? 'checked' :'').'>&nbsp;<img src="'.config('view_replace_str.__IMG__').'/folder.gif">&nbsp;'.$filename.'</label></div></li>';
+                            } elseif (substr(strtolower($v), -3, 3)=='php'){
+                            $file .= '<li><div class="checkbox"><label><input type="checkbox" name="dir[]" value="'.$v.'" '.(isset($scan['dir']) && is_array($scan['dir']) && !empty($scan['dir']) && in_array($v, $scan['dir']) ? 'checked' :'').'>&nbsp;<img src="'.config('view_replace_str.__IMG__').'/file.gif">&nbsp;'.$filename.'</label></div></li>';
+                            } else {
+                            continue;
+                            }
+                            }
+                            echo $dir,$file;
+                            ?>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 120px;">文件类型</td>
+                    <td><input type="text" name="info[file_type]" size="100" class="form-control" value="{$scan['file_type']}" /></td>
+                </tr>
+                <tr>
+                    <td style="border-top:none">特征函数</td>
+                    <td style="border-top:none"><input type="text" name="info[func]" size="100" class="form-control" value="{$scan['func']}" /></td>
+                </tr>
+                <tr>
+                    <td style="border-top:none">特征代码</td>
+                    <td style="border-top:none"><input type="text" name="info[code]" size="100" class="form-control" value="{$scan['code']}" /></td>
+                </tr>
+                <tr>
+                    <td style="border-top:none">MD5校验镜像</td>
+                    <td style="border-top:none">
+                        <select class="form-control" name="info[md5_file]">
+                            {volist name="md5_file_list" id="v"}
+                            <option>{$v}</option>
+                            {/volist}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-top:none"></td>
+                    <td style="text-align: left;border-top:none">
+                        <button class="btn btn-success submit-btn ajax-post" type="submit" target-form="form-horizontal">确 定</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+{/block}

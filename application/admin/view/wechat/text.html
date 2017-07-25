@@ -1,0 +1,47 @@
+{extend name="public/base"/}
+{block name="body"}
+<div class="main-box clearfix">
+	<header class="main-box-header clearfix">
+		<div class="pull-left">
+			<h2>文本回复列表</h2>
+		</div>
+		<div class="pull-right">
+			<a class="btn btn-primary" href="{:url('add_text')}"><i class="fa fa-plus-circle fa-lg"></i> 添加关键词</a>
+		</div>
+	</header>
+
+	<fieldset class="layui-elem-field">
+		<div class="main-box-body clearfix">
+			<div class="table-responsive clearfix">
+			<form id="myform" method="post">
+			<table class="table">
+				<thead>
+					<tr>
+						<th style="text-align: left">关键词</th>
+						<th style="text-align: left">回答</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				{volist name="lists" id="list"}
+				<tr >
+					<td align="left" abbr="username" axis="col3" class="">
+						<div style="text-align: left; width: 320px;" class="">{$list.keyword}</div>
+					</td>
+					<td align="left" abbr="article_time" axis="col6" class="">
+						<div style="text-align: left; width: 400px;" class="opt">{$list.text}</div>
+					</td>
+					<td align="left"  axis="col6" class="">
+						<a class="layui-btn layui-btn-mini" href="{:URL('add_text',['id'=>$list['id'],'edit'=>1])}" ><i class="fa fa-cog"></i> 编辑</a>&nbsp;&nbsp;
+						<a class="layui-btn layui-btn-danger layui-btn-mini" href="{:URL('del_text',['id'=>$list['id']])}"><i class="fa fa-trash-o"></i> 删除</a>
+					</td>
+				</tr>
+				{/volist}
+				</tbody>
+			</table>
+			</form>
+		</div>
+		</div>
+	</fieldset>
+</div>
+{/block}

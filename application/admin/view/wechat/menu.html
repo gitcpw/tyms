@@ -1,0 +1,45 @@
+{extend name="public/base"/}
+{block name="body"}
+<div class="main-box clearfix">
+	<header class="main-box-header clearfix">
+		<div class="pull-left">
+			<h2>公众号菜单列表</h2>
+		</div>
+		<div class="pull-right">
+			<a class="btn btn-primary" href="{:url('add_menu')}"><i class="fa fa-plus-circle fa-lg"></i> 新增菜单</a>
+			<a class="btn btn-primary" href="{:url('Admin/Wechat/pub_menu')}"><i class="fa fa-cloud-upload"></i> 发布</a>
+		</div>
+	</header>
+	<fieldset class="layui-elem-field">
+		<div class="main-box-body clearfix">
+			<div class="table-responsive clearfix">
+			<form id="myform" method="post">
+			<table class="table">
+				<thead>
+					<tr>
+						<th style="text-align: left">菜单名称</th>
+						<th style="text-align: left">菜单类型</th>
+						<th style="text-align: left">菜单URL</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				{volist name="list" id="vo"}
+				<tr>
+					<td style="text-align: left">{$vo._name}</td>
+					<td style="text-align: left">{$typeArr[$vo['type']]}</td>
+					<td style="text-align: left">{$vo.value}</td>
+					<td>
+						<a class="layui-btn layui-btn-mini" href="{:URL('edit_menu',['id'=>$vo['id']])}" ><i class="fa fa-cog"></i> 编辑</a>&nbsp;&nbsp;
+						<a class="layui-btn layui-btn-danger layui-btn-mini" href="{:URL('del_menu',['id'=>$vo['id']])}"><i class="fa fa-trash-o"></i> 删除</a>
+					</td>
+				</tr>
+				{/volist}
+				</tbody>
+			</table>
+			</form>
+		</div>
+		</div>
+	</fieldset>
+</div>
+{/block}

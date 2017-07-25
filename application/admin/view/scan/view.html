@@ -1,0 +1,51 @@
+{extend name="public/base"/}
+{block name="body"}
+    <div class="admin-main">
+        <div class="layui-field-box" style="padding:0;">
+            <table class="table">
+                <tbody>
+                {if condition="$func"}
+                <tr>
+                    <td style="text-align: left">特征函数：
+                        <?php
+                            if ($func) {
+                                 foreach ($func as $val) {
+                                    if($val) {
+                                        echo "<button class='layui-btn layui-btn-mini'>".$val."</button>&nbsp;&nbsp;";
+                                    }
+                                 }
+                            }
+                        ?>
+                    </td>
+                </tr>
+                {/if}
+                {if condition="$code"}
+                <tr>
+                    <td style="text-align: left">特征代码：
+                        <?php
+                            if(is_array($code)) {
+                                foreach ($code as $val) {
+                                    if($val) {
+                                        echo "<button class='layui-btn layui-btn-mini layui-btn-normal'>".new_html_special_chars($val)."</button>";
+                                    }
+                                }
+                            }
+                        ?>
+                    </td>
+                </tr>
+                {/if}
+                <tr>
+                    <td>
+                        <textarea name="code" id="code" class="form-control" style="height:650px;width:1500px;resize: none;"><?php echo new_html_special_chars($html)?></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="javascript:;" onclick="javascript:history.back(-1);return false;" class="btn btn-danger">返回</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{/block}
