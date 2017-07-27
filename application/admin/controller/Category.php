@@ -27,7 +27,7 @@ class Category extends Admin {
 		}
 
 		$this->assign('tree', $list);
-		$this->setMeta('栏目列表');
+		$this->setMeta('文章分类');
 		return $this->fetch();
 	}
 
