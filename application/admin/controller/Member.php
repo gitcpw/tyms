@@ -116,7 +116,11 @@ class Member extends Admin {
         $this->assign('user',$user);
         return $this->fetch();
     }
-    
+
+    /**
+     * 增加会员
+     * @return mixed
+     */
     public function add_user(){
     	if(IS_POST){
     		$data = input('post.');
@@ -130,7 +134,10 @@ class Member extends Admin {
     	}
     	return $this->fetch();
     }
-    
+
+    /**
+     * 导出会员信息
+     */
     public function export_user(){
     	$strTable ='<table width="500" border="1">';
     	$strTable .= '<tr>';
@@ -732,4 +739,40 @@ class Member extends Admin {
         config('TOKEN_ON',false);
         return $this->fetch();
     }
+
+    /**
+     * 会员类型
+     */
+    function user_type(){
+        $this->setmeta('会员类型');
+        $this->fetch();
+    }
+
+    /**
+     * 增加会员类型
+     */
+    function add_user_type(){
+        $this->setmeta('添加会员类型');
+        $this->fetch();
+    }
+
+    /**
+     * 修改会员类型
+     */
+    function edit_user_type(){
+        $this->setmeta('修改会员类型');
+        $this->fetch();
+    }
+
+    /**
+     * 删除会员类型
+     */
+    function del_user_type(){
+        $this->setmeta('删除会员类型');
+        $this->fetch();
+    }
+
+
+
+
 }
