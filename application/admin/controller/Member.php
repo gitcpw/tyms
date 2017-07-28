@@ -19,7 +19,7 @@ use think\Loader;
 class Member extends Admin {
 
     public function index(){
-		$this->setMeta('顾客管理');
+		$this->setMeta('会员管理');
         return $this->fetch();
     }
 
@@ -706,6 +706,7 @@ class Member extends Admin {
             return $alipay_obj->transfer($data);
         }
     }
+
     /**
      *  转账汇款记录
      */
@@ -740,39 +741,103 @@ class Member extends Admin {
         return $this->fetch();
     }
 
+
+
+
     /**
      * 会员类型
      */
     function user_type(){
-        $this->setmeta('会员类型');
-        $this->fetch();
+        $map = array();
+        $order = "sort asc,id asc";
+        $list  = M('users_type')->where($map)->order($order)->paginate(10);
+        $data = array(
+            'list' => $list,
+            'page' => $list->render(),
+        );
+        $this->assign($data);
+        $this->setMeta("会员类型");
+        return $this->fetch();
     }
+
+
 
     /**
      * 增加会员类型
      */
     function add_user_type(){
-        $this->setmeta('添加会员类型');
-        $this->fetch();
+        $member = model('Member');
+        if (IS_POST) {
+            $data = input('post.');
+            if ($data) {
+                unset($data['id']);
+                $result = $member->save($data);
+                if ($result) {
+                    return $this->success("添加成功！", url('member/user_type'));
+                } else {
+                    return $this->error($member->getError());
+                }
+            } else {
+                return $this->error($member->getError());
+            }
+        } else {
+            $data = array(
+                'keyList' => $member->keyList,
+            );
+            $this->assign($data);
+            $this->setMeta("添加会员类型");
+            return $this->fetch('public/edit');
+        }
     }
 
     /**
      * 修改会员类型
      */
     function edit_user_type(){
-        $this->setmeta('修改会员类型');
-        $this->fetch();
+        $member = model('Member');
+        $id   = input('id', '', 'trim,intval');
+        if (IS_POST) {
+            $data = input('post.');
+            if ($data) {
+                $result = $member->save($data, array('id' => $data['id']));
+                if ($result) {
+                    return $this->success("修改成功！", url('Member/user_type'));
+                } else {
+                    return $this->error("修改失败！");
+                }
+            } else {
+                return $this->error($member->getError());
+            }
+        } else {
+            $map  = array('id' => $id);
+            $info = db('users_type')->where($map)->find();
+            $data = array(
+                'keyList' => $member->keyList,
+                'info'    => $info,
+            );
+            $this->assign($data);
+            $this->setMeta("编辑会员类型");
+            return $this->fetch('public/edit');
+        }
     }
 
     /**
      * 删除会员类型
      */
     function del_user_type(){
-        $this->setmeta('删除会员类型');
-        $this->fetch();
+        $id = $this->getArrayParam('id');
+        if (empty($id)) {
+            return $this->error('非法操作！');
+        }
+        $users_type = db('users_type');
+
+        $map    = array('id' => array('IN', $id));
+        $result = $users_type->where($map)->delete();
+        if ($result) {
+            return $this->success("删除成功！");
+        } else {
+            return $this->error("删除失败！");
+        }
     }
-
-
-
 
 }
