@@ -15,7 +15,6 @@ use think\Db;
 class Order extends Admin {
     public  $order_status;
     public  $pay_status;
-    public  $shipping_status;
     /*
      * 初始化操作
      */
@@ -24,11 +23,9 @@ class Order extends Admin {
         config('TOKEN_ON',false); // 关闭表单令牌验证
         $this->order_status = config('ORDER_STATUS');
         $this->pay_status = config('PAY_STATUS');
-        $this->shipping_status = config('SHIPPING_STATUS');
         // 订单 支付 发货状态
         $this->assign('order_status',$this->order_status);
         $this->assign('pay_status',$this->pay_status);
-        $this->assign('shipping_status',$this->shipping_status);
     }
 
     /*
@@ -57,28 +54,20 @@ class Order extends Admin {
             $begin = strtotime(input('add_time_begin'));
             $end = strtotime(input('add_time_end'));
         }
-        
+
         // 搜索条件
         $condition = array();
-        $keyType = input("keytype");
-        $keywords = input('keywords','','trim');
-        
-        $consignee =  ($keyType && $keyType == 'consignee') ? $keywords : input('consignee','','trim');
-        $consignee ? $condition['consignee'] = trim($consignee) : false;
-        
-        
+
         if($begin && $end){
         	$condition['add_time'] = array('between',"$begin,$end");
         }
 
 
-        $order_sn = ($keyType && $keyType == 'order_sn') ? $keywords : input('order_sn') ;
+        $order_sn = !empty(input('order_sn')) ? input('order_sn') : '' ;
         $order_sn ? $condition['order_sn'] = trim($order_sn) : false;
         
         input('order_status') != '' ? $condition['order_status'] = input('order_status') : false;
         input('pay_status') != '' ? $condition['pay_status'] = input('pay_status') : false;
-        input('pay_code') != '' ? $condition['pay_code'] = input('pay_code') : false;
-        input('shipping_status') != '' ? $condition['shipping_status'] = input('shipping_status') : false;
         input('user_id') ? $condition['user_id'] = trim(input('user_id')) : false;
         $sort_order = input('order_by','DESC').' '.input('sort');
         $count = M('order')->where($condition)->count();
@@ -105,159 +94,17 @@ class Order extends Admin {
         return $this->fetch();
     }
 
-    /*
-     * ajax 发货订单列表
-    */
-    public function ajaxdelivery(){
-    	$orderLogic = new OrderLogic();
-    	$condition = array();
-    	input('consignee') ? $condition['consignee'] = trim(input('consignee')) : false;
-    	input('order_sn') != '' ? $condition['order_sn'] = trim(input('order_sn')) : false;
-    	$shipping_status = input('shipping_status');
-    	$condition['shipping_status'] = empty($shipping_status) ? array('neq',1) : $shipping_status;
-        $condition['order_status'] = array('in','1,2,4');
-    	$count = M('order')->where($condition)->count();
-    	$Page  = new AjaxPage($count,10);
-    	//搜索条件下 分页赋值
-    	foreach($condition as $key=>$val) {
-            if(!is_array($val)){
-                $Page->parameter[$key]   =   urlencode($val);
-            }
-    	}
-    	$show = $Page->show();
-    	$orderList = M('order')->where($condition)->limit($Page->firstRow.','.$Page->listRows)->order('add_time DESC')->select();
-    	$this->assign('orderList',$orderList);
-    	$this->assign('page',$show);// 赋值分页输出
-    	$this->assign('pager',$Page);
-    	return $this->fetch();
-    }
-    
-    public function refund_order_list(){
-    	$orderLogic = new OrderLogic();
-    	$condition = array();
-    	input('consignee') ? $condition['consignee'] = trim(input('consignee')) : false;
-    	input('order_sn') != '' ? $condition['order_sn'] = trim(input('order_sn')) : false;
-    	$condition['shipping_status'] = 0;
-    	$condition['order_status'] = 3;
-    	$condition['pay_status'] = array('gt',0);
-    	$count = M('order')->where($condition)->count();
-    	$Page  = new Page($count,10);
-    	//搜索条件下 分页赋值
-    	foreach($condition as $key=>$val) {
-    		if(!is_array($val)){
-    			$Page->parameter[$key]   =   urlencode($val);
-    		}
-    	}
-    	$show = $Page->show();
-    	$orderList = M('order')->where($condition)->limit($Page->firstRow.','.$Page->listRows)->order('add_time DESC')->select();
-    	$this->assign('orderList',$orderList);
-    	$this->assign('page',$show);// 赋值分页输出
-    	$this->assign('pager',$Page);
-    	return $this->fetch();
-    }
-    
-    public function refund_order_info($order_id){
-    	$orderLogic = new OrderLogic();
-    	$order = $orderLogic->getOrderInfo($order_id);
-    	$orderGoods = $orderLogic->getOrderGoods($order_id);
-    	$this->assign('order',$order);
-    	$this->assign('orderGoods',$orderGoods);
-    	return $this->fetch();
-    }
-    
-    public function refund_order(){
-    	$data = input('post.');
-    	$orderLogic = new OrderLogic();
-    	$order = $orderLogic->getOrderInfo($data['order_id']);
-    	if(!order){
-    		$this->error('订单不存在或参数错误');
-    	}
-    	//退到用户余额
-    	if($data['pay_status'] == 3 && $data['refund_type']== 1){
-    		accountLog($order['user_id'],$order['order_amount'],$order['integral'],'用户申请商品退款',0,$order['order_id'],$order['order_sn']);
-    		M('order')->where(array('order_id'=>$order['order_id']))->save($data);
-    		$this->success('退款成功');
-    	}
-    	if($data['pay_status'] == 3 && $data['refund_type']== 0){
-    		//支付原路退回
-    		if($order['pay_code'] == 'weixin' || $order['pay_code'] == 'alipay' || $order['pay_code'] == 'alipayMobile'){
-    			$return_money = $order['order_amount'];
-    			if($order['pay_code'] == 'weixin'){
-    				include_once  PLUGIN_PATH."payment/weixin/weixin.class.php";
-    				$payment_obj =  new \weixin();
-    				$data = array('transaction_id'=>$order['transaction_id'],'total_fee'=>$order['order_amount'],'refund_fee'=>$return_money);
-    				$result = $payment_obj->payment_refund($data);
-    				if($result['return_code'] == 'SUCCESS'){
-    					//使用积分或者余额抵扣部分一一退还
-    					if($order['user_money']>0 || $order['integral']>0){
-    						accountLog($order['user_id'],$order['user_money'],$order['integral'],'用户申请订单退款',0,$order['order_id'],$order['order_sn']);
-    					}
-    					M('order')->where(array('order_id'=>$order['order_id']))->save($data);
-    					$this->success('退款成功');
-    				}else{
-    					$this->error($result['return_msg']);
-    				}
-    			}else{
-    				include_once  PLUGIN_PATH."payment/alipay/alipay.class.php";
-    				$payment_obj = new \alipay();
-    				$detail_data = $order['transaction_id'].'^'.$return_money.'^'.'用户申请订单退款';
-    				$data = array('batch_no'=>date('YmdHi').$order['order_id'],'batch_num'=>1,'detail_data'=>$detail_data);
-    				$payment_obj->payment_refund($data);
-    				//使用积分或者余额抵扣部分一一退还
-    				if($order['user_money']>0 || $order['integral']>0){
-    					accountLog($order['user_id'],$order['user_money'],$order['integral'],'用户申请订单退款',0,$order['order_id'],$order['order_sn']);
-    				}
-    				$this->success('操作成功');
-    			}
-    		}else{
-    			$this->error('该订单支付方式不支持在线退回');
-    		}
-    	}else{
-    		M('order')->where(array('order_id'=>$order['order_id']))->save($data);
-    		$this->success('拒绝退款操作成功');
-    	}   	
-    }
+
     /**
      * 订单详情
      * @param int $id 订单id
      */
     public function detail($order_id){
-        $orderLogic = new OrderLogic();
-        $order = $orderLogic->getOrderInfo($order_id);
-        $orderGoods = $orderLogic->getOrderGoods($order_id);
-        $button = $orderLogic->getOrderButton($order);
-        // 获取操作记录
-        $action_log = M('order_action')->where(array('order_id'=>$order_id))->order('log_time desc')->select();
-        $has_user = false;
-        $adminIds = [];
-        //查找用户昵称
-        foreach ($action_log as $k => $v){
-            if ($v['action_user']) {
-                $adminIds[$k] = $v['action_user'];
-            } else {
-                $has_user = true;
-            }
-        }
-        if($adminIds && count($adminIds) > 0){
-            $admins = M("admin")->where("admin_id in (".implode(",",$adminIds).")")->getField("admin_id , user_name", true);
-        }
-        if($has_user){
-            $user = M("users")->alias('u')->field('u.nickname')->join('__ORDER__ o', 'o.user_id = u.user_id')->find();
-        }
-        
-    	$this->assign('admins',$admins);  
-        $this->assign('user', $user);
+        $this->setMeta('订单详情');
+        $order = M('order')->where("order_id = $order_id")->find();
+        $userinfo = M('users')->where("user_id = {$order['user_id']}")->find();
+        $this->assign('userinfo',$userinfo);
         $this->assign('order',$order);
-        $this->assign('action_log',$action_log);
-        $this->assign('orderGoods',$orderGoods);
-        $split = count($orderGoods) >1 ? 1 : 0;
-        foreach ($orderGoods as $val){
-        	if($val['goods_num']>1){
-        		$split = 1;
-        	}
-        }
-        $this->assign('split',$split);
-        $this->assign('button',$button);
         return $this->fetch();
     }
 
@@ -360,127 +207,6 @@ class Order extends Admin {
         $this->assign('orderGoods',$orderGoods);
         $this->assign('shipping_list',$shipping_list);
         $this->assign('payment_list',$payment_list);
-        return $this->fetch();
-    }
-
-    /*
-     * 拆分订单
-     */
-    public function split_order(){
-    	$order_id = input('order_id');
-    	$orderLogic = new OrderLogic();
-    	$order = $orderLogic->getOrderInfo($order_id);
-    	if($order['shipping_status'] != 0){
-    		$this->error('已发货订单不允许编辑');
-    		exit;
-    	}
-    	$orderGoods = $orderLogic->getOrderGoods($order_id);
-    	if(IS_POST){
-    		$data = input('post.');
-    		//################################先处理原单剩余商品和原订单信息
-    		$old_goods = input('old_goods/a');
-
-    		foreach ($orderGoods as $val){
-    			if(empty($old_goods[$val['rec_id']])){
-    				M('order_goods')->where("rec_id=".$val['rec_id'])->delete();//删除商品
-    			}else{
-    				//修改商品数量
-    				if($old_goods[$val['rec_id']] != $val['goods_num']){
-    					$val['goods_num'] = $old_goods[$val['rec_id']];
-    					M('order_goods')->where("rec_id=".$val['rec_id'])->save(array('goods_num'=>$val['goods_num']));
-    				}
-    				$oldArr[] = $val;//剩余商品
-    			}
-    			$all_goods[$val['rec_id']] = $val;//所有商品信息
-    		}
-    		$result = calculate_price($order['user_id'],$oldArr,$order['shipping_code'],0,$order['province'],$order['city'],$order['district'],0,0,0,0);
-    		if($result['status'] < 0)
-    		{
-    			$this->error($result['msg']);
-    		}
-    		//修改订单费用
-    		$res['goods_price']    = $result['result']['goods_price']; // 商品总价
-    		$res['order_amount']   = $result['result']['order_amount']; // 应付金额
-    		$res['total_amount']   = $result['result']['total_amount']; // 订单总价
-    		M('order')->where("order_id=".$order_id)->save($res);
-			//################################原单处理结束
-
-    		//################################新单处理
-    		for($i=1;$i<20;$i++){
-                $temp = $this->request->param($i.'_old_goods/a');
-    			if(!empty($temp)){
-    				$split_goods[] = $temp;
-    			}
-    		}
-
-    		foreach ($split_goods as $key=>$vrr){
-    			foreach ($vrr as $k=>$v){
-    				$all_goods[$k]['goods_num'] = $v;
-    				$brr[$key][] = $all_goods[$k];
-    			}
-    		}
-
-    		foreach($brr as $goods){
-    			$result = calculate_price($order['user_id'],$goods,$order['shipping_code'],0,$order['province'],$order['city'],$order['district'],0,0,0,0);
-    			if($result['status'] < 0)
-    			{
-    				$this->error($result['msg']);
-    			}
-    			$new_order = $order;
-    			$new_order['order_sn'] = date('YmdHis').mt_rand(1000,9999);
-    			$new_order['parent_sn'] = $order['order_sn'];
-    			//修改订单费用
-    			$new_order['goods_price']    = $result['result']['goods_price']; // 商品总价
-    			$new_order['order_amount']   = $result['result']['order_amount']; // 应付金额
-    			$new_order['total_amount']   = $result['result']['total_amount']; // 订单总价
-    			$new_order['add_time'] = time();
-    			unset($new_order['order_id']);
-    			$new_order_id = DB::name('order')->insertGetId($new_order);//插入订单表
-    			foreach ($goods as $vv){
-    				$vv['order_id'] = $new_order_id;
-    				unset($vv['rec_id']);
-    				$nid = M('order_goods')->add($vv);//插入订单商品表
-    			}
-    		}
-    		//################################新单处理结束
-    		$this->success('操作成功',U('Admin/Order/detail',array('order_id'=>$order_id)));
-            exit;
-    	}
-
-    	foreach ($orderGoods as $val){
-    		$brr[$val['rec_id']] = array('goods_num'=>$val['goods_num'],'goods_name'=>getSubstr($val['goods_name'], 0, 35).$val['spec_key_name']);
-    	}
-    	$this->assign('order',$order);
-    	$this->assign('goods_num_arr',json_encode($brr));
-    	$this->assign('orderGoods',$orderGoods);
-    	return $this->fetch();
-    }
-
-    /*
-     * 价钱修改
-     */
-    public function editprice($order_id){
-        $orderLogic = new OrderLogic();
-        $order = $orderLogic->getOrderInfo($order_id);
-        $this->editable($order);
-        if(IS_POST){
-        	$admin_id = session('admin_id');
-            if(empty($admin_id)){
-                $this->error('非法操作');
-                exit;
-            }
-            $update['discount'] = input('post.discount');
-            $update['shipping_price'] = input('post.shipping_price');
-			$update['order_amount'] = $order['goods_price'] + $update['shipping_price'] - $update['discount'] - $order['user_money'] - $order['integral_money'] - $order['coupon_price'];
-            $row = M('order')->where(array('order_id'=>$order_id))->save($update);
-            if(!$row){
-                $this->success('没有更新数据',U('Admin/Order/editprice',array('order_id'=>$order_id)));
-            }else{
-                $this->success('操作成功',U('Admin/Order/detail',array('order_id'=>$order_id)));
-            }
-            exit;
-        }
-        $this->assign('order',$order);
         return $this->fetch();
     }
 
@@ -587,208 +313,7 @@ class Order extends Admin {
         return $this->fetch("Plugin/print_express");
     }
 
-    /**
-     * 生成发货单
-     */
-    public function deliveryHandle(){
-        $orderLogic = new OrderLogic();
-		$data = input('post.');
-		$res = $orderLogic->deliveryHandle($data);
-		if($res){
-			$this->success('操作成功',U('Admin/Order/delivery_info',array('order_id'=>$data['order_id'])));
-		}else{
-			$this->success('操作失败',U('Admin/Order/delivery_info',array('order_id'=>$data['order_id'])));
-		}
-    }
 
-
-    public function delivery_info(){
-    	$order_id = input('order_id');
-    	$orderLogic = new OrderLogic();
-    	$order = $orderLogic->getOrderInfo($order_id);
-    	$orderGoods = $orderLogic->getOrderGoods($order_id,2);
-        if(!$orderGoods)$this->error('此订单商品已完成退货或换货');//已经完成售后的不能再发货
-		$delivery_record = M('delivery_doc')->alias('d')->join('__ADMIN__ a','a.admin_id = d.admin_id')->where('d.order_id='.$order_id)->select();
-		if($delivery_record){
-			$order['invoice_no'] = $delivery_record[count($delivery_record)-1]['invoice_no'];
-		}
-		$this->assign('order',$order);
-		$this->assign('orderGoods',$orderGoods);
-		$this->assign('delivery_record',$delivery_record);//发货记录
-    	return $this->fetch();
-    }
-
-    /**
-     * 发货单列表
-     */
-    public function delivery_list(){
-        return $this->fetch();
-    }
-
-    /*
-     * ajax 退货订单列表
-     */
-    public function ajax_return_list(){
-        // 搜索条件
-        $order_sn =  trim(input('order_sn'));
-        $order_by = input('order_by') ? input('order_by') : 'id';
-        $sort_order = input('sort_order') ? input('sort_order') : 'desc';
-        $status =  input('status');
-
-        $where = " 1 = 1 ";
-        $order_sn && $where.= " and order_sn like '%$order_sn%' ";
-        empty($order_sn)&& !empty($status) && $where.= " and status = '$status' ";
-        $count = M('return_goods')->where($where)->count();
-        $Page  = new AjaxPage($count,13);
-        $show = $Page->show();
-        $list = M('return_goods')->where($where)->order("$order_by $sort_order")->limit("{$Page->firstRow},{$Page->listRows}")->select();
-        $goods_id_arr = get_arr_column($list, 'goods_id');
-        if(!empty($goods_id_arr)){
-            $goods_list = M('goods')->where("goods_id in (".implode(',', $goods_id_arr).")")->getField('goods_id,goods_name');
-        }
-        $state = config('REFUND_STATUS');
-        $this->assign('state',$state);
-        $this->assign('goods_list',$goods_list);
-        $this->assign('list',$list);
-        $this->assign('pager',$Page);
-        $this->assign('page',$show);// 赋值分页输出
-        return $this->fetch();
-    }
-
-    /**
-     * 删除某个退换货申请
-     */
-    public function return_del(){
-        $id = input('get.id');
-        M('return_goods')->where("id = $id")->delete();
-        $this->success('成功删除!');
-    }
-
-    /**
-     * 退换货操作
-     */
-    public function return_info()
-    {
-        $return_id = input('id');
-        $return_goods = M('return_goods')->where("id= $return_id")->find();
-        if(!$return_goods)
-        {
-            $this->error('非法操作!');
-            exit;
-        }
-        $user = M('users')->where("user_id = {$return_goods[user_id]}")->find();
-        $goods = M('goods')->where("goods_id = {$return_goods[goods_id]}")->find();
-        $type_msg = array('仅退款','退货退款','换货');
-        $status_msg = config('REFUND_STATUS');
-        if(IS_POST)
-        {
-            $data = input('post.');
-            if($return_goods['type'] == 2 && $return_goods['is_receive'] == 1){
-            	$data['seller_delivery']['express_time'] = date('Y-m-d H:i:s');
-            	$data['seller_delivery'] = serialize($data['seller_delivery']); //换货的物流信息
-            }
-            $note ="退换货:{$type_msg[$return_goods['type']]}, 状态:{$status_msg[$data['status']]},处理备注：{$data['remark']}";
-            $result = M('return_goods')->where("id= $return_id")->save($data);
-            if($result && $data['status']==1)
-            {
-                $orderLogic = new OrderLogic();
-                //审核通过才更改订单商品状态，进行退货，退款时要改对应商品修改库存
-                $type = ($return_goods['type']<2) ? 3 : 2;
-                M('order_goods')->where(['order_id' =>$return_goods['order_id'],'goods_id'=>$return_goods['goods_id']])
-                        ->save(array('is_send' => $type));//更改商品状态
-                $orderLogic->alterReturnGoodsInventory($return_goods['order_id'],$return_goods['goods_id']); //审核通过，恢复原来库存
-            }
-            $log = $orderLogic->orderActionLog($return_goods['order_id'],'refund',$note);
-            $this->success('修改成功!');
-            exit;
-        }
-        $return_goods['seller_delivery'] = unserialize($return_goods['seller_delivery']);  //订单的物流信息，服务类型为换货会显示
-        if($return_goods['imgs']) $return_goods['imgs'] = explode(',', $return_goods['imgs']);
-        $this->assign('id',$return_id); // 用户
-        $this->assign('user',$user); // 用户
-        $this->assign('goods',$goods);// 商品
-        $this->assign('return_goods',$return_goods);// 退换货
-        $order = M('order')->where(array('order_id'=>$return_goods['order_id']))->find();
-        $this->assign('order',$order);//退货订单信息
-        return $this->fetch();
-    }
-    
-    public function refund_back(){
-    	$return_id = input('id');
-        $return_goods = M('return_goods')->where("id= $return_id")->find();
-    	$rec_goods = M('order_goods')->where(array('order_id'=>$return_goods['order_id'],'goods_id'=>$return_goods['goods_id']))->find();
-    	$order = M('order')->where(array('order_id'=>$rec_goods['order_id']))->find();
-    	if($order['pay_code'] == 'weixin' || $order['pay_code'] == 'alipay' || $order['pay_code'] == 'alipayMobile'){
-    		$return_money = $return_goods['refund_money'];
-    		if($order['pay_code'] == 'weixin'){
-    			include_once  PLUGIN_PATH."payment/weixin/weixin.class.php";
-    			$payment_obj =  new \weixin();
-    			$data = array('transaction_id'=>$order['transaction_id'],'total_fee'=>$order['order_amount'],'refund_fee'=>$return_money);
-    			$result = $payment_obj->payment_refund($data);
-    			if($result['return_code'] == 'SUCCESS'){
-    				M('order_goods')->where(array('rec_id'=>$rec_goods['rec_id']))->save(array('is_send'=>3));
-    				$updata = array('refund_type'=>2,'refundtime'=>time(),'status'=>3);
-    				M('return_goods')->where("id= $return_id")->save($updata);
-    				//使用积分或者余额抵扣部分一一退还
-    				if($return_goods['refund_deposit']>0 || $return_goods['refund_integral']>0){
-    					accountLog($return_goods['user_id'],$return_goods['refund_deposit'],$return_goods['refund_integral'],'用户申请商品退款',0,$return_goods['order_id'],$return_goods['order_sn']);
-    				}
-    				//若该商品有赠送积分则追回
-    				$order_goods = M('order_goods')->where(array('rec_id'=>$return_goods['rec_id']))->find();
-    				if($order_goods['give_integral']>0){
-    					accountLog($return_goods['user_id'],0,-$return_goods['refund_integral'],'退货积分追回',0,$return_goods['order_id'],$return_goods['order_sn']);
-    				}
-    				$this->success('退款成功');
-    			}else{
-    				$this->error($result['return_msg']);
-    			}
-    		}else{
-    			include_once  PLUGIN_PATH."payment/alipay/alipay.class.php";
-    			$payment_obj = new \alipay();
-    			$detail_data = $order['transaction_id'].'^'.$return_money.'^'.'用户申请订单退款';
-    			$data = array('batch_no'=>date('YmdHi').$rec_goods['rec_id'],'batch_num'=>1,'detail_data'=>$detail_data);
-    			$payment_obj->payment_refund($data);
-    			//使用积分或者余额抵扣部分一一退还
-    			if($return_goods['refund_deposit']>0 || $return_goods['refund_integral']>0){
-    				accountLog($return_goods['user_id'],$return_goods['refund_deposit'],$return_goods['refund_integral'],'用户申请商品退款',0,$return_goods['order_id'],$return_goods['order_sn']);
-    			}
-    			//若该商品有赠送积分则追回
-    			$order_goods = M('order_goods')->where(array('rec_id'=>$return_goods['rec_id']))->find();
-    			if($order_goods['give_integral']>0){
-    				accountLog($return_goods['user_id'],0,-$return_goods['refund_integral'],'退货积分追回',0,$return_goods['order_id'],$return_goods['order_sn']);
-    			}
-    		}
-    	}else{
-    		$this->error('该订单支付方式不支持在线退回');
-    	}
-    }
-
-    /**
-     * 管理员生成申请退货单
-     */
-    public function add_return_goods()
-   {
-            $order_id = input('order_id');
-            $goods_id = input('goods_id');
-
-            $return_goods = M('return_goods')->where("order_id = $order_id and goods_id = $goods_id")->find();
-            if(!empty($return_goods))
-            {
-                $this->error('已经提交过退货申请!',U('Admin/Order/return_list'));
-                exit;
-            }
-            $order = M('order')->where("order_id = $order_id")->find();
-
-            $data['order_id'] = $order_id;
-            $data['order_sn'] = $order['order_sn'];
-            $data['goods_id'] = $goods_id;
-            $data['addtime'] = time();
-            $data['user_id'] = $order[user_id];
-            $data['remark'] = '管理员申请退换货'; // 问题描述
-            M('return_goods')->add($data);
-            $this->success('申请成功,现在去处理退货',U('Admin/Order/return_list'));
-            exit;
-    }
 
     /**
      * 订单操作
@@ -956,12 +481,7 @@ class Order extends Admin {
     	exit();
     }
     
-    /**
-     * 退货单列表
-     */
-    public function return_list(){
-        return $this->fetch();
-    }
+
     
     /**
      * 添加一笔订单

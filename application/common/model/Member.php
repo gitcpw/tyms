@@ -1,11 +1,5 @@
 <?php
-// +----------------------------------------------------------------------
-// | YizuCMS [ WE CAN DO IT JUST THINK IT ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2013 http://www.yizukeji.cn All rights reserved.
-// +----------------------------------------------------------------------
-// | Author: liuxing <464401240@qq.com> <http://www.yizukeji.cn>
-// +----------------------------------------------------------------------
+// 会员模型  会员类型  会员列表
 
 namespace app\common\model;
 
@@ -15,11 +9,12 @@ namespace app\common\model;
 class Member extends Base{
     protected $name = "users_type";
 
-    public $keyList = array(
+    public $users_type_keyList = array(
         array('name'=>'id' ,'title'=>'ID', 'type'=>'hidden'),
         array('name'=>'name' ,'title'=>'会员类型', 'type'=>'text', 'help'=>''),
         array('name'=>'commission' ,'title'=>'固定佣金', 'type'=>'text', 'help'=>''),
-        array('name'=>'sort' ,'title'=>'排序', 'type'=>'text', 'help'=>'')
+        array('name'=>'sort' ,'title'=>'排序', 'type'=>'text', 'help'=>''),
+        array('name'=>'backimg' ,'title'=>'背景图', 'type'=>'image', 'help'=>'')
     );
 
     protected $auto = array('update_time');

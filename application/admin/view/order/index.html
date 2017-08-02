@@ -16,12 +16,6 @@
                     <div class="navbar navbar-default">
                             <form action="{:url('Admin/order/export_order')}" id="search-form2" class="navbar-form form-inline" method="post">
                                 <div class="form-group">
-                                    <label class="control-label" for="input-order-id">收货人</label>
-                                    <div class="input-group">
-                                        <input type="text" name="consignee" placeholder="收货人" id="input-member-id" class="input-sm" style="width:70px;">
-                                    </div>
-                                </div>
-                                <div class="form-group">
                                     <label class="control-label" for="input-order-id">订单编号</label>
                                     <div class="input-group">
                                         <input type="text" name="order_sn" placeholder="订单编号" id="input-order-id" class="input-sm" style="width:100px;">
@@ -34,33 +28,18 @@
 					                 </div>
                                 </div>
                                 <div class="form-group">
-                                    <select name="pay_status" class="input-sm" style="width:100px;">
-                                            <option value="">支付状态</option>
-                                            <option value="0">未支付</option>
-                  		            <option value="1">已支付</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <select name="pay_code" class="input-sm" style="width:100px;">
-                                        	<option value="">支付方式</option>
-                                            <option value="alipay">支付宝支付</option>
-                  							<option value="weixin">微信支付</option>
-                  							<option value="cod">货到付款</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <select name="shipping_status" class="input-sm" style="width:100px;">
-                                        	<option value="">发货状态</option>
-                                            <option value="0">未发货</option>
-                  							<option value="1">已发货</option>
-                  							<option value="2">部分发货</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
                                     <select name="order_status" class="input-sm" style="width:100px;">
                                         <option value="">订单状态</option>
                                         {volist name="order_status" id="v" key="k"}
-                                            <option value="{$k-1}">{$v}</option>
+                                        <option value="{$k-1}">{$v}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <select name="pay_status" class="input-sm" style="width:100px;">
+                                        <option value="">支付状态</option>
+                                        {volist name="pay_status" id="v" key="k"}
+                                        <option value="{$k-1}">{$v}</option>
                                         {/volist}
                                     </select>
                                     <input type="hidden" name="order_by" value="order_id">

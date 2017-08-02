@@ -29,5 +29,17 @@ return array(
 		'prefix'     => 'admin',
 		'type'       => '',
 		'auto_start' => true,
-	)
+	),
+
+    'ORDER_STATUS' => array(
+        0 => '未完成',
+        1 => '已完成'
+    ),
+
+    'PAY_STATUS' => array(
+        0 => '未支付',
+        1 => '已支付'
+    )
+
+
 );
