@@ -1,7 +1,7 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost
+Source Server         : MySQL
 Source Server Version : 50553
 Source Host           : 127.0.0.1:3306
 Source Database       : tyms
@@ -10,13 +10,13 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2017-08-02 19:56:22
+Date: 2017-08-03 00:27:23
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for tyms_action
+-- Table structure for `tyms_action`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_action`;
 CREATE TABLE `tyms_action` (
@@ -48,7 +48,7 @@ INSERT INTO `tyms_action` VALUES ('10', 'update_menu', '更新菜单', '新增�
 INSERT INTO `tyms_action` VALUES ('11', 'update_category', '更新分类', '新增或修改或删除分类.', '', '', '1', '1', '1383296765');
 
 -- ----------------------------
--- Table structure for tyms_action_log
+-- Table structure for `tyms_action_log`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_action_log`;
 CREATE TABLE `tyms_action_log` (
@@ -117,7 +117,7 @@ INSERT INTO `tyms_action_log` VALUES ('44', '10', '1', '2130706433', 'Menu', '42
 INSERT INTO `tyms_action_log` VALUES ('45', '10', '1', '2130706433', 'Menu', '42', '操作url：/index.php/admin/menu/edit/id/42.html', '1', '1501667313');
 
 -- ----------------------------
--- Table structure for tyms_ad
+-- Table structure for `tyms_ad`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_ad`;
 CREATE TABLE `tyms_ad` (
@@ -145,7 +145,7 @@ INSERT INTO `tyms_ad` VALUES ('3', '1', 'WEB应用系统设计与开发', '14', 
 INSERT INTO `tyms_ad` VALUES ('4', '1', '手机APP应用设计与开发', '0', '', 'http://www.yizukeji.cn', '', '', '<p>蚁族科技有限公司专注于手机客户端软件开发，是省内移动客户端开发商的先行者，做到行业内领先地位。 </p>', '1440433571', '1459489811', '1');
 
 -- ----------------------------
--- Table structure for tyms_addons
+-- Table structure for `tyms_addons`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_addons`;
 CREATE TABLE `tyms_addons` (
@@ -171,7 +171,7 @@ INSERT INTO `tyms_addons` VALUES ('2', 'Sitestat', '站点统计信息', '统计
 INSERT INTO `tyms_addons` VALUES ('3', 'Systeminfo', '系统环境信息', '用于显示一些服务器的信息', '1', '', 'molong', '0.1', '1', '0', '0');
 
 -- ----------------------------
--- Table structure for tyms_ad_place
+-- Table structure for `tyms_ad_place`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_ad_place`;
 CREATE TABLE `tyms_ad_place` (
@@ -195,7 +195,7 @@ CREATE TABLE `tyms_ad_place` (
 INSERT INTO `tyms_ad_place` VALUES ('1', '首页幻灯片', 'banner', '1', '5', '0', '0', '1440433367', '1440433367', '', '1');
 
 -- ----------------------------
--- Table structure for tyms_article
+-- Table structure for `tyms_article`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_article`;
 CREATE TABLE `tyms_article` (
@@ -220,7 +220,7 @@ CREATE TABLE `tyms_article` (
 INSERT INTO `tyms_article` VALUES ('1', 'asdfsdaf', '2', '0', '0', 'asdf', '<p>asdfdsaf</p>', '1', '0', '0', '1501071706', '1501071706');
 
 -- ----------------------------
--- Table structure for tyms_attachment
+-- Table structure for `tyms_attachment`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_attachment`;
 CREATE TABLE `tyms_attachment` (
@@ -246,7 +246,7 @@ CREATE TABLE `tyms_attachment` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for tyms_attribute
+-- Table structure for `tyms_attribute`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_attribute`;
 CREATE TABLE `tyms_attribute` (
@@ -292,7 +292,7 @@ INSERT INTO `tyms_attribute` VALUES ('21', 'update_time', '更新时间', '11', 
 INSERT INTO `tyms_attribute` VALUES ('22', 'create_time', '添加时间', '11', 'datetime', '0', '添加时间', '', '2', '0', '1', '1', '0', '0', '1501071681', '1501071681', '', '0', '', '', '', '0', '');
 
 -- ----------------------------
--- Table structure for tyms_auth_extend
+-- Table structure for `tyms_auth_extend`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_auth_extend`;
 CREATE TABLE `tyms_auth_extend` (
@@ -309,7 +309,7 @@ CREATE TABLE `tyms_auth_extend` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for tyms_auth_group
+-- Table structure for `tyms_auth_group`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_auth_group`;
 CREATE TABLE `tyms_auth_group` (
@@ -330,7 +330,7 @@ INSERT INTO `tyms_auth_group` VALUES ('1', 'admin', '1', '网站编辑', '网站
 INSERT INTO `tyms_auth_group` VALUES ('2', 'admin', '1', '网站运营', '针对网站SEO进行管理', '1', '21,20,14,12,3,19,18,17,16,15,13,1');
 
 -- ----------------------------
--- Table structure for tyms_auth_group_access
+-- Table structure for `tyms_auth_group_access`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_auth_group_access`;
 CREATE TABLE `tyms_auth_group_access` (
@@ -346,7 +346,7 @@ CREATE TABLE `tyms_auth_group_access` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for tyms_auth_rule
+-- Table structure for `tyms_auth_rule`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_auth_rule`;
 CREATE TABLE `tyms_auth_rule` (
@@ -414,7 +414,7 @@ INSERT INTO `tyms_auth_rule` VALUES ('46', 'admin', '1', 'admin/wechat/add_img',
 INSERT INTO `tyms_auth_rule` VALUES ('47', 'admin', '1', 'admin/wechat/del_img', '删除图文回复', '微信管理', '1', '');
 
 -- ----------------------------
--- Table structure for tyms_category
+-- Table structure for `tyms_category`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_category`;
 CREATE TABLE `tyms_category` (
@@ -458,7 +458,7 @@ INSERT INTO `tyms_category` VALUES ('2', 'company_news', '国内新闻', '1', '1
 INSERT INTO `tyms_category` VALUES ('3', '', '国外新闻', '1', '2', '10', '', '', '', '', '', '', '', '', '', '', '0', '1', '1', '0', '0', '', '', '0', '0', '1', '0', '');
 
 -- ----------------------------
--- Table structure for tyms_channel
+-- Table structure for `tyms_channel`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_channel`;
 CREATE TABLE `tyms_channel` (
@@ -488,7 +488,7 @@ INSERT INTO `tyms_channel` VALUES ('1', '0', '网站首页', 'index/index/index'
 INSERT INTO `tyms_channel` VALUES ('2', '0', '新闻资讯', 'article/list/1', '1', '1', 'article', '', '', '', 'article', '1379475111', '1501071649', '1', '0');
 
 -- ----------------------------
--- Table structure for tyms_config
+-- Table structure for `tyms_config`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_config`;
 CREATE TABLE `tyms_config` (
@@ -550,7 +550,7 @@ INSERT INTO `tyms_config` VALUES ('42', 'mobile_themes', 'text', '手机站模�
 INSERT INTO `tyms_config` VALUES ('43', 'nav_type_list', 'textarea', '导航分类', '99', '', '', '', '1481539756', '1481539801', '1', '1:顶部\r\n2:底部', '1');
 
 -- ----------------------------
--- Table structure for tyms_district
+-- Table structure for `tyms_district`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_district`;
 CREATE TABLE `tyms_district` (
@@ -1089,7 +1089,7 @@ INSERT INTO `tyms_district` VALUES ('522', '黄大仙区', '2', '33');
 INSERT INTO `tyms_district` VALUES ('523', '湾仔区', '2', '33');
 
 -- ----------------------------
--- Table structure for tyms_file
+-- Table structure for `tyms_file`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_file`;
 CREATE TABLE `tyms_file` (
@@ -1113,7 +1113,7 @@ CREATE TABLE `tyms_file` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for tyms_form
+-- Table structure for `tyms_form`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_form`;
 CREATE TABLE `tyms_form` (
@@ -1131,7 +1131,7 @@ CREATE TABLE `tyms_form` (
 INSERT INTO `tyms_form` VALUES ('1', 'form', 'form', '1501069567', '1501069567');
 
 -- ----------------------------
--- Table structure for tyms_form_form
+-- Table structure for `tyms_form_form`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_form_form`;
 CREATE TABLE `tyms_form_form` (
@@ -1144,7 +1144,7 @@ CREATE TABLE `tyms_form_form` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for tyms_goods_config
+-- Table structure for `tyms_goods_config`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_goods_config`;
 CREATE TABLE `tyms_goods_config` (
@@ -1164,7 +1164,7 @@ CREATE TABLE `tyms_goods_config` (
 INSERT INTO `tyms_goods_config` VALUES ('1', '纤必达21天系统营养塑身套餐', '888.00', '快速塑身套餐', '2', '1501133689');
 
 -- ----------------------------
--- Table structure for tyms_hooks
+-- Table structure for `tyms_hooks`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_hooks`;
 CREATE TABLE `tyms_hooks` (
@@ -1187,7 +1187,7 @@ INSERT INTO `tyms_hooks` VALUES ('2', 'pageFooter', '页面footer钩子，一般
 INSERT INTO `tyms_hooks` VALUES ('3', 'AdminIndex', '首页小格子个性化显示', '1', '1382596073', 'Sitestat,Devteam,Systeminfo', '1');
 
 -- ----------------------------
--- Table structure for tyms_link
+-- Table structure for `tyms_link`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_link`;
 CREATE TABLE `tyms_link` (
@@ -1211,7 +1211,7 @@ CREATE TABLE `tyms_link` (
 INSERT INTO `tyms_link` VALUES ('1', '1', '蚁族科技', 'http://www.yizukeji.cn', '0', '', '0', '0', '1462496026', '0', '1');
 
 -- ----------------------------
--- Table structure for tyms_member
+-- Table structure for `tyms_member`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_member`;
 CREATE TABLE `tyms_member` (
@@ -1247,7 +1247,7 @@ CREATE TABLE `tyms_member` (
 INSERT INTO `tyms_member` VALUES ('1', 'admin', '7525b1f1d883957e49451843911fd5b2', 'admin', 'admin@admin.com', null, '0', '0000-00-00', '123123', '0', '', '0', '0', '0', '0', 'iJhmGg', '6', '0', '1501066646', '2130706433', '1501635805', '1');
 
 -- ----------------------------
--- Table structure for tyms_member_extend
+-- Table structure for `tyms_member_extend`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_member_extend`;
 CREATE TABLE `tyms_member_extend` (
@@ -1261,7 +1261,7 @@ CREATE TABLE `tyms_member_extend` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for tyms_member_extend_group
+-- Table structure for `tyms_member_extend_group`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_member_extend_group`;
 CREATE TABLE `tyms_member_extend_group` (
@@ -1281,7 +1281,7 @@ CREATE TABLE `tyms_member_extend_group` (
 INSERT INTO `tyms_member_extend_group` VALUES ('1', 'member_extend', '个人资料', '1403847366', '0', '1', '1');
 
 -- ----------------------------
--- Table structure for tyms_member_extend_setting
+-- Table structure for `tyms_member_extend_setting`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_member_extend_setting`;
 CREATE TABLE `tyms_member_extend_setting` (
@@ -1307,7 +1307,7 @@ CREATE TABLE `tyms_member_extend_setting` (
 INSERT INTO `tyms_member_extend_setting` VALUES ('1', 'education', '学历', '10', 'select', '', '', '1', '1:小学\r\n2:初中\r\n3:高中', '0', '1', '1455930923', '1455930787');
 
 -- ----------------------------
--- Table structure for tyms_menu
+-- Table structure for `tyms_menu`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_menu`;
 CREATE TABLE `tyms_menu` (
@@ -1371,7 +1371,7 @@ INSERT INTO `tyms_menu` VALUES ('41', '订单列表', 'admin', 'credit-card', '4
 INSERT INTO `tyms_menu` VALUES ('42', '会员类型', 'admin', 'user', '33', '0', 'admin/member/users_type', '0', '', '会员管理', '0', '0');
 
 -- ----------------------------
--- Table structure for tyms_model
+-- Table structure for `tyms_model`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_model`;
 CREATE TABLE `tyms_model` (
@@ -1400,7 +1400,7 @@ CREATE TABLE `tyms_model` (
 INSERT INTO `tyms_model` VALUES ('2', 'article', '百问百答', '', '1', '1:基础', 'id:ID\r\ntitle:标题\r\ncreate_time:添加时间|time_format\r\nupdate_time:更新时间|time_format', '25', '', '', '', '', '', '1', '1501071680', '1501118838');
 
 -- ----------------------------
--- Table structure for tyms_order
+-- Table structure for `tyms_order`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_order`;
 CREATE TABLE `tyms_order` (
@@ -1425,7 +1425,7 @@ CREATE TABLE `tyms_order` (
 INSERT INTO `tyms_order` VALUES ('1', '201708021508', '1', '100.00', '1501657709', '0', '0', '0', '1');
 
 -- ----------------------------
--- Table structure for tyms_picture
+-- Table structure for `tyms_picture`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_picture`;
 CREATE TABLE `tyms_picture` (
@@ -1450,7 +1450,7 @@ INSERT INTO `tyms_picture` VALUES ('5', '/uploads/picture/20170802/e6999171c8512
 INSERT INTO `tyms_picture` VALUES ('6', '/uploads/picture/20170802/aa424482c2a613e134dd6c0d26776a7a.jpg', '/uploads/picture/20170802/aa424482c2a613e134dd6c0d26776a7a.jpg', '7286df589338035c7395b51f8a9c43f4', '4a4330cd0274d03eedebb636b6a0371337661556', '1', '1501663724');
 
 -- ----------------------------
--- Table structure for tyms_rewrite
+-- Table structure for `tyms_rewrite`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_rewrite`;
 CREATE TABLE `tyms_rewrite` (
@@ -1467,7 +1467,7 @@ CREATE TABLE `tyms_rewrite` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for tyms_seo_rule
+-- Table structure for `tyms_seo_rule`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_seo_rule`;
 CREATE TABLE `tyms_seo_rule` (
@@ -1490,7 +1490,7 @@ CREATE TABLE `tyms_seo_rule` (
 INSERT INTO `tyms_seo_rule` VALUES ('1', '整站标题', '', '', '', '1', 'YizuCMS网站管理系统', 'YizuCMS网站管理系统', 'YizuCMS网站管理系统', '7');
 
 -- ----------------------------
--- Table structure for tyms_sync_login
+-- Table structure for `tyms_sync_login`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_sync_login`;
 CREATE TABLE `tyms_sync_login` (
@@ -1507,7 +1507,7 @@ CREATE TABLE `tyms_sync_login` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for tyms_users
+-- Table structure for `tyms_users`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_users`;
 CREATE TABLE `tyms_users` (
@@ -4094,17 +4094,17 @@ INSERT INTO `tyms_users` VALUES ('2576', 'hou', 'http://wx.qlogo.cn/mmopen/Piajx
 INSERT INTO `tyms_users` VALUES ('2577', '袁学飞', 'http://wx.qlogo.cn/mmopen/3ydx8qAabL53jKAK14HxVXbuOCnzCQt0j0tiaxgASjQQX5pm8bywpBCuR2wUD5JXJN5eDIjiabZom0nRUpjiboXX8Y01btuHVOC/0', 'oyP7DwJp2I6Z10mT-les7FV1zR20', '', '0', '', '1', '1', '0', '0', '', '1473382925');
 INSERT INTO `tyms_users` VALUES ('2578', 'sImple', 'http://wx.qlogo.cn/mmopen/FrdAUicrPIibdtgJM1pbD1eOogibib12ncnTVekVQVAFTQyYsrPAmyO04XXX4CEHabaRpYccfPDN3RTzNDzYT8dztXHr83TxBAId/0', 'oyP7DwF6zSWHioWdWYpOwHL59nSg', '', '0', '', '1', '1', '0', '0', '', '1473383596');
 INSERT INTO `tyms_users` VALUES ('2579', '电商平台、APP定制02885758275', 'http://wx.qlogo.cn/mmopen/3ydx8qAabL5FibLNtP3vw4qSW4ZOQ31W1LuoYghCh8FxWmkCZa8jmQXJ9tmM1kCaeuBymPzXhiaczKRzibzxP8mMSOlNh8cpyJ4/0', 'oyP7DwLVryu4xL-ff_BmLGuX_L1A', '', '0', '', '1', '1', '0', '0', '', '1473385796');
-INSERT INTO `tyms_users` VALUES ('2580', 'Forest～π_π', 'http://wx.qlogo.cn/mmopen/vzdiaa5rSAQ5z2VfdYML8UFrJT9hbbaIjp0KqkfOpNuhCPIXibluRCp8UeeKia3joq2KEicdF3rCvx9Ha3jhGnRsjccQ90ftMmaK/0', 'oyP7DwLFI8a-ctDM0ELT0IrNk9KU', '', '0', '', '1', '1', '0', '0', '', '1473387192');
-INSERT INTO `tyms_users` VALUES ('2581', 'T_T', 'http://wx.qlogo.cn/mmopen/3ydx8qAabL5FibLNtP3vw4v7EXjwnL3OeHzA7TpbxSjZX6NFXKC1iabRrzicSicztVk3ibUpknULU1VzxxdQ0MJkfEUdhqhXav1tI/0', 'oyP7DwM_-VMY3RqimrPoIqZzyBa8', '', '0', '', '1', '1', '0', '0', '', '1473388242');
-INSERT INTO `tyms_users` VALUES ('2582', '囧', 'http://wx.qlogo.cn/mmopen/Q8uXlhcy3p09e9nl5xN90I256wyDlInwrj1icqEaIZLKibRGClh6Drdvax0fzyI2VBrrtqrYLsYFxyftCGyqmARt2Um8KE6f9ib/0', 'oyP7DwM7CpW-r45Hx9kS1ofhJNsg', '', '0', '', '1', '1', '0', '0', '', '1473389160');
-INSERT INTO `tyms_users` VALUES ('2583', '施好好', 'http://wx.qlogo.cn/mmopen/FrdAUicrPIibelAltw240OgZiankOhlKSx7YxHCJbS6FkOwqT7FLC2CWicw6nMfj6kicFzq69vxRubIl1Nvrg54N6LQ/0', 'oyP7DwGkhVvAHOR7niEOOG1bDkrI', '', '0', '', '1', '1', '0', '0', '', '1473390291');
-INSERT INTO `tyms_users` VALUES ('2588', '511482696@qq.com', null, null, '', '0', '', '1', '1', '0', '0', '', '1477639961');
-INSERT INTO `tyms_users` VALUES ('2589', '13554754719', null, null, '', '0', '13554754719', '1', '1', '0', '0', '', '1490597950');
-INSERT INTO `tyms_users` VALUES ('2590', '13554754711', null, null, '', '0', '13554754711', '1', '1', '0', '0', '', '1495453354');
+INSERT INTO `tyms_users` VALUES ('2580', 'Forest～π_π', 'http://wx.qlogo.cn/mmopen/vzdiaa5rSAQ5z2VfdYML8UFrJT9hbbaIjp0KqkfOpNuhCPIXibluRCp8UeeKia3joq2KEicdF3rCvx9Ha3jhGnRsjccQ90ftMmaK/0', 'oyP7DwLFI8a-ctDM0ELT0IrNk9KU', 'xiaofeng', '4', '', '4', '1', '100', '80', '', '1473387192');
+INSERT INTO `tyms_users` VALUES ('2581', 'T_T', 'http://wx.qlogo.cn/mmopen/3ydx8qAabL5FibLNtP3vw4v7EXjwnL3OeHzA7TpbxSjZX6NFXKC1iabRrzicSicztVk3ibUpknULU1VzxxdQ0MJkfEUdhqhXav1tI/0', 'oyP7DwM_-VMY3RqimrPoIqZzyBa8', 'roc', '4', '', '4', '1', '80', '60', '', '1473388242');
+INSERT INTO `tyms_users` VALUES ('2582', '囧', 'http://wx.qlogo.cn/mmopen/Q8uXlhcy3p09e9nl5xN90I256wyDlInwrj1icqEaIZLKibRGClh6Drdvax0fzyI2VBrrtqrYLsYFxyftCGyqmARt2Um8KE6f9ib/0', 'oyP7DwM7CpW-r45Hx9kS1ofhJNsg', '', '3', '', '3', '1', '0', '0', '', '1473389160');
+INSERT INTO `tyms_users` VALUES ('2583', '施好好', 'http://wx.qlogo.cn/mmopen/FrdAUicrPIibelAltw240OgZiankOhlKSx7YxHCJbS6FkOwqT7FLC2CWicw6nMfj6kicFzq69vxRubIl1Nvrg54N6LQ/0', 'oyP7DwGkhVvAHOR7niEOOG1bDkrI', '', '3', '', '3', '1', '0', '0', '', '1473390291');
+INSERT INTO `tyms_users` VALUES ('2588', '511482696@qq.com', null, null, '', '2', '', '2', '1', '0', '0', '', '1477639961');
+INSERT INTO `tyms_users` VALUES ('2589', '13554754719', null, null, '', '2', '13554754719', '2', '1', '0', '0', '', '1490597950');
+INSERT INTO `tyms_users` VALUES ('2590', '13554754711', null, null, '', '1', '13554754711', '1', '1', '0', '0', '', '1495453354');
 INSERT INTO `tyms_users` VALUES ('2591', '1273276548@qq.com', 'http://wx.qlogo.cn/mmopen/FrdAUicrPIibelAltw240OgZiankOhlKSx7YxHCJbS6FkOwqT7FLC2CWicw6nMfj6kicFzq69vxRubIl1Nvrg54N6LQ/0', 'oyP7DwGkhVvAHOR7niEOOG1bDkrI', '小五', '1', '15281812281', '1', '1', '0', '0', '', '1495509974');
 
 -- ----------------------------
--- Table structure for tyms_users_type
+-- Table structure for `tyms_users_type`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_users_type`;
 CREATE TABLE `tyms_users_type` (
@@ -4127,7 +4127,7 @@ INSERT INTO `tyms_users_type` VALUES ('3', '美容师', '666.00', '1501663719', 
 INSERT INTO `tyms_users_type` VALUES ('4', '顾客', '111.00', '1501663725', '0', '6');
 
 -- ----------------------------
--- Table structure for tyms_withdrawals
+-- Table structure for `tyms_withdrawals`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_withdrawals`;
 CREATE TABLE `tyms_withdrawals` (
@@ -4152,7 +4152,7 @@ INSERT INTO `tyms_withdrawals` VALUES ('4', '1', '1483352467', '2000.00', '支�
 INSERT INTO `tyms_withdrawals` VALUES ('5', '1', '1486606724', '10.00', '建设银行', '6217007200006342680', '第三方第三', '', '0');
 
 -- ----------------------------
--- Table structure for tyms_wx_img
+-- Table structure for `tyms_wx_img`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_wx_img`;
 CREATE TABLE `tyms_wx_img` (
@@ -4176,7 +4176,7 @@ CREATE TABLE `tyms_wx_img` (
 INSERT INTO `tyms_wx_img` VALUES ('26', 'demo', 'dss', '3', 'demo', '1495338515', '', 'eesops1462769263', 'demo', '0', '');
 
 -- ----------------------------
--- Table structure for tyms_wx_keyword
+-- Table structure for `tyms_wx_keyword`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_wx_keyword`;
 CREATE TABLE `tyms_wx_keyword` (
@@ -4197,7 +4197,7 @@ INSERT INTO `tyms_wx_keyword` VALUES ('331', '你好', '14', 'eesops1462769263',
 INSERT INTO `tyms_wx_keyword` VALUES ('334', 'demo', '26', 'eesops1462769263', 'IMG');
 
 -- ----------------------------
--- Table structure for tyms_wx_menu
+-- Table structure for `tyms_wx_menu`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_wx_menu`;
 CREATE TABLE `tyms_wx_menu` (
@@ -4219,7 +4219,7 @@ INSERT INTO `tyms_wx_menu` VALUES ('34', '1', '首页', '0', 'view', 'http://www
 INSERT INTO `tyms_wx_menu` VALUES ('35', '2', '二级菜单', '0', 'view', 'http://www.baidu.com', 'eesops1462769263', '34');
 
 -- ----------------------------
--- Table structure for tyms_wx_msg
+-- Table structure for `tyms_wx_msg`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_wx_msg`;
 CREATE TABLE `tyms_wx_msg` (
@@ -4242,7 +4242,7 @@ CREATE TABLE `tyms_wx_msg` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for tyms_wx_news
+-- Table structure for `tyms_wx_news`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_wx_news`;
 CREATE TABLE `tyms_wx_news` (
@@ -4260,7 +4260,7 @@ CREATE TABLE `tyms_wx_news` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for tyms_wx_text
+-- Table structure for `tyms_wx_text`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_wx_text`;
 CREATE TABLE `tyms_wx_text` (
@@ -4284,7 +4284,7 @@ CREATE TABLE `tyms_wx_text` (
 INSERT INTO `tyms_wx_text` VALUES ('14', '0', '', '你好', '0', '你更好!', '1490888710', '', '0', 'eesops1462769263');
 
 -- ----------------------------
--- Table structure for tyms_wx_user
+-- Table structure for `tyms_wx_user`
 -- ----------------------------
 DROP TABLE IF EXISTS `tyms_wx_user`;
 CREATE TABLE `tyms_wx_user` (
