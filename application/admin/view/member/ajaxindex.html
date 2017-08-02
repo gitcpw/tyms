@@ -34,7 +34,7 @@
                                     <tr>
                                         <td class="text-right">{$list.user_id}</td>
                                         <td class="text-left">{$list.nickname}</td>
-                                        <td class="text-left"><img src="{:get_cover($list['head_pic'],'path')}" width="60px" height="60px;" alt=""></td>
+                                        <td class="text-left">{if !empty($list.head_pic)}<img src="{$list.head_pic}" width="60px" height="60px;" alt="">{else}<img src="{:get_cover($list['head_pic'],'path')}" width="60px" height="60px;" alt="">{/if}</td>
                                         <td class="text-left">{$users_type[$list['users_type']]['name']|default="未设置"}</td>
                                         <td class="text-left">{$level[$list['level']]['name']|default="未设置"}</td>
                                         <td class="text-left">{if $list['is_distribut'] eq 0}否{else}是{/if}</td>

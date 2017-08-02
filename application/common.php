@@ -1244,3 +1244,10 @@ function check_mobile($mobile){
         return true;
     return false;
 }
+
+/**
+ * 根据会员ID获取会员姓名
+ */
+function get_user_name($user_id){
+    $user_name = db('users')->where(array('user_id' => $user_id))->field('');
+}

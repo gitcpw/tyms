@@ -11,6 +11,13 @@
                 <div class="panel-body">
                     <div class="navbar navbar-default">
                             <form action="" id="search-form2" class="navbar-form form-inline" method="post" onsubmit="return false">
+                                {volist name="data" id="ut"}
+                                <div class="form-group">
+                                    <a href="{:url('member/index',array('users_type'=>$ut['id']))}" class="btn btn-info pull-right" {if input('users_type') eq $ut.id } style="background-color:#3385ff;" {/if}>{$ut.name}</a>
+                                </div>
+                                {/volist}
+                                <div class="form-group" style="margin-right: 20px">
+                                </div>
                                 <div class="form-group">
                                     <label class="control-label" for="input-mobile">手机号码</label>
                                     <div class="input-group">
@@ -23,7 +30,6 @@
                                 	<input type="hidden" name="sort" value="desc">
                                 	<button type="submit" onclick="ajax_get_table('search-form2',1)" id="button-filter search-order" class="btn btn-primary pull-right"><i class="fa fa-search"></i> 筛选</button>
                                  </div>
-								 <a href="{:url('member/add_user')}" class="btn btn-info pull-right">添加会员</a>
                             </form>
                     </div>
                     <div id="ajax_return">
@@ -44,10 +50,11 @@
 
     // ajax 抓取页面
     function ajax_get_table(tab,page){
+        var users_type = "<?php echo input('users_type');?>";
         cur_page = page; //当前页面 保存为全局变量
             $.ajax({
                 type : "POST",
-                url:"/index.php/Admin/Member/ajaxindex/p/"+page,//+tab,
+                url:"/index.php/Admin/Member/ajaxindex/p/"+page+"/users_type/"+users_type, //+tab,
                 data : $('#'+tab).serialize(),// 你的formid
                 success: function(data){
                     $("#ajax_return").html('');
@@ -64,68 +71,5 @@
         $("input[name='sort']").val(v);
         ajax_get_table('search-form2',cur_page);
     }
-
-    //发送站内信
-    function send_message(id)
-    {
-        var obj = $("input[name*='selected']");
-        var url = "{:url('Admin/Member/sendMessage')}";
-        if(obj.is(":checked")){
-            var check_val = [];
-            for(var k in obj){
-                if(obj[k].checked)
-                    check_val.push(obj[k].value);
-            }
-            url += "?user_id_array="+check_val;
-        }
-        layer.open({
-            type: 2,
-            title: '站内信',
-            shadeClose: true,
-            shade: 0.8,
-            area: ['580px', '480px'],
-            content: url
-        });
-    }
-
-    //发送邮件
-    function send_mail(id)
-    {
-        var obj = $("input[name*='selected']");
-        var url = "{:url('Admin/User/sendMail')}";
-        if(obj.is(":checked")){
-            var check_val = [];
-            for(var k in obj){
-                if(obj[k].checked)
-                    check_val.push(obj[k].value);
-            }
-            url += "?user_id_array="+check_val;
-            layer.open({
-                type: 2,
-                title: '发送邮箱',
-                shadeClose: true,
-                shade: 0.8,
-                area: ['580px', '480px'],
-                content: url
-            });
-        }else{
-            layer.msg('请选择会员',{icon:2});
-        }
-
-    }
-
-    /**
-     * 回调函数
-     */
-    function call_back(v) {
-        layer.closeAll();
-        if (v == 1) {
-            layer.msg('发送成功',{icon:1});
-        } else {
-            layer.msg('发送失败',{icon:2});
-        }
-    }
-
-
 </script>
 {/block}

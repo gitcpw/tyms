@@ -48,6 +48,7 @@ class Member extends Admin {
     public function ajaxindex(){
         // 搜索条件
         $condition = array();
+        input('users_type') ? $condition['users_type'] = input('users_type') : false;
         input('mobile') ? $condition['mobile'] = input('mobile') : false;
         $sort_order = input('order_by').' '.input('sort');
         $model = M('users');
@@ -100,7 +101,6 @@ class Member extends Admin {
         }
     }
 
-
     /**
      * 删除会员
      */
@@ -113,44 +113,8 @@ class Member extends Admin {
             $this->error('操作失败');
         }
     }
-    /**
-     * 删除会员
-     */
-    public function ajax_delete(){
-        $uid = input('id');
-        if($uid){
-            $row = M('users')->where(array('user_id'=>$uid))->delete();
-            if($row !== false){
-                $this->ajaxReturn(array('status' => 1, 'msg' => '删除成功', 'data' => ''));
-            }else{
-                $this->ajaxReturn(array('status' => 0, 'msg' => '删除失败', 'data' => ''));
-            }
-        }else{
-            $this->ajaxReturn(array('status' => 0, 'msg' => '参数错误', 'data' => ''));
-        }
-    }
 
 
-    /**
-     * 增加会员
-     * @return mixed
-     */
-    public function add_user(){
-        $member = model('member');
-    	if(IS_POST){
-    		$data = input('post.');
-			$user_obj = new UsersLogic();
-			$res = $user_obj->addUser($data);
-			if($res['status'] == 1){
-				$this->success('添加成功',url('User/index'));exit;
-			}else{
-				$this->error('添加失败,'.$res['msg'],url('User/index'));
-			}
-    	}else{
-
-        }
-    	return $this->fetch();
-    }
 
     /**
      * 导出会员信息

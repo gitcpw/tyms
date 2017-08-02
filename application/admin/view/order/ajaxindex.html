@@ -9,9 +9,9 @@
                                     </td>
                                     <td class="text-center">
                                         <a href="javascript:sort('order_price');">订单金额</a>
-                                    </td>      
+                                    </td>
                                     <td class="text-center">
-                                        <a href="javascription:;">买家</a>
+                                        <a href="javascription:;">买家姓名</a>
                                     </td>
                                     <td class="text-center">
                                         <a href="javascript:sort('order_status');">订单状态</a>
@@ -37,7 +37,7 @@
                                         <td class="text-center">{$order_status[$list['order_status']]}</td>
                                         <td class="text-center">{$pay_status[$list['pay_status']]}</td>
                                         <td class="text-center">{$list.add_time|date='Y-m-d H:i',###}</td>
-                                        <td class="text-center">{$list.pay_time|date='Y-m-d H:i',###}</td>
+                                        <td class="text-center">{if $list.pay_time eq 0}N{else}{$list.pay_time|date='Y-m-d H:i',###}{/if}</td>
                                         <td class="text-center">
                                            <a href="{:url('Admin/order/detail',array('order_id'=>$list['order_id']))}" data-toggle="tooltip" title="" class="btn btn-info" data-original-title="查看详情"><i class="fa fa-eye"></i></a>
                                            {if condition="($list['order_status'] eq 3) or ($list['order_status'] eq 5)"}
