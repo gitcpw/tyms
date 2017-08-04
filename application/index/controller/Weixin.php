@@ -59,6 +59,9 @@ class Weixin extends Fornt {
 
         //关注
         if($postObj->Event == 'subscribe'){
+            $info = $postObj->EventKey;
+            //点击关注之后，拉取微信用户的微信信息，同时获得分享用户的user_id(即scene_id场景id),查询分享用户的信息，处理微信用户即分享用户信息写入用户表
+            //关注之后确定上下级关系
             $textTpl = "<xml>
                         <ToUserName><![CDATA[%s]]></ToUserName>
                         <FromUserName><![CDATA[%s]]></FromUserName>
@@ -67,10 +70,43 @@ class Weixin extends Fornt {
                         <Content><![CDATA[%s]]></Content>
                         <FuncFlag>0</FuncFlag>
                         </xml>";
-            $contentStr = config('wx_subscribe');
+            $contentStr = ' 尊敬的顾客您好，'."\n".'请点击信息结尾的“购买引导”，进入购买引导界面'."$info\n".'<a href="http://www.baidu.com"> 购买引导 </a>';
             $resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, 'text', $contentStr);
             exit($resultStr);
         }
+        if($postObj->Event == 'SCAN'){
+            $info = $postObj->EventKey;
+            //关注之后确定上下级关系
+            $textTpl = "<xml>
+                        <ToUserName><![CDATA[%s]]></ToUserName>
+                        <FromUserName><![CDATA[%s]]></FromUserName>
+                        <CreateTime>%s</CreateTime>
+                        <MsgType><![CDATA[%s]]></MsgType>
+                        <Content><![CDATA[%s]]></Content>
+                        <FuncFlag>0</FuncFlag>
+                        </xml>";
+            $contentStr = ' 尊敬的顾客您好，'."\n".'请点击信息结尾的“购买引导”，进入购买引导界面12'."$info\n".'<a href="http://www.baidu.com"> 购买引导 </a>';
+            $resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, 'text', $contentStr);
+            exit($resultStr);
+        }
+
+
+        //关注
+        /*if($postObj->Event == 'subscribe'){
+            $info = $postObj->EventKey;
+            //关注之后确定上下级关系
+            $textTpl = "<xml>
+                        <ToUserName><![CDATA[%s]]></ToUserName>
+                        <FromUserName><![CDATA[%s]]></FromUserName>
+                        <CreateTime>%s</CreateTime>
+                        <MsgType><![CDATA[%s]]></MsgType>
+                        <Content><![CDATA[%s]]></Content>
+                        <FuncFlag>0</FuncFlag>
+                        </xml>";
+            $contentStr = ' 尊敬的顾客您好，'."\n".'请点击信息结尾的“购买引导”，进入购买引导界面'."$info\n".'<a href="http://www.baidu.com"> 购买引导 </a>';
+            $resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, 'text', $contentStr);
+            exit($resultStr);
+        }*/
 
         //取消关注
         if($postObj->Event == 'unsubscribe'){

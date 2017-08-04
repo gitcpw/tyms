@@ -1143,38 +1143,6 @@ function PyFirst($zh) {
 
 
 /**
- * @param $arr
- * @param $key_name
- * @return array
- * 将数据库中查出的列表以指定的 id 作为数组的键名 
- */
-function convert_arr_key($arr, $key_name)
-{
-	$arr2 = array();
-	foreach($arr as $key => $val){
-		$arr2[$val[$key_name]] = $val;        
-	}
-	return $arr2;
-}
-
-
-/**
- * 获取数组中的某一列
- * @param type $arr 数组
- * @param type $key_name  列名
- * @return type  返回那一列的数组
- */
-function get_arr_column($arr, $key_name)
-{
-	$arr2 = array();
-	foreach($arr as $key => $val){
-		$arr2[] = $val[$key_name];        
-	}
-	return $arr2;
-}
-
-
-/**
  * CURL请求
  * @param $url 请求url地址
  * @param $method 请求方法 get post
@@ -1232,6 +1200,37 @@ function httpRequest($url, $method="GET", $postfields = null, $headers = array()
     curl_close($ci);
     return $response;
     //return array($http_code, $response,$requestinfo);
+}
+
+
+/**
+ * @param $arr
+ * @param $key_name
+ * @return array
+ * 将数据库中查出的列表以指定的 id 作为数组的键名
+ */
+function convert_arr_key($arr, $key_name)
+{
+    $arr2 = array();
+    foreach($arr as $key => $val){
+        $arr2[$val[$key_name]] = $val;
+    }
+    return $arr2;
+}
+
+/**
+ * 获取数组中的某一列
+ * @param type $arr 数组
+ * @param type $key_name  列名
+ * @return type  返回那一列的数组
+ */
+function get_arr_column($arr, $key_name)
+{
+    $arr2 = array();
+    foreach($arr as $key => $val){
+        $arr2[] = $val[$key_name];
+    }
+    return $arr2;
 }
 
 
