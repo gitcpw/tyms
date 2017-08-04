@@ -10,13 +10,11 @@
 namespace app\common\controller;
 
 class Base extends \think\Controller {
-
 	protected $url;
 	protected $request;
 	protected $module;
 	protected $controller;
 	protected $action;
-
 	public function _initialize() {
 		if (!is_file(APP_PATH . 'database.php') || !is_file(APP_PATH . 'install.lock')) {
 			return $this->redirect('install/index/index');

@@ -1250,3 +1250,8 @@ function check_mobile($mobile){
 function get_user_name($user_id){
     $user_name = db('users')->where(array('user_id' => $user_id))->field('');
 }
+
+function ajaxReturn($data){
+    header('Content-Type:application/json; charset=utf-8');
+    exit(json_encode($data));
+}

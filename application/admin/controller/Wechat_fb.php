@@ -572,23 +572,38 @@ class Wechat extends Admin {
      *
      */
     public function shareinfo(){
-        //分享二维码
-        $wechat = db('wx_user')->find();
-        $id = $wechat['id'];
-        if(!empty($wechat['qr'])){
-            $qr = $wechat['qr'];
+        //公司分享原链接
+        /*$wechat_list = db('wx_user')->select();
+        $appid = $wechat_list[0]['appid'];//appid
+        $redirect_uri = "http://tianyimeishan.yizukeji.cn";//回调地址
+        $scope = "snsapi_userinfo";//scope类型  snsapi_base （不弹出授权页面，直接跳转，只能获取用户openid） snsapi_userinfo （弹出授权页面，可通过openid拿到昵称、性别、所在地。并且，即使在未关注的情况下，只要用户授权，也能获取其信息）
+        $state = "1";//重定向后会带上state参数
+        $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=".$appid."&redirect_uri=".$redirect_uri."&response_type=code&scope=".$scope."&state=".$state."#wechat_redirect";
+
+        return $url;*/
+        /*$wechat = db('wx_user')->find();
+        $access_token = $this->get_access_token($wechat['appid'],$wechat['appsecret']);//获取基础支持的access_token
+        $url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=$access_token";
+        $qrcode = '{"action_name":"QR_LIMIT_SCENE","action_info":{"scene":{"scene_id":1}}}';
+        $result = httpRequest($url,'POST',$qrcode);
+        $jsoninfo = json_decode($result,true);
+        $ticket = $jsoninfo['ticket'];
+        if($ticket){
+            $url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=$ticket";
+            $this->redirect($url);
         }else{
-            $extends = & $this->load_wechat('Extends');
-            $result = $extends->getQRCode('1','1');
-            if(!empty($result)){
-                $qrurl = $extends->getQRUrl($result['ticket']);
-                db('wx_user')->where("id = $id")->update(array('qr'=>$qrurl));
-                $qr = $qrurl;
-            }
+            $this->error('错误！');
+        }*/
+        $extends = & $this->load_wechat('Extends');
+        $result = $extends->getQRCode('1','1');
+        if(!empty($result)){
+            $qrurl = $extends->getQRUrl($result['ticket']);
+
+        }else{
+            $this->error('错误！');
         }
-        $this->assign('qr',$qr);
-        $this->setMeta("分享信息");
-        return $this->fetch();
+
+        $this->fetch();
 
     }
 
