@@ -1,0 +1,64 @@
+{extend name="public/base"/}
+{block name="body"}
+<div class="wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content">
+        <!-- Main content -->
+        <!--<div class="container-fluid">-->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="border:0">
+                        <h3 class="panel-title" style="border:0"><i class="fa fa-list"></i> 美容院信息</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form action="" method="post">
+                            <table class="table table-bordered">
+                                <tbody>
+                                <tr>
+                                    <td class="col-sm-2">美容院名称:</td>
+                                    <td >{$user.name}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-2">美容院描述:</td>
+                                    <td >{$user.description}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-2">联系人:</td>
+                                    <td >{$user.contact}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-2">手机号:</td>
+                                    <td >{$user.phone}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-2">美容院地址:</td>
+                                    <td >{$user.address}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <a href="javascript:history.go(-1)" data-toggle="tooltip" title="" class="btn btn-default pull-right" data-original-title="返回"><i class="fa fa-reply"></i></a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>    <!-- /.content -->
+    </section>
+</div>
+<script>
+
+</script>
+
+</body>
+{/block}

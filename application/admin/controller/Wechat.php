@@ -2,6 +2,7 @@
 namespace app\admin\controller;
 use app\common\controller\Admin;
 use think\Db;
+use think\Loader;
 
 class Wechat extends Admin {
     /*
@@ -562,6 +563,51 @@ class Wechat extends Admin {
         return $this->fetch();
     }
 
+
+    /**
+     * 分享信息
+     * @param $appid
+     * @param $appsecret
+     * @return mixed
+     *
+     */
+    public function shareinfo(){
+        //公司分享原链接
+        /*$wechat_list = db('wx_user')->select();
+        $appid = $wechat_list[0]['appid'];//appid
+        $redirect_uri = "http://tianyimeishan.yizukeji.cn";//回调地址
+        $scope = "snsapi_userinfo";//scope类型  snsapi_base （不弹出授权页面，直接跳转，只能获取用户openid） snsapi_userinfo （弹出授权页面，可通过openid拿到昵称、性别、所在地。并且，即使在未关注的情况下，只要用户授权，也能获取其信息）
+        $state = "1";//重定向后会带上state参数
+        $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=".$appid."&redirect_uri=".$redirect_uri."&response_type=code&scope=".$scope."&state=".$state."#wechat_redirect";
+
+        return $url;*/
+        $wechat = db('wx_user')->find();
+        $access_token = $this->get_access_token($wechat['appid'],$wechat['appsecret']);//获取基础支持的access_token
+        $url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=$access_token";
+        $qrcode = '{"action_name":"QR_LIMIT_SCENE","action_info":{"scene":{"scene_id":1}}}';
+        $result = httpRequest($url,'POST',$qrcode);
+        $jsoninfo = json_decode($result,true);
+        $ticket = $jsoninfo['ticket'];
+        if($ticket){
+            $url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=$ticket";
+            $this->redirect($url);
+        }else{
+            $this->error('错误！');
+        }
+        /*$extends = & $this->load_wechat('Extends');
+        $result = $extends->getShortUrl($url);
+        print_r($result);
+        exit;*/
+
+    }
+
+
+    /**
+     * 如果access_token过期则重新获取，如果没有就返回数据库的access_token
+     * @param $appid
+     * @param $appsecret
+     * @return mixed
+     */
     public function get_access_token($appid,$appsecret){
         //判断是否过了缓存期
         $wechat = db('wx_user')->find();
@@ -576,4 +622,37 @@ class Wechat extends Admin {
         db('wx_user')->where(array('id'=>$wechat['id']))->update(array('web_access_token'=>$return['access_token'],'web_expires'=>$web_expires));
         return $return['access_token'];
     }
+
+
+    /**
+     * 获取微信操作对象（单例模式）
+     * @staticvar array $wechat 静态对象缓存对象
+     * @param type $type 接口名称 ( Card|Custom|Device|Extend|Media|Oauth|Pay|Receive|Script|User )
+     * @return \Wehcat\WechatReceive 返回接口对接
+     */
+    /*function & load_wechat($type = '') {
+        static $wechat = array();
+        $index = md5(strtolower($type));
+        if (!isset($wechat[$index])) {
+            $wechat = db('wx_user')->find();
+            // 定义微信公众号配置参数（这里是可以从数据库读取的哦）
+            $options = array(
+                'token'           => $wechat['token'], // 填写你设定的key
+                'appid'           => $wechat['appid'], // 填写高级调用功能的app id, 请在微信开发模式后台查询
+                'appsecret'       => $wechat['appsecret'], // 填写高级调用功能的密钥
+                'encodingaeskey'  => '', // 填写加密用的EncodingAESKey（可选，接口传输选择加密时必需）
+                'mch_id'          => '', // 微信支付，商户ID（可选）
+                'partnerkey'      => '', // 微信支付，密钥（可选）
+                'ssl_cer'         => '', // 微信支付，双向证书（可选，操作退款或打款时必需）
+                'ssl_key'         => '', // 微信支付，双向证书（可选，操作退款或打款时必需）
+                'cachepath'       => '', // 设置SDK缓存目录（可选，默认位置在Wechat/Cache下，请保证写权限）
+            );
+            \Wechat\Loader::config($options);
+            $wechat[$index] = \Wechat\Loader::get($type);
+        }
+        return $wechat[$index];
+    }*/
+
+
+
 }

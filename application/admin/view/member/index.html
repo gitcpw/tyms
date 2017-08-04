@@ -19,15 +19,22 @@
                                 <div class="form-group" style="margin-right: 20px">
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label" for="input-mobile">手机号码</label>
+                                    <label class="control-label">手机号码</label>
                                     <div class="input-group">
-                                        <input type="text" name="mobile" value="" placeholder="手机号码" id="input-mobile" class="form-control">
+                                        <input type="text" value="" placeholder="手机号码" id="search_key" class="form-control">
                                         <!--<span class="input-group-addon" id="basic-addon2"><i class="fa fa-search"></i></span>-->
                                     </div>
                                 </div>
                                  <div class="form-group">
-                                    <input type="hidden" name="order_by" value="user_id">
-                                	<input type="hidden" name="sort" value="desc">
+                                     <input type="hidden" name="order_by" value="user_id">
+                                     <input type="hidden" name="sort" value="desc">
+                                     <input type="hidden" name="mobile" value="" id="input-mobile" />
+
+                                     <input type="hidden" name="users_type" value="{:input('users_type')}">
+                                     <!--分销时查看下级人数都有哪些-->
+                                     <input type="hidden" name="first_leader" value="{:input('first_leader')}">
+                                     <input type="hidden" name="second_leader" value="{:input('second_leader')}">
+                                     <input type="hidden" name="third_leader" value="{:input('third_leader')}">
                                 	<button type="submit" onclick="ajax_get_table('search-form2',1)" id="button-filter search-order" class="btn btn-primary pull-right"><i class="fa fa-search"></i> 筛选</button>
                                  </div>
                             </form>
@@ -45,22 +52,42 @@
 <script>
     $(document).ready(function(){
         ajax_get_table('search-form2',1);
-
     });
 
     // ajax 抓取页面
     function ajax_get_table(tab,page){
-        var users_type = "<?php echo input('users_type');?>";
+        var search_key = $.trim($('#search_key').val());
+        if(search_key.length > 0){
+             if(checkMobile(search_key)){
+                $('#input-mobile').val(search_key);
+            }else{
+                layer.alert('请输入正确的手机号码', {icon: 2});
+            }
+        }
         cur_page = page; //当前页面 保存为全局变量
-            $.ajax({
-                type : "POST",
-                url:"/index.php/Admin/Member/ajaxindex/p/"+page+"/users_type/"+users_type, //+tab,
-                data : $('#'+tab).serialize(),// 你的formid
-                success: function(data){
-                    $("#ajax_return").html('');
-                    $("#ajax_return").append(data);
-                }
-            });
+        $.ajax({
+            type : "POST",
+            url:"/index.php/Admin/member/ajaxindex/p/"+page,//+tab,
+            data : $('#'+tab).serialize(),// 你的formid
+            success: function(data){
+                $("#ajax_return").html('');
+                $("#ajax_return").append(data);
+            }
+        });
+    }
+
+    /**
+     * 手机号码格式判断
+     * @param tel
+     * @returns {boolean}
+     */
+    function checkMobile(tel) {
+        var reg = /(^1[3|4|5|7|8][0-9]{9}$)/;
+        if (reg.test(tel)) {
+            return true;
+        }else{
+            return false;
+        };
     }
 
     // 点击排序

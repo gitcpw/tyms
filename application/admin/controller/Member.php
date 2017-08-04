@@ -15,7 +15,6 @@ use think\Db;
 
 class Member extends Admin {
     public  $users_type;
-    public  $level;
     /*
      * 初始化操作
      */
@@ -27,11 +26,9 @@ class Member extends Admin {
             $users_type[$val['id']]['name'] = $val['name'];
         }
         $this->users_type = $users_type;
-        $this->level = $users_type;
         // 订单 支付 发货状态
         $this->assign('data',$data);
         $this->assign('users_type',$this->users_type);
-        $this->assign('level',$this->level);
     }
 
     /*
@@ -50,7 +47,13 @@ class Member extends Admin {
         $condition = array();
         input('users_type') ? $condition['users_type'] = input('users_type') : false;
         input('mobile') ? $condition['mobile'] = input('mobile') : false;
+
+        input('first_leader') && ($condition['first_leader'] = input('first_leader')); // 查看一级下线人有哪些
+        input('second_leader') && ($condition['second_leader'] = input('second_leader')); // 查看二级下线人有哪些
+        input('third_leader') && ($condition['third_leader'] = input('third_leader')); // 查看三级下线人有哪些
+
         $sort_order = input('order_by').' '.input('sort');
+
         $model = M('users');
         $count = $model->where($condition)->count();
         $Page  = new AjaxPage($count,10);
@@ -59,6 +62,22 @@ class Member extends Admin {
             $Page->parameter[$key]   =   urlencode($val);
         }
         $userList = $model->where($condition)->order($sort_order)->limit($Page->firstRow.','.$Page->listRows)->select();
+        $user_id_arr = get_arr_column($userList, 'user_id');
+        if(!empty($user_id_arr))
+        {
+            $pre = config('database.prefix');
+            $first_leader = DB::query("select first_leader,count(1) as count  from {$pre}users where first_leader in(".  implode(',', $user_id_arr).")  group by first_leader");
+            $first_leader = convert_arr_key($first_leader,'first_leader');
+
+            $second_leader = DB::query("select second_leader,count(1) as count  from {$pre}users where second_leader in(".  implode(',', $user_id_arr).")  group by second_leader");
+            $second_leader = convert_arr_key($second_leader,'second_leader');
+
+            $third_leader = DB::query("select third_leader,count(1) as count  from {$pre}users where third_leader in(".  implode(',', $user_id_arr).")  group by third_leader");
+            $third_leader = convert_arr_key($third_leader,'third_leader');
+        }
+        $this->assign('first_leader',$first_leader);
+        $this->assign('second_leader',$second_leader);
+        $this->assign('third_leader',$third_leader);
         $show = $Page->show();
         $this->assign('userList',$userList);
         $this->assign('page',$show);// 赋值分页输出
@@ -67,7 +86,7 @@ class Member extends Admin {
     }
 
     /**
-     * 会员详细信息查看
+     * 会员详细信息查看、修改会员信息
      */
     public function detail(){
         if(IS_POST){
@@ -95,6 +114,9 @@ class Member extends Admin {
             $user = M('users')->where(array('user_id'=>$uid))->find();
             if(!$user)
                 exit($this->error('会员不存在'));
+            $user['first_lower'] = M('users')->where("first_leader = {$user['user_id']}")->count();
+            $user['second_lower'] = M('users')->where("second_leader = {$user['user_id']}")->count();
+            $user['third_lower'] = M('users')->where("third_leader = {$user['user_id']}")->count();
             $this->assign('user',$user);
             $this->setMeta("会员信息");
             return $this->fetch();
@@ -114,6 +136,117 @@ class Member extends Admin {
         }
     }
 
+
+    /**
+     * 会员类型
+     */
+    function users_type(){
+        $map = array();
+        $order = "sort asc,id asc";
+        $list  = M('users_type')->where($map)->order($order)->paginate(10);
+        $data = array(
+            'list' => $list,
+            'page' => $list->render(),
+        );
+        $this->assign($data);
+        $this->setMeta("会员类型");
+        return $this->fetch();
+    }
+
+
+
+    /**
+     * 增加会员类型
+     */
+    function add_users_type(){
+        $member = model('Member');
+        if (IS_POST) {
+            $data = input('post.');
+            if ($data) {
+                unset($data['id']);
+                $result = $member->save($data);
+                if ($result) {
+                    return $this->success("添加成功！", url('member/user_type'));
+                } else {
+                    return $this->error($member->getError());
+                }
+            } else {
+                return $this->error($member->getError());
+            }
+        } else {
+            $data = array(
+                'keyList' => $member->users_type_keyList,
+            );
+            $this->assign($data);
+            $this->setMeta("添加会员类型");
+            return $this->fetch('public/edit');
+        }
+    }
+
+    /**
+     * 修改会员类型
+     */
+    function edit_users_type(){
+        $member = model('Member');
+        $id   = input('id', '', 'trim,intval');
+        if (IS_POST) {
+            $data = input('post.');
+            if ($data) {
+                $result = $member->save($data, array('id' => $data['id']));
+                if ($result) {
+                    return $this->success("修改成功！", url('Member/user_type'));
+                } else {
+                    return $this->error("修改失败！");
+                }
+            } else {
+                return $this->error($member->getError());
+            }
+        } else {
+            $map  = array('id' => $id);
+            $info = db('users_type')->where($map)->find();
+            $data = array(
+                'keyList' => $member->users_type_keyList,
+                'info'    => $info,
+            );
+            $this->assign($data);
+            $this->setMeta("编辑会员类型");
+            return $this->fetch('public/edit');
+        }
+    }
+
+    /**
+     * 删除会员类型
+     */
+    function del_users_type(){
+        $id = $this->getArrayParam('id');
+        if (empty($id)) {
+            return $this->error('非法操作！');
+        }
+        $users_type = db('users_type');
+
+        $map    = array('id' => array('IN', $id));
+        $result = $users_type->where($map)->delete();
+        if ($result) {
+            return $this->success("删除成功！");
+        } else {
+            return $this->error("删除失败！");
+        }
+    }
+
+
+
+    /**
+     * 美容院详细信息
+     */
+    public function beautydetail(){
+        $uid = input('id');
+        $user = M('beauty_salon')->where(array('user_id'=>$uid))->find();
+        if(!$user)
+            exit($this->error('美容院不存在'));
+        $this->assign('user',$user);
+        $this->setMeta("美容院详细信息");
+        return $this->fetch();
+    }
 
 
     /**
@@ -163,11 +296,6 @@ class Member extends Admin {
     }
 
 
-
-
-
-
-
     /**
      * 搜索用户名
      */
@@ -202,8 +330,6 @@ class Member extends Admin {
           $list = M('users')->where("first_leader = 1")->select();
           return $this->fetch();
     }
-
-
 
     /**
      * 提现申请记录
@@ -244,6 +370,7 @@ class Member extends Admin {
         $this->setmeta('提现申请');
         return $this->fetch();
     }
+
     /**
      * 删除申请记录
      */
@@ -413,100 +540,6 @@ class Member extends Admin {
 
 
 
-    /**
-     * 会员类型
-     */
-    function users_type(){
-        $map = array();
-        $order = "sort asc,id asc";
-        $list  = M('users_type')->where($map)->order($order)->paginate(10);
-        $data = array(
-            'list' => $list,
-            'page' => $list->render(),
-        );
-        $this->assign($data);
-        $this->setMeta("会员类型");
-        return $this->fetch();
-    }
 
-
-
-    /**
-     * 增加会员类型
-     */
-    function add_users_type(){
-        $member = model('Member');
-        if (IS_POST) {
-            $data = input('post.');
-            if ($data) {
-                unset($data['id']);
-                $result = $member->save($data);
-                if ($result) {
-                    return $this->success("添加成功！", url('member/user_type'));
-                } else {
-                    return $this->error($member->getError());
-                }
-            } else {
-                return $this->error($member->getError());
-            }
-        } else {
-            $data = array(
-                'keyList' => $member->users_type_keyList,
-            );
-            $this->assign($data);
-            $this->setMeta("添加会员类型");
-            return $this->fetch('public/edit');
-        }
-    }
-
-    /**
-     * 修改会员类型
-     */
-    function edit_users_type(){
-        $member = model('Member');
-        $id   = input('id', '', 'trim,intval');
-        if (IS_POST) {
-            $data = input('post.');
-            if ($data) {
-                $result = $member->save($data, array('id' => $data['id']));
-                if ($result) {
-                    return $this->success("修改成功！", url('Member/user_type'));
-                } else {
-                    return $this->error("修改失败！");
-                }
-            } else {
-                return $this->error($member->getError());
-            }
-        } else {
-            $map  = array('id' => $id);
-            $info = db('users_type')->where($map)->find();
-            $data = array(
-                'keyList' => $member->users_type_keyList,
-                'info'    => $info,
-            );
-            $this->assign($data);
-            $this->setMeta("编辑会员类型");
-            return $this->fetch('public/edit');
-        }
-    }
-
-    /**
-     * 删除会员类型
-     */
-    function del_users_type(){
-        $id = $this->getArrayParam('id');
-        if (empty($id)) {
-            return $this->error('非法操作！');
-        }
-        $users_type = db('users_type');
-
-        $map    = array('id' => array('IN', $id));
-        $result = $users_type->where($map)->delete();
-        if ($result) {
-            return $this->success("删除成功！");
-        } else {
-            return $this->error("删除失败！");
-        }
-    }
 
 }
