@@ -20,18 +20,26 @@
                                     <td class="col-sm-2">用户昵称:</td>
                                     <td >{$user.nickname}</td>
                                     <td></td>
+                                    <td></td>
                                 </tr>
                                 <tr>
                                     <td>用户头像:</td>
                                     <td>
                                         {if $user.head_pic neq ''}<img src="{$user.head_pic}" alt="" width="100px;" height="100px;">{else} 无头像 {/if}
+
                                     </td>
-                                    <td></td>
+                                    {if $user.nickname neq ''}
+                                    <td>分享二维码</td>
+                                    <td>
+                                        {if $user.qr neq ''}<img src="{$user.qr}" alt="" width="100px;" height="100px;">{else} 无分享二维码 {/if}
+                                    </td>
+                                    {/if}
                                 </tr>
                                 {if $user.real_name neq ''}
                                 <tr>
                                     <td class="col-sm-2">真实姓名:</td>
                                     <td >{$user.real_name}</td>
+                                    <td></td>
                                     <td></td>
                                 </tr>
                                 {/if}
@@ -41,6 +49,7 @@
                                         {$user.reg_time|date='Y-m-d H:i:s',###}
                                     </td>
                                     <td></td>
+                                    <td></td>
                                 </tr>
                                 {if $user.present_weight neq ''}
                                 <tr>
@@ -48,6 +57,7 @@
                                     <td>
                                         {$user.present_weight}&nbsp;kg
                                     </td>
+                                    <td></td>
                                     <td></td>
                                 </tr>
                                 {/if}
@@ -58,6 +68,7 @@
                                         {$user.target_weight}&nbsp;kg
                                     </td>
                                     <td></td>
+                                    <td></td>
                                 </tr>
                                 {/if}
                                 {if $user.mobile neq ''}
@@ -67,6 +78,7 @@
                                         <input type="text" class="form-control" name="mobile" value="{$user.mobile}">
                                     </td>
                                     <td></td>
+                                    <td></td>
                                 </tr>
                                 {/if}
                                 {if $user.users_type neq '4'}
@@ -75,6 +87,7 @@
                                     <td >
                                         {$users_type[$user['users_type']]['name']}{if $user.users_type eq '2'}&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:url('beautydetail',array('id'=>$user['user_id']))}">美容院资料</a>{/if}
                                     </td>
+                                    <td></td>
                                     <td></td>
                                 </tr>
                                 {else}
@@ -89,6 +102,7 @@
                                         </select>
                                     </td>
                                     <td></td>
+                                    <td></td>
                                 </tr>
                                 {/if}
 
@@ -99,6 +113,7 @@
                                         <input name="is_lock" type="radio" value="0" {if condition="$user['is_lock'] eq 0"}checked{/if} >否
                                     </td>
                                     <td></td>
+                                    <td></td>
                                 </tr>
 
                                 <tr>
@@ -107,6 +122,7 @@
                                         <input name="is_distribut" type="radio" value="1" {if condition="$user['is_distribut'] eq 1"}checked{/if} >是
                                         <input name="is_distribut" type="radio" value="0" {if condition="$user['is_distribut'] eq 0"}checked{/if} >否
                                     </td>
+                                    <td></td>
                                     <td></td>
                                 </tr>
 

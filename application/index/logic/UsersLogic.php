@@ -34,64 +34,16 @@ class UsersLogic extends Model
         if(!$openid)
             return array('status'=>-1,'msg'=>'参数有误','result'=>'');
         //获取用户信息
-        if(isset($data['unionid'])){
-        	$map['unionid'] = $data['unionid'];
-        	$user = get_user_info($data['unionid'],4,$oauth);
+        $user = get_user_info($openid,3);
+        if($user){
+            $user['nickname'] = $map['nickname'] = $data['nickname'];
+            $user['head_pic'] = $map['head_pic'] = $data['head_pic'];
+            M('users')->where("openid", $openid)->update($map);
         }else{
-        	$user = get_user_info($openid,3,$oauth);
-        }  
-        if(!$user){
-            //账户不存在 注册一个
-            $map['password'] = '';
-            $map['openid'] = $openid;
-            $map['nickname'] = $data['nickname'];
-            $map['reg_time'] = time();
-            $map['oauth'] = $oauth;
-            $map['head_pic'] = $data['head_pic'];
-            $map['sex'] = empty($data['sex']) ? 0 : $data['sex'];
-            $map['token'] = md5(time().mt_rand(1,99999));
-            $map['first_leader'] = cookie('first_leader'); // 推荐人id
-            if($_GET['first_leader'])
-                $map['first_leader'] = $_GET['first_leader']; // 微信授权登录返回时 get 带着参数的            
-            // 如果找到他老爸还要找他爷爷他祖父等
-            if($map['first_leader'])
-            {
-                $first_leader = M('users')->where("user_id", $map['first_leader'])->find();
-                $map['second_leader'] = $first_leader['first_leader']; //  第一级推荐人
-                $map['third_leader'] = $first_leader['second_leader']; // 第二级推荐人
-                //他上线分销的下线人数要加1
-                M('users')->where(array('user_id' => $map['first_leader']))->setInc('underling_number');
-                M('users')->where(array('user_id' => $map['second_leader']))->setInc('underling_number');
-                M('users')->where(array('user_id' => $map['third_leader']))->setInc('underling_number');
-            }else
-			{
-				$map['first_leader'] = 0;
-			}                                    
-
-            // 成为分销商条件  
-            $distribut_condition = tpCache('distribut.condition'); 
-            if($distribut_condition == 0)  // 直接成为分销商, 每个人都可以做分销        
-                $map['is_distribut']  = 1;
-                        
-            $row_id = M('users')->insertGetId($map);
-//			// 会员注册送优惠券
-//			$coupon = M('coupon')->where("send_end_time > ".time()." and ((createnum - send_num) > 0 or createnum = 0) and type = 2")->select();
-//			foreach ($coupon as $key => $val)
-//			{
-//				// 送券
-//				M('coupon_list')->add(array('cid'=>$val['id'],'type'=>$val['type'],'uid'=>$row_id,'send_time'=>time()));
-//				M('Coupon')->where("id", $val['id'])->setInc('send_num'); // 优惠券领取数量加一
-//			}
-            $user = M('users')->where("user_id", $row_id)->find();
-			
-        }else{
-            $user['token'] = md5(time().mt_rand(1,999999999));
-            M('users')->where("user_id", $user['user_id'])->save(array('token'=>$user['token'],'last_login'=>time(),'push_id'=>$map['push_id']));
+            die("非法访问！");
         }
         return array('status'=>1,'msg'=>'登陆成功','result'=>$user);
     }
-
-    
 
      /*
       * 获取当前登录用户信息

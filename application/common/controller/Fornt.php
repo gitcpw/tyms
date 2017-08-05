@@ -8,7 +8,7 @@
 // +----------------------------------------------------------------------
 
 namespace app\common\controller;
-use think\Session;
+use app\index\logic\UsersLogic;
 
 class Fornt extends Base {
     public $session_id;
@@ -34,32 +34,25 @@ class Fornt extends Base {
             if (isset($user_temp['user_id']) && $user_temp['user_id']) {
                 $user = M('users')->where("user_id", $user_temp['user_id'])->find();
                 if (!$user) {
-                    $_SESSION['openid'] = 0;
+                    session('openid',0);
                     session('user', null);
                 }
             }
-            if (empty($_SESSION['openid'])) {
+            if (empty(session('openid'))) {
                 $this->weixin_config = M('wx_user')->find(); //获取微信配置
                 $this->assign('wechat_config', $this->weixin_config);
                 if(is_array($this->weixin_config) && $this->weixin_config['wait_access'] == 1){
                     $wxuser = $this->GetOpenid(); //授权获取openid以及微信用户信息
-                    session('subscribe', $wxuser['subscribe']);// 当前这个用户是否关注了微信公众号
-                    setcookie('subscribe',$wxuser['subscribe']);
                     //微信自动登录
                     $logic = new UsersLogic();
                     $data = $logic->thirdLogin($wxuser);
 
                     if($data['status'] == 1){
                         session('user',$data['result']);
-                        setcookie('user_id',$data['result']['user_id'],null,'/');
-                        setcookie('is_distribut',$data['result']['is_distribut'],null,'/');
-                        setcookie('uname',$data['result']['nickname'],null,'/');
                     }
                 }
             }
         }
-
-
 
 	}
 
@@ -90,8 +83,9 @@ class Fornt extends Base {
     // 网页授权登录获取 OpendId
     public function GetOpenid()
     {
-        if($_SESSION['openid'])
-            return $_SESSION['openid'];
+        $openid = session('openid');
+        if($openid)
+            return $openid;
         //通过code获得openid
         if (!isset($_GET['code'])){
             //触发微信返回code码
@@ -102,18 +96,14 @@ class Fornt extends Base {
             exit();
         } else {
             //上面获取到code后这里跳转回来
-            $code = $_GET['code'];
+            $code = input('code');
             $data = $this->getOpenidFromMp($code);//获取网页授权access_token和用户openid
+            //if(!isset($data['access_token'])) $this->redirect('index/index/index');
             $data2 = $this->GetUserInfo($data['access_token'],$data['openid']);//获取微信用户信息
+
             $data['nickname'] = empty($data2['nickname']) ? '微信用户' : trim($data2['nickname']);
-            $data['sex'] = $data2['sex'];
             $data['head_pic'] = $data2['headimgurl'];
-            $data['subscribe'] = $data2['subscribe'];
-            $_SESSION['openid'] = $data['openid'];
-            $data['oauth'] = 'weixin';
-            if(isset($data2['unionid'])){
-                $data['unionid'] = $data2['unionid'];
-            }
+            session('openid',$data['openid']);
             return $data;
         }
     }

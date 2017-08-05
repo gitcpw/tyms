@@ -242,7 +242,7 @@ class Member extends Admin {
         $uid = input('id');
         $user = M('beauty_salon')->where(array('user_id'=>$uid))->find();
         if(!$user)
-            exit($this->error('美容院不存在'));
+            exit($this->error('还未填写资料'));
         $this->assign('user',$user);
         $this->setMeta("美容院详细信息");
         return $this->fetch();

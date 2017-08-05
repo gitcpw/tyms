@@ -42,83 +42,83 @@ class Weixin extends Fornt {
      * */
     public function responseMsg()
     {
-        //get post data, May be due to the different environments
-        $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
-        //extract post data
-        if (empty($postStr)){
-            exit("");
-        }
-        /* libxml_disable_entity_loader is to prevent XML eXternal Entity Injection,
-           the best way is to check the validity of xml by yourself */
-        libxml_disable_entity_loader(true);
-        $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
-        $fromUsername = $postObj->FromUserName;  //用户的openid。
-        $toUsername = $postObj->ToUserName;      //商户的公众号原始id。
-        $keyword = trim($postObj->Content);      //回复的消息内容（换行：在content中能够换行，微信客户端就支持换行显示）
-        $time = time();
-
-        //还未关注过，扫码关注事件  $postObj->EventKey： 为空（扫公众号二维码） 不为空（场景id）
-        if($postObj->Event == 'subscribe'){
-            $scene_id  = str_replace('qrscene_','',$postObj->EventKey);
-            $scene_id  = empty($scene_id) ? 0 : $scene_id;
-            $parent_id = db("users")->where(array('user_id'=>$scene_id))->value('user_id');
-            $parent_id = empty($parent_id) ? 0 : $parent_id;
-
-            if($parent_id){
-                $map = array();
-                $is_exist = Db::query("select user_id from lx_users where openid='{$fromUsername}'");
-                if(!$is_exist){
-                    //会员不存在则添加一个
-                    $map['openid']    = (string)$fromUsername;
-                    $map['parent_id'] = $parent_id;
-                    $map['nickname']  = 'wx_'.date('YmdHis').mt_rand(100,999);
-                    $map['oauth']     = 'weixin';
-                    $map['reg_time']  = time();
-                }
+            //get post data, May be due to the different environments
+            $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
+            //extract post data
+            if (empty($postStr)){
+                exit("");
             }
-            $textTpl = "<xml>
-                <ToUserName><![CDATA[%s]]></ToUserName>
-                <FromUserName><![CDATA[%s]]></FromUserName>
-                <CreateTime>%s</CreateTime>
-                <MsgType><![CDATA[%s]]></MsgType>
-                <Content><![CDATA[%s]]></Content>
-                <FuncFlag>0</FuncFlag>
-                </xml>";
-            $contentStr = ' 尊敬的顾客您好，'."\n".'请点击信息结尾的“购买引导”，进入购买引导界面123123123'."\n".'<a href="http://www.baidu.com"> 购买引导 </a>';
-            $resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, 'text', $contentStr);
-            exit($resultStr);
+            /* libxml_disable_entity_loader is to prevent XML eXternal Entity Injection,
+               the best way is to check the validity of xml by yourself */
+            libxml_disable_entity_loader(true);
+            $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
+            $fromUsername = $postObj->FromUserName;  //用户的openid。
+            $toUsername = $postObj->ToUserName;      //商户的公众号原始id。
+            $keyword = trim($postObj->Content);      //回复的消息内容（换行：在content中能够换行，微信客户端就支持换行显示）
+            $time = time();
 
+            //还未关注过，扫码关注事件  $postObj->EventKey： 为空（扫公众号二维码） 不为空（场景id）
+            if($postObj->Event == 'subscribe'){
+                $scene_id  = str_replace('qrscene_','',$postObj->EventKey);
+                $scene_id  = empty($scene_id) ? 0 : $scene_id;
+                $parent_id = db("users")->where(array('user_id'=>$scene_id))->value('user_id');
+                $parent_id = empty($parent_id) ? 0 : $parent_id;
 
-
-           /* //公司员工关注公司公众号二维码
-            if(empty($postObj->EventKey)){
+                if($parent_id){
+                    $map = array();
+                    $is_exist = Db::query("select user_id from lx_users where openid='{$fromUsername}'");
+                    if(!$is_exist){
+                        //会员不存在则添加一个
+                        $map['openid']    = (string)$fromUsername;
+                        $map['parent_id'] = $parent_id;
+                        $map['nickname']  = 'wx_'.date('YmdHis').mt_rand(100,999);
+                        $map['oauth']     = 'weixin';
+                        $map['reg_time']  = time();
+                    }
+                }
                 $textTpl = "<xml>
-                        <ToUserName><![CDATA[%s]]></ToUserName>
-                        <FromUserName><![CDATA[%s]]></FromUserName>
-                        <CreateTime>%s</CreateTime>
-                        <MsgType><![CDATA[%s]]></MsgType>
-                        <Content><![CDATA[%s]]></Content>
-                        <FuncFlag>0</FuncFlag>
-                        </xml>";
+                    <ToUserName><![CDATA[%s]]></ToUserName>
+                    <FromUserName><![CDATA[%s]]></FromUserName>
+                    <CreateTime>%s</CreateTime>
+                    <MsgType><![CDATA[%s]]></MsgType>
+                    <Content><![CDATA[%s]]></Content>
+                    <FuncFlag>0</FuncFlag>
+                    </xml>";
                 $contentStr = ' 尊敬的顾客您好，'."\n".'请点击信息结尾的“购买引导”，进入购买引导界面123123123'."\n".'<a href="http://www.baidu.com"> 购买引导 </a>';
                 $resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, 'text', $contentStr);
                 exit($resultStr);
-            }*/
 
-            //点击关注之后，拉取微信用户的微信信息，同时获得分享用户的user_id(即scene_id场景id),查询分享用户的信息，处理微信用户即分享用户信息写入用户表
-            //关注之后确定上下级关系
-            /*$textTpl = "<xml>
-                        <ToUserName><![CDATA[%s]]></ToUserName>
-                        <FromUserName><![CDATA[%s]]></FromUserName>
-                        <CreateTime>%s</CreateTime>
-                        <MsgType><![CDATA[%s]]></MsgType>
-                        <Content><![CDATA[%s]]></Content>
-                        <FuncFlag>0</FuncFlag>
-                        </xml>";
-            $contentStr = ' 尊敬的顾客您好，'."\n".'请点击信息结尾的“购买引导”，进入购买引导界面'."$info\n".'<a href="http://www.baidu.com"> 购买引导 </a>';
-            $resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, 'text', $contentStr);
-            exit($resultStr);*/
-        }
+
+
+               /* //公司员工关注公司公众号二维码
+                if(empty($postObj->EventKey)){
+                    $textTpl = "<xml>
+                            <ToUserName><![CDATA[%s]]></ToUserName>
+                            <FromUserName><![CDATA[%s]]></FromUserName>
+                            <CreateTime>%s</CreateTime>
+                            <MsgType><![CDATA[%s]]></MsgType>
+                            <Content><![CDATA[%s]]></Content>
+                            <FuncFlag>0</FuncFlag>
+                            </xml>";
+                    $contentStr = ' 尊敬的顾客您好，'."\n".'请点击信息结尾的“购买引导”，进入购买引导界面123123123'."\n".'<a href="http://www.baidu.com"> 购买引导 </a>';
+                    $resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, 'text', $contentStr);
+                    exit($resultStr);
+                }*/
+
+                //点击关注之后，拉取微信用户的微信信息，同时获得分享用户的user_id(即scene_id场景id),查询分享用户的信息，处理微信用户即分享用户信息写入用户表
+                //关注之后确定上下级关系
+                /*$textTpl = "<xml>
+                            <ToUserName><![CDATA[%s]]></ToUserName>
+                            <FromUserName><![CDATA[%s]]></FromUserName>
+                            <CreateTime>%s</CreateTime>
+                            <MsgType><![CDATA[%s]]></MsgType>
+                            <Content><![CDATA[%s]]></Content>
+                            <FuncFlag>0</FuncFlag>
+                            </xml>";
+                $contentStr = ' 尊敬的顾客您好，'."\n".'请点击信息结尾的“购买引导”，进入购买引导界面'."$info\n".'<a href="http://www.baidu.com"> 购买引导 </a>';
+                $resultStr = sprintf($textTpl, $fromUsername, $toUsername, $time, 'text', $contentStr);
+                exit($resultStr);*/
+            }
         //已关注，扫码后的事件
         if($postObj->Event == 'SCAN'){
             //公司员工关注公司公众号二维码

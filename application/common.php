@@ -1255,3 +1255,28 @@ function ajaxReturn($data){
     header('Content-Type:application/json; charset=utf-8');
     exit(json_encode($data));
 }
+
+/**
+ * 获取用户信息
+ * @param $user_id_or_name  用户id 邮箱 手机 第三方id
+ * @param int $type  类型 0 user_id查找 1 邮箱查找 2 手机查找 3 第三方唯一标识查找
+ * @param string $oauth  第三方来源
+ * @return mixed
+ */
+function get_user_info($user_id_or_name,$type = 0){
+    $map = array();
+    if($type == 0)
+        $map['user_id'] = $user_id_or_name;
+    if($type == 1)
+        $map['email'] = $user_id_or_name;
+    if($type == 2)
+        $map['mobile'] = $user_id_or_name;
+    if($type == 3){
+        $map['openid'] = $user_id_or_name;
+    }
+    if($type == 4){
+        $map['unionid'] = $user_id_or_name;
+    }
+    $user = M('users')->where($map)->find();
+    return $user;
+}

@@ -39,7 +39,7 @@ class WechatLogic
         if (!$msg) {
             exit($wechatObj->getError());
         }
-        
+
         if ($msg['MsgType'] == 'event') {
             if ($msg['Event'] == 'subscribe') {
                 $ret = $this->handleSubscribeEvent($msg);//关注事件
@@ -52,7 +52,7 @@ class WechatLogic
         } elseif ($msg['MsgType'] == 'text') {
             $this->handleTextMsg($msg);//用户输入文本
         }
-        
+
         $this->replyDefault($msg);
     }
     
@@ -63,7 +63,9 @@ class WechatLogic
      */
     private function handleSubscribeEvent($msg)
     {
-        $openid = $msg['FromUserName'];
+        $openid = $msg['FromUserName'];//用户的openid。
+        $toUsername = $msg['ToUserName'];      //商户的公众号原始id。
+        $time = time();
 
         if (!$openid) {
              return ['status' => -1, 'msg' => "openid无效"];
@@ -72,28 +74,34 @@ class WechatLogic
         if ($msg['MsgType'] != 'event' || $msg['Event'] != 'subscribe') {
             return ['status' => 1, 'msg' => "不是关注事件"];
         }
-        
-        $wechatObj = $this->wechatObj;
+
         if (!($user = M('users')->where('openid', $openid)->find())) {
-            if (false === ($wxdata = $wechatObj->getFanInfo($openid))) {
-                return ['status' => -1, 'msg' => $wechatObj->getError()];
-            }
             $user = [
                 'openid'    => $openid,
-                'head_pic'  => $wxdata['headimgurl'],
-                'nickname'  => $wxdata['nickname'] ?: '微信用户',
                 'reg_time'  => time(),
                 'token'     => md5(time().mt_rand(1,99999)),
                 'is_distribut' => 0,
             ];
-            isset($wxdata['unionid']) && $user['unionid'] = $wxdata['unionid'];
-            
+
             // 由场景值获取分销一级id
             if (!empty($msg['EventKey'])) {
                 $user['first_leader'] = substr($msg['EventKey'], strlen('qrscene_'));
                 if ($user['first_leader']) {
                     $first_leader = M('users')->where('user_id', $user['first_leader'])->find();
                     if ($first_leader) {
+                        switch ($first_leader['users_type']){
+                            case 1:
+                                $user['users_type'] = 2;
+                                break;
+                            case 2:
+                                $user['users_type'] = 3;
+                                break;
+                            case 3:
+                                $user['users_type'] = 4;
+                                break;
+                            default:
+                                $user['users_type'] = 4;
+                        }
                         $user['second_leader'] = $first_leader['first_leader']; //  第一级推荐人
                         $user['third_leader'] = $first_leader['second_leader']; // 第二级推荐人
                         //他上线分销的下线人数要加1
@@ -105,16 +113,51 @@ class WechatLogic
                     $user['first_leader'] = 0;
                 }
             }
-            
-            $ret = M('users')->insert($user);
-            if (!$ret) {
+
+            $user_id = M('users')->insertGetId($user);
+            if (!$user_id) {
                 return ['status' => -1, 'msg' => "保存数据出错"];
             }
+
+            $this->create_qrcode($user_id);
+
         }
-        $wechatObj->sendMsg($openid, "欢迎来到TPshop商城! 商城入口：".$_SERVER['HTTP_HOST'].'/index');
-        exit;
+
+        $textTpl = "<xml>
+                    <ToUserName><![CDATA[%s]]></ToUserName>
+                    <FromUserName><![CDATA[%s]]></FromUserName>
+                    <CreateTime>%s</CreateTime>
+                    <MsgType><![CDATA[%s]]></MsgType>
+                    <Content><![CDATA[%s]]></Content>
+                    <FuncFlag>0</FuncFlag>
+                    </xml>";
+        $contentStr = '<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx607a95578a618a8b&redirect_uri=http://tianyimeishan.yizukeji.cn&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect"> 购买引导 </a>';
+        $resultStr = sprintf($textTpl, $openid, $toUsername, $time, 'text', $contentStr);
+        exit($resultStr);
     }
-    
+
+
+    /**
+     * 生成二维码
+     */
+    private function create_qrcode($user_id)
+    {
+        $wxinfo = $this->wx_user;
+        $config['token'] = $wxinfo['w_token'];
+        $config['appid'] = $wxinfo['appid'];
+        $config['appsecret'] = $wxinfo['appsecret'];
+        $weObj = new \data\Wechat($config);
+        // 获取二维码ticket
+        $ticket = $weObj->getQRCode($user_id, 1, 1800);
+        if (empty($ticket)) {
+            exit;
+        }
+        // 二维码地址
+        $qrcode_url = $weObj->getQRUrl($ticket['ticket']);
+        db('users')->where('user_id = ' . $user_id)->update(array('qr'=>$qrcode_url));
+    }
+
+
     /**
      * 处理点击事件
      * @param type $msg
@@ -132,6 +175,11 @@ class WechatLogic
         //其他处理
         $this->handleTextMsg($msg);
     }
+
+
+
+
+
     
     /**
      * 回复我的二维码
@@ -141,7 +189,7 @@ class WechatLogic
         $fromUsername = $msg['FromUserName'];
         $toUsername   = $msg['ToUserName'];
         $wechatObj = $this->wechatObj;
-        
+
         if (!($user = M('users')->where('openid', $fromUsername)->find())) {
             $content = '请进入商城: '.SITE_URL.' , 再获取二维码哦';
             $reply = $wechatObj->createReplyMsgOfText($toUsername, $fromUsername, $content);
@@ -313,25 +361,25 @@ class WechatLogic
 
         vendor('phpqrcode.phpqrcode');
         vendor('topthink.think-image.src.Image');
-        
+
         $qr_code_path = './public/upload/qr_code/';
         !file_exists($qr_code_path) && mkdir($qr_code_path, 0777, true);
 
         /* 生成二维码 */
         $qr_code_file = $qr_code_path.time().rand(1, 10000).'.png';
         \QRcode::png($qrText, $qr_code_file, QR_ECLEVEL_M);
-        
+
         $QR = Image::open($qr_code_file);
         $QR_width = $QR->width();
         $QR_height = $QR->height();
 
-        
+
         /* 添加背景图 */
         if ($backImg && is_file($backImg)) {
             $back =Image::open($backImg);
             $backWidth = $back->width();
             $backHeight = $back->height();
-            
+
             //生成的图片大小以540*960为准
             if ($backWidth <= $backHeight) {
                 $refWidth = 540;
@@ -358,7 +406,7 @@ class WechatLogic
                     $backHeight = $backHeight * $backRatio;
                 }
             }
-            
+
             $shortSize = $backWidth > $backHeight ? $backHeight : $backWidth;
             $QR_width = $shortSize / 2;
             $QR_height = $QR_width;
@@ -368,40 +416,7 @@ class WechatLogic
             $QR = $back;
         }
         
-        /* 添加头像 */
-        if ($headPic) {
-            //如果是网络头像
-            if (strpos($headPic, 'http') === 0) {
-                //下载头像
-                $ch = curl_init();
-                curl_setopt($ch,CURLOPT_URL, $headPic); 
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-                $file_content = curl_exec($ch);
-                curl_close($ch);
-                //保存头像
-                if ($file_content) {
-                    $head_pic_path = $qr_code_path.time().rand(1, 10000).'.png';
-                    file_put_contents($head_pic_path, $file_content);
-                    $headPic = $head_pic_path;
-                }
-            }
-            //如果是本地头像
-            if (file_exists($headPic)) {
-                $logo = Image::open($headPic);
-                $logo_width = $logo->height();
-                $logo_height = $logo->width();
-                $logo_qr_width = $QR_width / 5;
-                $scale = $logo_width / $logo_qr_width;
-                $logo_qr_height = $logo_height / $scale;
-                $logo_file = $qr_code_path.time().rand(1, 10000);
-                $logo->thumb($logo_qr_width, $logo_qr_height)->save($logo_file, null, 100);
-                $QR = $QR->water($logo_file, \think\Image::WATER_CENTER);     
-                unlink($logo_file);
-            }
-            if ($head_pic_path) {
-                unlink($head_pic_path);
-            }
-        }
+
         
         //加上有效时间
         $valid_date = date('Y.m.d', strtotime('+30 days'));

@@ -21,17 +21,17 @@ class WechatUtil
     private $errorMsg = '';  //错误字符串信息
     private $debug = false;   //是否开启调试
     private $tagsMap = null; //粉丝标签映射
-    
+
     public function __construct($config)
     {
         $this->config = $config;
     }
-    
-    public function getError() 
+
+    public function getError()
     {
         return $this->errorMsg;
     }
-    
+
     private function setError($error)
     {
         if (!is_string($error)) {
@@ -39,12 +39,12 @@ class WechatUtil
         }
         $this->errorMsg = $error;
     }
-    
+
     public function isDedug()
     {
         return $this->debug;
     }
-    
+
     public function logDebugFile($content)
     {
         if (!$this->debug) {
@@ -55,13 +55,13 @@ class WechatUtil
         }
         file_put_contents("./wechat.log", date('Y-m-d H:i:s').' -- '.$content."\n", FILE_APPEND);
     }
-    
+
     /**
      * http请求
      * @param type $url
      * @param type $method
      * @param type $fields
-     * @return 
+     * @return
      */
     private function httpRequest($url, $method = 'GET', $fields = [])
     {
@@ -121,7 +121,7 @@ class WechatUtil
         }
         return false;
     }
-    
+
     /**
      * 专门用来检查微信接口返回值的。
      */
@@ -175,13 +175,13 @@ class WechatUtil
             $this->setError("公众号不存在！");
             return false;
         }
-            
+
         //判断是否过了缓存期
         $expire_time = $wechat['web_expires'];
         if($expire_time > time()){
            return $wechat['web_access_token'];
         }
-        
+
         $appid = $wechat['appid'];
         $appsecret = $wechat['appsecret'];
         $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={$appid}&secret={$appsecret}";
@@ -189,15 +189,15 @@ class WechatUtil
         if ($return === false) {
             return false;
         }
-        
+
         $web_expires = time() + 7000; // 提前200秒过期
         M('wx_user')->where('id', $wechat['id'])->save(['web_access_token'=>$return['access_token'], 'web_expires'=>$web_expires]);
         $this->config['web_access_token'] = $return['access_token'];
         $this->config['web_expires'] = $web_expires;
-        
+
         return $return['access_token'];
     }
-    
+
     /**
      * 获取粉丝详细信息
      * @param type $openid
@@ -212,13 +212,13 @@ class WechatUtil
                 return false;
             }
         }
-        
+
         $url ="https://api.weixin.qq.com/cgi-bin/user/info?access_token={$access_token}&openid={$openid}&lang=zh_CN";
         $return = $this->requestAndCheck($url, 'GET');
         if ($return === false) {
             return false;
         }
-        
+
         /* $wxdata[]元素：
          * subscribe	用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。
          * openid	用户的标识，对当前公众号唯一
@@ -247,11 +247,11 @@ class WechatUtil
         if ($sex_id == 1) {
             return '男';
         } else if ($sex_id == 2) {
-            return '女';   
+            return '女';
         }
         return '未知';
     }
-    
+
     /**
      * 获取粉丝标签
      * @return type
@@ -262,17 +262,17 @@ class WechatUtil
         if (!$access_token) {
             return false;
         }
-        
+
         $url = "https://api.weixin.qq.com/cgi-bin/tags/get?access_token={$access_token}";
         $return = $this->requestAndCheck($url, 'GET');
         if ($return === false) {
             return false;
         }
-        
+
         //$wxdata数据样例：{"tags":[{"id":1,"name":"每天一罐可乐星人","count":0/*此标签下粉丝数*/}, ...]}
         return $return['tags'];
     }
-    
+
     /**
      * 获取所有用户标签
      * @return array
@@ -282,19 +282,19 @@ class WechatUtil
         if ($this->tagsMap !== null) {
             return $this->tagsMap;
         }
-        
+
         $user_tags = $this->getAllFanTags();
         if ($user_tags === false) {
             return false;
         }
-        
+
         $this->tagsMap = [];
         foreach ($user_tags as $tag) {
             $this->tagsMap[$tag['id']] = $this->tagsMap[$tag['name']];
         }
         return $this->tagsMap;
     }
-    
+
     /**
      * 获取粉丝标签名
      * @param string $tagid_list
@@ -310,14 +310,14 @@ class WechatUtil
             }
             $this->tagsMap = $tagsMap;
         }
-        
+
         $tag_names = [];
         foreach ($tagid_list as $tag) {
             $tag_names[] = $this->tagsMap[$tag];
         }
         return $tag_names;
     }
- 
+
     /**
      * 获取粉丝id列表
      * @param string $next_openid 下一次拉取的起始id的前一个id
@@ -329,13 +329,13 @@ class WechatUtil
         if (!$access_token) {
             return false;
         }
-        
+
         $url ="https://api.weixin.qq.com/cgi-bin/user/get?access_token={$access_token}&next_openid={$next_openid}";//重头开始拉取，一次最多拉取10000个
         $return = $this->requestAndCheck($url, 'GET');
         if ($return === false) {
             return false;
         }
-        
+
         //$list[]元素：
         //total	关注该公众账号的总用户数
         //count	拉取的OPENID个数，最大值为10000
@@ -344,7 +344,7 @@ class WechatUtil
         //样本数据：{"total":2,"count":2,"data":{"openid":["OPENID1","OPENID2"]},"next_openid":"NEXT_OPENID"}
         return $return;
     }
-    
+
     /**
      * 设置粉丝备注
      */
@@ -354,17 +354,17 @@ class WechatUtil
         if (!$access_token) {
             return false;
         }
-        
+
         $post = json_encode(['openid '=> $openid, 'remark' => $remark], JSON_UNESCAPED_UNICODE);
         $url ="https://api.weixin.qq.com/cgi-bin/user/info/updateremark?access_token={$access_token}";
         $return = $this->requestAndCheck($url, 'POST', $post);
         if ($return === false) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     /*
      * 向一个粉丝发送消息
      */
@@ -374,22 +374,22 @@ class WechatUtil
         if (!$access_token) {
             return false;
         }
-        
-        $url ="https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token={$access_token}";        
+
+        $url ="https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token={$access_token}";
         $post_arr = [
                         'touser' => $openid,
                         'msgtype' => 'text',
                         'text' => ['content'=>$content]
                     ];
-        $post = json_encode($post_arr, JSON_UNESCAPED_UNICODE);        
+        $post = json_encode($post_arr, JSON_UNESCAPED_UNICODE);
         $return = $this->requestAndCheck($url, 'POST', $post);
         if ($return === false) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     /**
      * 指定一部分人群发消息
      * @param array or string $openids
@@ -402,22 +402,22 @@ class WechatUtil
         if (!$access_token) {
             return false;
         }
-        
+
         $url ="https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token={$access_token}";
         $post_arr = [
                         'touser' => $openids,
                         'msgtype' => 'text',
                         'text' => ['content'=>$content]
                     ];
-        $post = json_encode($post_arr, JSON_UNESCAPED_UNICODE);        
+        $post = json_encode($post_arr, JSON_UNESCAPED_UNICODE);
         $return = $this->requestAndCheck($url, 'POST', $post);
         if ($return === false) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     /**
      * 给所有粉丝发消息
      * @param string $content
@@ -430,21 +430,21 @@ class WechatUtil
             return false;
         }
 
-        $url ="https://api.weixin.qq.com/cgi-bin/message/mass/sendall?access_token={$access_token}";        
+        $url ="https://api.weixin.qq.com/cgi-bin/message/mass/sendall?access_token={$access_token}";
         $post_arr = [
                         'filter' => ['is_to_all'=>true, 'tag_id'=>0],
                         'msgtype' => 'text',
                         'text' => ['content'=>$content]
                     ];
-        $post = json_encode($post_arr, JSON_UNESCAPED_UNICODE);        
+        $post = json_encode($post_arr, JSON_UNESCAPED_UNICODE);
         $return = $this->requestAndCheck($url, 'POST', $post);
         if ($return === false) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     /**
      * 发送消息，自动识别id数
      * @param string or array $openids
@@ -459,19 +459,19 @@ class WechatUtil
         if (is_string($openids)) {
             $openids = explode(',', $openids);
         }
-        
+
         if (count($openids) > 1) {
             $result = $this->sendMsgToMass($openids, $content);
         } else {
             $result = $this->sendMsgToOne($openids[0], $content);
-        }        
+        }
         if ($result === false) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     /**
      * 新增媒质永久素材
      * 文档：https://mp.weixin.qq.com/wiki?action=doc&id=mp1444738729
@@ -486,8 +486,8 @@ class WechatUtil
         if (!$access_token) {
             return false;
         }
-        
-        $post_arr = ['media' => '@'.$path];  
+
+        $post_arr = ['media' => '@'.$path];
         if ($type == 'video') {
             $description = [
                 'title' => $param['title'],
@@ -495,16 +495,16 @@ class WechatUtil
             ];
             $post_arr['description'] = json_encode($description, JSON_UNESCAPED_UNICODE);
         }
-        
+
         $url ="https://api.weixin.qq.com/cgi-bin/material/add_material?access_token={$access_token}&type={$type}";
         $return = $this->requestAndCheck($url, 'POST', $post_arr);
         if ($return === false) {
             return false;
         }
-        
+
         return $return;
     }
-    
+
     /**
      * 上传图文素材。 说明：news里面的图片只能用news_image，封面用image
      * 文档：https://mp.weixin.qq.com/wiki?action=doc&id=mp1444738729
@@ -529,8 +529,8 @@ class WechatUtil
         if (!$access_token) {
             return false;
         }
-        
-        $post_arr = ["articles"=>$articles];  
+
+        $post_arr = ["articles"=>$articles];
         $post = json_encode($post_arr, JSON_UNESCAPED_UNICODE);
 
         $url ="https://api.weixin.qq.com/cgi-bin/material/add_news?access_token={$access_token}";
@@ -538,10 +538,10 @@ class WechatUtil
         if ($return === false) {
             return false;
         }
-        
+
         return $return['media_id'];
     }
-    
+
     /**
      * 上传图文消息中的图片
      * 文档：https://mp.weixin.qq.com/wiki?action=doc&id=mp1444738729
@@ -554,8 +554,8 @@ class WechatUtil
         if (!$access_token) {
             return false;
         }
-        
-        $post_arr = ["media"=>'@'.$path];  
+
+        $post_arr = ["media"=>'@'.$path];
         $url ="https://api.weixin.qq.com/cgi-bin/media/uploadimg?access_token={$access_token}";
         $return = $this->requestAndCheck($url, 'POST', $post_arr);
         if ($return === false) {
@@ -577,21 +577,21 @@ class WechatUtil
         if (!($access_token = $this->getAccessToken())) {
             return false;
         }
-        
-        $post_arr = ['media' => '@'.$path];  
+
+        $post_arr = ['media' => '@'.$path];
         $url ="https://api.weixin.qq.com/cgi-bin/media/upload?access_token={$access_token}&type={$type}";
         $return = $this->requestAndCheck($url, 'POST', $post_arr);
         if ($return === false) {
             return false;
         }
-        
+
         return $return;
     }
-    
+
     /**
      * 更新一篇图文
      * 文档：https://mp.weixin.qq.com/wiki?action=doc&id=mp1444738732&t=0.5904919423628598
-     * @param string $mediaId MEDIA_ID 
+     * @param string $mediaId MEDIA_ID
      * @param array $article INDEX
        {
             "title": TITLE,
@@ -611,7 +611,7 @@ class WechatUtil
         if (!$access_token) {
             return false;
         }
-        
+
         $post_arr = [
             'media_id' => $mediaId,
             'index' => $index,
@@ -624,10 +624,10 @@ class WechatUtil
         if ($return === false) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     /**
      * 获取图文素材
      * @param type $mediaId
@@ -639,7 +639,7 @@ class WechatUtil
         if ($wxdata === false) {
             return false;
         }
-        
+
 //    [
 //        [
 //        title 图文消息的标题
@@ -655,7 +655,7 @@ class WechatUtil
 //     ]
         return $wxdata['news_item'];
     }
-    
+
     /**
      * 获取媒质素材
      * @param type $mediaId
@@ -672,7 +672,7 @@ class WechatUtil
         if (!$access_token) {
             return false;
         }
-        
+
         $post_arr = ['media_id' => $mediaId];
         $post = json_encode($post_arr, JSON_UNESCAPED_UNICODE);
 
@@ -683,7 +683,7 @@ class WechatUtil
         }
         return true;
     }
-    
+
     /**
      * 删除素材，包括图文
      * @param type $mediaId
@@ -695,7 +695,7 @@ class WechatUtil
         if (!$access_token) {
             return false;
         }
-        
+
         $post_arr = ['media_id' => $mediaId];
         $post = json_encode($post_arr, JSON_UNESCAPED_UNICODE);
 
@@ -707,7 +707,7 @@ class WechatUtil
 
         return true;
     }
-    
+
     /**
      * 获取素材总数
      * @return array
@@ -722,7 +722,7 @@ class WechatUtil
         if (!$access_token) {
             return false;
         }
-        
+
         $url ="https://api.weixin.qq.com/cgi-bin/material/get_materialcount?access_token={$access_token}";
         $return = $this->requestAndCheck($url, 'GET');
         if ($return === false) {
@@ -731,9 +731,9 @@ class WechatUtil
 
         return $return;
     }
-    
+
     /**
-     * 获取素材列表 
+     * 获取素材列表
      * @param string $type 素材的类型，图片（image）、视频（video）、语音 （voice）、图文（news）
      * @param int $offset 从全部素材的该偏移位置开始返回，0表示从第一个素材 返回
      * @param int $count 返回素材的数量，取值在1到20之间
@@ -745,14 +745,14 @@ class WechatUtil
         if (!$access_token) {
             return false;
         }
-        
+
         $post_arr = [
             'type' => $type,
             'offset' => $offset,
             'count' => $count
         ];
         $post = json_encode($post_arr, JSON_UNESCAPED_UNICODE);
-        
+
         $url ="https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token={$access_token}";
         $return = $this->requestAndCheck($url, 'POST', $post);
         if ($return === false) {
@@ -784,7 +784,7 @@ class WechatUtil
         //   //可能有多个图文消息item结构
         // ]
         //}
-        
+
         /*其他类型*/
         //{
         //  "total_count": TOTAL_COUNT,
@@ -800,7 +800,7 @@ class WechatUtil
         //}
         return $return;
     }
-    
+
     /**
      * 创建临时二维码
      * @param int $expire 过期时间，单位秒，最大30天，即2592000秒
@@ -813,7 +813,7 @@ class WechatUtil
         if (!$access_token) {
             return false;
         }
-        
+
         $post_arr = [
             'expire_seconds' => $expire,
             'action_name'    => 'QR_SCENE',
@@ -824,23 +824,23 @@ class WechatUtil
             ]
         ];
         $post = json_encode($post_arr, JSON_UNESCAPED_UNICODE);
-        
+
         $url ="https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token={$access_token}";
         $return = $this->requestAndCheck($url, 'POST', $post);
         if ($return === false) {
             return false;
         }
-        
+
 //        返回数据格式：
 //        {
 //            "ticket":"gQH47joAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2taZ2Z3TVRtNzJXV1Brb3ZhYmJJAAIEZ23sUwMEmm3sUw==",
 //            "expire_seconds":60,
 //            "url":"http:\/\/weixin.qq.com\/q\/kZgfwMTm72WWPkovabbI"
 //        }
-        
+
         return $return;
     }
-    
+
     /**
      * 推送消息处理接口
      * @return type
@@ -851,7 +851,7 @@ class WechatUtil
         if (!$content) {
             $content = file_get_contents("php://input");
         }
-        
+
         $this->debug && $this->logDebugFile($content);
 
         $message = \app\common\util\XML::parse($content);
@@ -859,10 +859,10 @@ class WechatUtil
             $this->setError('推送消息为空！');
             return false;
         }
-        
+
         return $message;
     }
-    
+
     /**
      * 创建文本回复消息
      * @param type $fromUser
@@ -873,7 +873,7 @@ class WechatUtil
     public function createReplyMsgOfText($fromUser, $toUser, $text)
     {
         $time = time();
-        $template = 
+        $template =
             "<xml>
             <ToUserName><![CDATA[$toUser]]></ToUserName>
             <FromUserName><![CDATA[$fromUser]]></FromUserName>
@@ -881,9 +881,9 @@ class WechatUtil
             <MsgType><![CDATA[text]]></MsgType>
             <Content><![CDATA[$text]]></Content>
             </xml>";
-        return $template;    
+        return $template;
     }
-    
+
     /**
      * 创建图片回复消息
      * @param type $fromUser
@@ -894,7 +894,7 @@ class WechatUtil
     public function createReplyMsgOfImage($fromUser, $toUser, $mediaId)
     {
         $time = time();
-        $template = 
+        $template =
             "<xml>
             <ToUserName><![CDATA[$toUser]]></ToUserName>
             <FromUserName><![CDATA[$fromUser]]></FromUserName>
@@ -904,9 +904,9 @@ class WechatUtil
             <MediaId><![CDATA[$mediaId]]></MediaId>
             </Image>
             </xml>";
-        return $template;    
+        return $template;
     }
-    
+
     /**
      * 创建图文回复消息
      * @param type $fromUser
@@ -921,10 +921,10 @@ class WechatUtil
         if (!$num) {
             return '';
         }
-        
+
         $itemTpl = '';
         foreach ($articles as $item) {
-            $itemTpl .= 
+            $itemTpl .=
             "<item>
             <Title><![CDATA[{$item['title']}]]></Title> 
             <Description><![CDATA[{$item['description']}]]></Description>
@@ -932,9 +932,9 @@ class WechatUtil
             <Url><![CDATA[{$item['url']}]]></Url>
             </item>";
         }
-        
+
         $time = time();
-        $template = 
+        $template =
             "<xml>
             <ToUserName><![CDATA[$toUser]]></ToUserName>
             <FromUserName><![CDATA[$fromUser]]></FromUserName>
