@@ -14,12 +14,14 @@
                     <table class="table table-bordered">
                         <tbody>
                         <tr>
-                            <td>订单id:</td>
-                            <td>订单号:</td>
-                            <td>订单金额:</td>
-                            <td>订单 状态:</td>
-                            <td>下单时间:</td>
-                            <td>支付时间:</td>
+                            <td>订单id</td>
+                            <td>订单号</td>
+                            <td>订单金额</td>
+                            <td>订单 状态</td>
+                            <td>下单时间</td>
+                            <td>支付时间</td>
+                            <td>商品名称</td>
+                            <td>商品价格</td>
                         </tr>
                         <tr>
                             <td>{$order.order_id}</td>
@@ -33,6 +35,36 @@
                                 未支付
                              {/if}
                             </td>
+                            <td>{$order.goods_name}</td>
+                            <td>{$order.goods_price}</td>
+                        </tr>
+                        <tr>
+                            <td>公司员工推荐人</td>
+                            <td>佣金</td>
+                            <td>美容院推荐人</td>
+                            <td>佣金</td>
+                            <td>美容师推荐人</td>
+                            <td>佣金</td>
+                            {if $order.customer_id gt 0}
+                            <td>顾客推荐人</td>
+                            {/if}
+                            {if $order.customer_id_commission gt 0}
+                            <td>佣金</td>
+                            {/if}
+                        </tr>
+                        <tr>
+                            <td><a href="{:url('member/detail',array('id'=>$order.staff_id))}">{:get_nickname($order.staff_id)}</a></td>
+                            <td>{$order.staff_id_commission}</td>
+                            <td><a href="{:url('member/detail',array('id'=>$order.beauty_id))}">{:get_nickname($order.beauty_id)}</a></td>
+                            <td>{$order['beauty_id_commission']}</td>
+                            <td><a href="{:url('member/detail',array('id'=>$order.beautician_id))}">{:get_nickname($order.beautician_id)}</a></td>
+                            <td>{$order.beautician_id_commission}</td>
+                            {if $order.customer_id gt 0}
+                                <td><a href="{:url('member/detail',array('id'=>$order.customer_id))}">{:get_nickname($order.customer_id)}</a></td>
+                            {/if}
+                            {if $order.customer_id_commission gt 0}
+                                <td>{$order.customer_id_commission}</td>
+                            {/if}
                         </tr>
 
                         </tbody>
@@ -49,28 +81,21 @@
                     <table class="table table-bordered">
                         <tbody>
                         <tr>
-                            <td>微信头像:</td>
-                            <td>微信昵称:</td>
-                            <td>真实姓名:</td>
-                            <td>电话:</td>
-                            <td>目前体重:</td>
-                            <td>目标体重:</td>
-                            <td>推荐人:</td>
-                            <td>上级:</td>
+                            <td width="120px">微信头像</td>
+                            <td>微信昵称</td>
+                            <td>真实姓名</td>
+                            <td>手机号</td>
+                            <td>目前体重</td>
+                            <td>目标体重</td>
                         </tr>
                         <tr>
-                            <td>{$order.order_sn}</td>
-                            <td><a href="#" target="_blank">{$order.user_id}</a></td>
-                            <td>{$order.order_price}</td>
-                            <td>{$order.add_time|date='Y-m-d H:i',###}</td>
-                            <td>{if condition="$order.pay_time neq 0"}
-                                {$order.pay_time|date='Y-m-d H:i',###}
-                                {else/}
-                                未支付
-                                {/if}
-                            </td>
+                            <td><img src="{$userinfo.head_pic}" alt="" width="120px"></td>
+                            <td><a href="{:url('member/detail',array('id'=>$order.user_id))}" target="_blank">{:get_nickname($order.user_id)}</a></td>
+                            <td>{$userinfo.real_name|default='无'}</td>
+                            <td>{$userinfo.mobile|default='无'}</td>
+                            <td>{$userinfo.present_weight|default='无'}</td>
+                            <td>{$userinfo.target_weight|default='无'}</td>
                         </tr>
-
                         </tbody>
                     </table>
                 </div>

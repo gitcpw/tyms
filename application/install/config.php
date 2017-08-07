@@ -5,7 +5,7 @@ return array(
 		'__ADDONS__'           => BASE_PATH . '/addons',
 		'__PUBLIC__'           => BASE_PATH . '/public',
 		'__STATIC__'           => BASE_PATH . '/application/admin/static',
-		'__IMG__'              => BASE_PATH . '/application/admin/static/images',
+		'__IMG__'              => BASE_PATH . '/application/admin/static/img',
 		'__CSS__'              => BASE_PATH . '/application/admin/static/css',
 		'__JS__'               => BASE_PATH . '/application/admin/static/js',
 		'__COMPANY__'          => '四川蚁族科技有限公司',

@@ -20,7 +20,7 @@ return array(
 		'__ADDONS__' => BASE_PATH . '/addons',
 		'__PUBLIC__' => BASE_PATH . '/public',
 		'__STATIC__' => BASE_PATH . '/application/admin/static',
-		'__IMG__'    => BASE_PATH . '/application/admin/static/images',
+		'__IMG__'    => BASE_PATH . '/application/admin/static/img',
 		'__CSS__'    => BASE_PATH . '/application/admin/static/css',
 		'__JS__'     => BASE_PATH . '/application/admin/static/js',
 	),
@@ -33,7 +33,8 @@ return array(
 
     'ORDER_STATUS' => array(
         0 => '未完成',
-        1 => '已完成'
+        1 => '未核销',
+        2 => '已核销'
     ),
 
     'PAY_STATUS' => array(

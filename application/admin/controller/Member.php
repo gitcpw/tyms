@@ -48,10 +48,10 @@ class Member extends Admin {
         input('users_type') ? $condition['users_type'] = input('users_type') : false;
         input('mobile') ? $condition['mobile'] = input('mobile') : false;
 
-        input('first_leader') && ($condition['first_leader'] = input('first_leader')); // 查看一级下线人有哪些
-        input('second_leader') && ($condition['second_leader'] = input('second_leader')); // 查看二级下线人有哪些
-        input('third_leader') && ($condition['third_leader'] = input('third_leader')); // 查看三级下线人有哪些
-
+        input('staff_id') ? $condition['staff_id'] = input('staff_id') : false; //
+        input('beauty_id') ? $condition['beauty_id'] = input('beauty_id') : false; //
+        input('beautician_id') ? $condition['beautician_id'] = input('beautician_id') : false; //
+        input('customer_id') ? $condition['customer_id'] = input('customer_id') : false; //
         $sort_order = input('order_by').' '.input('sort');
 
         $model = M('users');
@@ -62,22 +62,6 @@ class Member extends Admin {
             $Page->parameter[$key]   =   urlencode($val);
         }
         $userList = $model->where($condition)->order($sort_order)->limit($Page->firstRow.','.$Page->listRows)->select();
-        $user_id_arr = get_arr_column($userList, 'user_id');
-        if(!empty($user_id_arr))
-        {
-            $pre = config('database.prefix');
-            $first_leader = DB::query("select first_leader,count(1) as count  from {$pre}users where first_leader in(".  implode(',', $user_id_arr).")  group by first_leader");
-            $first_leader = convert_arr_key($first_leader,'first_leader');
-
-            $second_leader = DB::query("select second_leader,count(1) as count  from {$pre}users where second_leader in(".  implode(',', $user_id_arr).")  group by second_leader");
-            $second_leader = convert_arr_key($second_leader,'second_leader');
-
-            $third_leader = DB::query("select third_leader,count(1) as count  from {$pre}users where third_leader in(".  implode(',', $user_id_arr).")  group by third_leader");
-            $third_leader = convert_arr_key($third_leader,'third_leader');
-        }
-        $this->assign('first_leader',$first_leader);
-        $this->assign('second_leader',$second_leader);
-        $this->assign('third_leader',$third_leader);
         $show = $Page->show();
         $this->assign('userList',$userList);
         $this->assign('page',$show);// 赋值分页输出
@@ -114,9 +98,24 @@ class Member extends Admin {
             $user = M('users')->where(array('user_id'=>$uid))->find();
             if(!$user)
                 exit($this->error('会员不存在'));
-            $user['first_lower'] = M('users')->where("first_leader = {$user['user_id']}")->count();
-            $user['second_lower'] = M('users')->where("second_leader = {$user['user_id']}")->count();
-            $user['third_lower'] = M('users')->where("third_leader = {$user['user_id']}")->count();
+            switch ($user['users_type']){
+                case 1:
+                    //下级美容院数量
+                    $count = M('users')->where(array('users_type'=>2,'staff_id'=>$user['user_id']))->count();
+                    break;
+                case 2:
+                    //下级美容师数量
+                    $count = M('users')->where(array('users_type'=>3,'beauty_id'=>$user['user_id']))->count();
+                    break;
+                case 3:
+                    //下级顾客数量
+                    $count = M('users')->where(array('users_type'=>4,'beautician_id'=>$user['user_id']))->count();
+                    break;
+                default:
+                    //推荐顾客数量
+                    $count = M('users')->where(array('users_type'=>4,'customer_id'=>$user['user_id']))->count();
+            }
+            $this->assign('count',$count);
             $this->assign('user',$user);
             $this->setMeta("会员信息");
             return $this->fetch();

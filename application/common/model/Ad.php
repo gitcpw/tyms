@@ -27,7 +27,7 @@ class Ad extends Base{
 		array('name'=>'title', 'title'=>'广告名称', 'type'=>'text', 'help'=>'', 'option'=>''),
 		array('name'=>'cover_id', 'title'=>'广告图片', 'type'=>'image', 'help'=>'', 'option'=>''),
 		array('name'=>'url', 'title'=>'广告链接', 'type'=>'text', 'help'=>'', 'option'=>''),
-		array('name'=>'photolist', 'title'=>'辅助图片', 'type'=>'images', 'help'=>'', 'option'=>''),
+		array('name'=>'photolist', 'title'=>'辅助图片', 'type'=>'img', 'help'=>'', 'option'=>''),
 		array('name'=>'listurl', 'title'=>'辅助链接', 'type'=>'textarea', 'help'=>'对应辅助图片的排序，一行一个', 'option'=>''),
 		array('name'=>'background', 'title'=>'广告背景颜色', 'type'=>'text', 'help'=>'', 'option'=>''),
 		array('name'=>'content', 'title'=>'广告描述', 'type'=>'textarea', 'help'=>'', 'option'=>''),

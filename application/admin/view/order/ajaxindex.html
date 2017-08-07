@@ -33,7 +33,7 @@
                                     <tr>
                                         <td class="text-center">{$list.order_sn}</td>
                                         <td class="text-center">{$list.order_price}</td>
-                                        <td class="text-center">{$list.user_id}</td>
+                                        <td class="text-center">{:get_nickname($list.user_id)}</td>
                                         <td class="text-center">{$order_status[$list['order_status']]}</td>
                                         <td class="text-center">{$pay_status[$list['pay_status']]}</td>
                                         <td class="text-center">{$list.add_time|date='Y-m-d H:i',###}</td>

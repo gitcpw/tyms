@@ -1,0 +1,130 @@
+/* CSS Reset*/
+html { font-family:"Microsoft Yahei", "Helvetica Neue", Helvetica, STHeiTi, Arial, sans-serif; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; }
+body { margin: 0; line-height: 20px; color: #000; background-color: #fff; height: 100%; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary { display: block; }
+a { background: transparent; text-decoration: none; color: #000; }
+a:active { outline: 0; }
+b, strong { font-weight: bold; }
+dfn { font-style:normal;}
+img { border: 0; vertical-align: middle; }
+* {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: transparent; /* For some Androids */
+  outline: none;
+}
+input,textarea,button { border: 0; margin: 0; padding: 0; font-family:"Microsoft Yahei", "Helvetica Neue", Helvetica, STHeiTi, Arial, sans-serif;}
+textarea { resize: none;}
+table { border-collapse: collapse; border-spacing: 0; }
+td, th { padding: 0; }
+h1, h2, h3, h4, h5, h6, p, figure, form, blockquote { margin: 0; }
+ul, ol, li, dl, dd { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+input::-moz-placeholder, textarea::-moz-placeholder { color: #ccc; }
+input:-ms-input-placeholder, textarea:-ms-input-placeholder { color: #ccc; }
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder { color: #ccc; }
+
+.clearfix:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
+.clearfix { display:inline-block;}
+.fl { float: left;}
+.fr { float: right;}
+/* Hides from IE-mac \*/
+* html .clearfix { height:1%;}
+.clearfix { display:block;}
+/* End hide from IE-mac */
+/*Reset End*/
+::-webkit-input-placeholder { /* Chrome */
+	color: #ccc;
+}
+:-moz-placeholder {  /* Mozilla Firefox 4 to 18 */
+	color: #ccc;
+	opacity: 1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+	color: #ccc;
+	opacity: 1;
+}
+::-ms-input-placeholder { /* IE */
+	color: #ccc;
+}
+/* Remove default css from IOS */
+input[type="button"], input[type="submit"], input[type="reset"], textarea {
+	-webkit-appearance: none;
+}
+/* Rem Format*/
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+body,p,a,li,span,input {
+  font-size: .28rem
+}
+h1 {
+  font-size: .34rem
+}
+h2 {
+  font-size: .32rem
+}
+h3 {
+  font-size: .3rem
+}
+h4 {
+  font-weight: 400;
+  font-size: .3rem
+}
+h5 {
+  font-size: .28rem
+}
+textarea {
+  font-size: .24rem
+}
+html {
+  font-size: 312.5%
+}
+@media screen and (max-width: 359px) and (orientation:portrait) {
+  html {
+    font-size:266.67%
+  }
+}
+@media screen and (min-width: 360px) and (max-width:374px) and (orientation:portrait) {
+  html {
+    font-size:300%
+  }
+}
+@media screen and (min-width: 384px) and (max-width:399px) and (orientation:portrait) {
+  html {
+    font-size:320%
+  }
+}
+@media screen and (min-width: 400px) and (max-width:413px) and (orientation:portrait) {
+  html {
+    font-size:333.33%
+  }
+}
+@media screen and (min-width: 414px) and (max-width:431px) and (orientation:portrait) {
+  html {
+    font-size:345%
+  }
+}
+@media screen and (min-width: 432px) and (max-width:479px) and (orientation:portrait) {
+  html {
+    font-size:360%
+  }
+}
+@media screen and (min-width: 480px) and (max-width:639px) and (orientation:portrait) {
+  html {
+    font-size:400%
+  }
+}
+@media screen and (min-width: 640px) and (orientation:portrait) {
+  html {
+    font-size:533.33%
+  }
+}

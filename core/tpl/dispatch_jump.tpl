@@ -189,7 +189,7 @@
             <div class="push-50">
                 <a class="btn btn-minw btn-rounded btn-success" onclick="go_to('<?php echo($url);?>')" href="javascript:;" ><i class="fa fa-external-link-square"></i> 立即跳转</a>
                 <button class="btn btn-minw btn-rounded btn-warning" type="button" onclick="stop()"><i class="fa fa-ban"></i> 禁止跳转</button>
-                <a class="btn btn-minw btn-rounded btn-default" href="{:url('index/index')}"><i class="fa fa-home"></i> 返回首页</a>
+                <!--a class="btn btn-minw btn-rounded btn-default" href="{:url('index/index')}"><i class="fa fa-home"></i> 返回首页</a-->
             </div>
             <!-- END Error Titles -->
         </div>

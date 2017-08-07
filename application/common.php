@@ -259,14 +259,14 @@ function get_nav_url($url) {
  */
 function get_cover($cover_id, $field = null) {
 	if (empty($cover_id)) {
-		return BASE_PATH . '/public/images/default.png';
+		return BASE_PATH . '/public/img/default.png';
 	}
 	$picture = db('Picture')->where(array('status' => 1, 'id' => $cover_id))->find();
 	if ($field == 'path') {
 		if (!empty($picture['url'])) {
-			$picture['path'] = $picture['url'] ? BASE_PATH . $picture['url'] : BASE_PATH . '/public/images/default.png';
+			$picture['path'] = $picture['url'] ? BASE_PATH . $picture['url'] : BASE_PATH . '/public/img/default.png';
 		} else {
-			$picture['path'] = $picture['path'] ? BASE_PATH . $picture['path'] : BASE_PATH . '/public/images/default.png';
+			$picture['path'] = $picture['path'] ? BASE_PATH . $picture['path'] : BASE_PATH . '/public/img/default.png';
 		}
 	}
 	return empty($field) ? $picture : $picture[$field];
@@ -432,47 +432,6 @@ function get_username($uid = 0) {
 	return $name;
 }
 
-/**
- * 根据用户ID获取用户昵称
- * @param  integer $uid 用户ID
- * @return string       用户昵称
- */
-function get_nickname($uid = 0) {
-	static $list;
-	if (!($uid && is_numeric($uid))) {
-		//获取当前登录用户名
-		return session('user_auth.username');
-	}
-
-	/* 获取缓存数据 */
-	if (empty($list)) {
-		$list = cache('sys_user_nickname_list');
-	}
-
-	/* 查找用户信息 */
-	$key = "u{$uid}";
-	if (isset($list[$key])) {
-		//已缓存，直接使用
-		$name = $list[$key];
-	} else {
-		//调用接口获取用户信息
-		$info = db('Member')->field('nickname')->find($uid);
-		if ($info !== false && $info['nickname']) {
-			$nickname = $info['nickname'];
-			$name     = $list[$key]     = $nickname;
-			/* 缓存用户 */
-			$count = count($list);
-			$max   = config('USER_MAX_CACHE');
-			while ($count-- > $max) {
-				array_shift($list);
-			}
-			cache('sys_user_nickname_list', $list);
-		} else {
-			$name = '';
-		}
-	}
-	return $name;
-}
 
 /**
  * 对查询结果集进行排序
@@ -796,7 +755,7 @@ function avatar($uid, $size = 'middle') {
 	$dir  = setavatardir($uid);
 	$file = BASE_PATH . '/uploads/avatar/' . $dir . 'avatar_' . $size . '.png';
 	if (!file_exists('.' . $file)) {
-		$file = BASE_PATH . '/public/images/default_avatar_' . $size . '.jpg';
+		$file = BASE_PATH . '/public/img/default_avatar_' . $size . '.jpg';
 	}
 	return $file;
 }
@@ -1245,10 +1204,13 @@ function check_mobile($mobile){
 }
 
 /**
- * 根据会员ID获取会员姓名
+ * 根据用户ID获取用户昵称
+ * @param  integer $uid 用户ID
+ * @return string       用户昵称
  */
-function get_user_name($user_id){
-    $user_name = db('users')->where(array('user_id' => $user_id))->field('');
+function get_nickname($user_id){
+    $user = db('users')->where(array('user_id' => $user_id))->field('nickname')->find();
+    return $user['nickname'];
 }
 
 function ajaxReturn($data){

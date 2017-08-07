@@ -413,7 +413,7 @@ window.ShearPhoto.prototype = {
 			if (Object.prototype.toString.call(arg.preview) === "[object Array]") {
 				var leng = arg.preview.length,
 					EmptyFun = function() {},
-					srcDefault = arg.relativeUrl + "images/default.gif";
+					srcDefault = arg.relativeUrl + "img/default.gif";
 				if (leng > 0) {
 					arg.scope.parentNode.insertAdjacentHTML("afterEnd", '<div id="preview" style="display:none;margin-left:8px;"></div>');
 					var HTML = "",
@@ -1259,7 +1259,7 @@ window.ShearPhoto.prototype = {
 		this.arg.SelectBox.style.visibility = "visible";
 		this.arg.Shearbar.style.display = "none";
 		this.runImgUrl = false;
-		this.arg.ImgDom.src = this.arg.ImgMain.src = this.arg.relativeUrl + "images/default.gif";
+		this.arg.ImgDom.src = this.arg.ImgMain.src = this.arg.relativeUrl + "img/default.gif";
 	},
 	CoordinateData: function(True) {
 		var SendPHPSmaller = function(W, H, P) {

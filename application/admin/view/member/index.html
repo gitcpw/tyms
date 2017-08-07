@@ -32,9 +32,10 @@
 
                                      <input type="hidden" name="users_type" value="{:input('users_type')}">
                                      <!--分销时查看下级人数都有哪些-->
-                                     <input type="hidden" name="first_leader" value="{:input('first_leader')}">
-                                     <input type="hidden" name="second_leader" value="{:input('second_leader')}">
-                                     <input type="hidden" name="third_leader" value="{:input('third_leader')}">
+                                     <input type="hidden" name="first_leader" value="{:input('staff_id')}">
+                                     <input type="hidden" name="second_leader" value="{:input('beauty_id')}">
+                                     <input type="hidden" name="third_leader" value="{:input('beautician_id')}">
+                                     <input type="hidden" name="customer_id" value="{:input('customer_id')}">
                                 	<button type="submit" onclick="ajax_get_table('search-form2',1)" id="button-filter search-order" class="btn btn-primary pull-right"><i class="fa fa-search"></i> 筛选</button>
                                  </div>
                             </form>

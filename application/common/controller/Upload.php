@@ -15,7 +15,7 @@ class Upload {
 	 * 上传控制器
 	 */
 	public function upload() {
-		$upload_type = input('get.filename', 'images', 'trim');
+		$upload_type = input('get.filename', 'img', 'trim');
 		$config      = $this->$upload_type();
 		// 获取表单上传文件 例如上传了001.jpg
 		$file = request()->file('file');
@@ -105,7 +105,7 @@ class Upload {
 	public function save($config, $type, $file) {
 		$file           = $this->parseFile($file);
 		$file['status'] = 1;
-		$dbname         = ($type == 'images') ? 'picture' : 'file';
+		$dbname         = ($type == 'img') ? 'picture' : 'file';
 		$id             = db($dbname)->insertGetId($file);
 
 		if ($id) {

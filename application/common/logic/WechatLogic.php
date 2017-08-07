@@ -80,37 +80,42 @@ class WechatLogic
                 'openid'    => $openid,
                 'reg_time'  => time(),
                 'token'     => md5(time().mt_rand(1,99999)),
-                'is_distribut' => 0,
             ];
 
             // 由场景值获取分销一级id
             if (!empty($msg['EventKey'])) {
-                $user['first_leader'] = substr($msg['EventKey'], strlen('qrscene_'));
-                if ($user['first_leader']) {
-                    $first_leader = M('users')->where('user_id', $user['first_leader'])->find();
+                $sent_id = substr($msg['EventKey'], strlen('qrscene_'));
+                if ($sent_id) {
+                    $first_leader = M('users')->where('user_id', $sent_id)->find();
                     if ($first_leader) {
                         switch ($first_leader['users_type']){
                             case 1:
                                 $user['users_type'] = 2;
+                                $user['staff_id'] = $first_leader['user_id'];
                                 break;
                             case 2:
                                 $user['users_type'] = 3;
+                                $user['staff_id'] = $first_leader['staff_id'];
+                                $user['beauty_id'] = $first_leader['user_id'];
                                 break;
                             case 3:
                                 $user['users_type'] = 4;
+                                $user['staff_id'] = $first_leader['staff_id'];
+                                $user['beauty_id'] = $first_leader['beauty_id'];
+                                $user['beautician_id'] = $first_leader['user_id'];
                                 break;
                             default:
                                 $user['users_type'] = 4;
+                                $user['staff_id'] = $first_leader['staff_id'];
+                                $user['beauty_id'] = $first_leader['beauty_id'];
+                                $user['beautician_id'] = $first_leader['beautician_id'];
+                                $user['customer_id'] = $first_leader['user_id'];
                         }
-                        $user['second_leader'] = $first_leader['first_leader']; //  第一级推荐人
-                        $user['third_leader'] = $first_leader['second_leader']; // 第二级推荐人
                         //他上线分销的下线人数要加1
-                        M('users')->where('user_id', $user['first_leader'])->setInc('underling_number');
-                        M('users')->where('user_id', $user['second_leader'])->setInc('underling_number');
-                        M('users')->where('user_id', $user['third_leader'])->setInc('underling_number');
+                        //M('users')->where('user_id', $user['first_leader'])->setInc('underling_number');
+                        //M('users')->where('user_id', $user['second_leader'])->setInc('underling_number');
+                        //M('users')->where('user_id', $user['third_leader'])->setInc('underling_number');
                     }
-                } else {
-                    $user['first_leader'] = 0;
                 }
             }
 

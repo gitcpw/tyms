@@ -74,7 +74,7 @@ class Fornt extends Base {
 		}
 		$this->view->config('view_path', $view_path . $view_path_pre)
 			->config('tpl_replace_string',array(
-				'__IMG__' => BASE_PATH . '/' . $view_path . 'static/images',
+				'__IMG__' => BASE_PATH . '/' . $view_path . 'static/img',
 				'__JS__'  => BASE_PATH . '/' . $view_path . 'static/js',
 				'__CSS__' => BASE_PATH . '/' . $view_path . 'static/css',
 			));
