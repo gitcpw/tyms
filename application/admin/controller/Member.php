@@ -296,41 +296,6 @@ class Member extends Admin {
 
 
     /**
-     * 搜索用户名
-     */
-    public function search_user()
-    {
-        $search_key = trim(input('search_key'));        
-        if(strstr($search_key,'@'))    
-        {
-            $list = M('users')->where(" email like '%$search_key%' ")->select();        
-            foreach($list as $key => $val)
-            {
-                echo "<option value='{$val['user_id']}'>{$val['email']}</option>";
-            }                        
-        }
-        else
-        {
-            $list = M('users')->where(" mobile like '%$search_key%' ")->select();        
-            foreach($list as $key => $val)
-            {
-                echo "<option value='{$val['user_id']}'>{$val['mobile']}</option>";
-            }            
-        } 
-        exit;
-    }
-
-    
-    /**
-     * 分销树状关系
-     */
-    public function ajax_distribut_tree()
-    {
-          $list = M('users')->where("first_leader = 1")->select();
-          return $this->fetch();
-    }
-
-    /**
      * 提现申请记录
      */
     public function withdrawals()
@@ -376,7 +341,7 @@ class Member extends Admin {
     public function delWithdrawals()
     {
         $model = M("withdrawals");
-        $model->where('id ='.$_GET['id'])->delete();
+        $model->where('id ='.input('id'))->delete();
         $return_arr = array('status' => 1,'msg' => '操作成功','data'  =>'',);   //$return_arr = array('status' => -1,'msg' => '删除失败','data'  =>'',);
         $this->ajaxReturn($return_arr);
     }
@@ -388,7 +353,7 @@ class Member extends Admin {
     {
         $id = input('id');
         $withdrawals = DB::name('withdrawals')->where('id',$id)->find();
-        $user = M('users')->where("user_id = {$withdrawals[user_id]}")->find();
+        $user = M('users')->where("user_id = {$withdrawals['user_id']}")->find();
         if (IS_POST) {
             $data = input('post.');
             // 如果是已经给用户转账 则生成转账流水记录

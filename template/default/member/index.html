@@ -11,21 +11,21 @@
 </header>
 <div class="center-content" style="background: #fff;">
 	<div class="income-wrap clearfix">
-		<span class="fl">今日收入:<strong>2053</strong></span>
-		<span class="fr">本周收入:<strong>26989</strong></span>
+		<span class="fl">今日收入:<strong>{$today_income}</strong></span>
+		<span class="fr">本周收入:<strong>{$week_income}</strong></span>
 	</div>
 	<div class="content-wrap">
 		<div class="com-wrap user-panel">
 			<div class="user-cell">
-				<span>756</span>
+				<span>{$totalfen}</span>
 				<p>分享量</p>
 			</div>
 			<div class="user-cell">
-				<span>1234</span>
+				<span>{$nopayfen}</span>
 				<p>已下单</p>
 			</div>
 			<div class="user-cell">
-				<span>456</span>
+				<span>{$ispayfen}</span>
 				<p>已付款</p>
 			</div>
 		</div>
@@ -34,16 +34,13 @@
                 <!--  公司员工个人中心页面 -->
                 {if $user.users_type eq 1}
                     <li class="table-view-cell">
-                        <a href="wallet.html" class="navigate-right"><img src="__IMG__/icon05.png"/>我的钱包</a>
+                        <a href="{:url('wallet')}" class="navigate-right"><img src="__IMG__/icon05.png"/>我的钱包</a>
                     </li>
                     <li class="table-view-cell">
-                        <a href="order-details2.html" class="navigate-right"><img src="__IMG__/icon03.png"/>查看订单</a>
+                        <a href="{:url('sharelog')}" class="navigate-right"><img src="__IMG__/icon07.png"/>分享记录</a>
                     </li>
                     <li class="table-view-cell">
-                        <a href="sharelog.html" class="navigate-right"><img src="__IMG__/icon07.png"/>分享记录</a>
-                    </li>
-                    <li class="table-view-cell">
-                        <a href="share.html" class="navigate-right"><img src="__IMG__/icon01.png"/>我要分享</a>
+                        <a href="{:url('share')}" class="navigate-right"><img src="__IMG__/icon01.png"/>我要分享</a>
                     </li>
                 {/if}
 

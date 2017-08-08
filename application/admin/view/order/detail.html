@@ -20,6 +20,7 @@
                             <td>订单 状态</td>
                             <td>下单时间</td>
                             <td>支付时间</td>
+                            <td>核销时间</td>
                             <td>商品名称</td>
                             <td>商品价格</td>
                         </tr>
@@ -27,13 +28,19 @@
                             <td>{$order.order_id}</td>
                             <td>{$order.order_sn}</td>
                             <td>{$order.order_price}</td>
-                            <td id="order-status">{$order_status[$order['order_status']]} / {$pay_status[$order['pay_status']]}</td>
+                            <td id="order-status">{$order_status[$order['order_status']]} / {$pay_status[$order['pay_status']]} </td>
                             <td>{$order.add_time|date='Y-m-d H:i',###}</td>
                             <td>{if condition="$order.pay_time neq 0"}
                                     {$order.pay_time|date='Y-m-d H:i',###}
                              {else/}
-                                未支付
+                                N
                              {/if}
+                            </td>
+                            <td>{if condition="$order.hexiao_time neq 0"}
+                                {$order.hexiao_time|date='Y-m-d H:i',###}
+                                {else/}
+                                N
+                                {/if}
                             </td>
                             <td>{$order.goods_name}</td>
                             <td>{$order.goods_price}</td>
@@ -51,6 +58,7 @@
                             {if $order.customer_id_commission gt 0}
                             <td>佣金</td>
                             {/if}
+                            <td></td>
                         </tr>
                         <tr>
                             <td><a href="{:url('member/detail',array('id'=>$order.staff_id))}">{:get_nickname($order.staff_id)}</a></td>
@@ -65,6 +73,7 @@
                             {if $order.customer_id_commission gt 0}
                                 <td>{$order.customer_id_commission}</td>
                             {/if}
+                            <td></td>
                         </tr>
 
                         </tbody>

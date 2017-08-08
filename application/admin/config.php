@@ -33,8 +33,8 @@ return array(
 
     'ORDER_STATUS' => array(
         0 => '未完成',
-        1 => '未核销',
-        2 => '已核销'
+        1 => '待核销',
+        2 => '已核销',
     ),
 
     'PAY_STATUS' => array(
