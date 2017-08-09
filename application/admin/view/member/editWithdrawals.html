@@ -1,6 +1,6 @@
-<include file="public/min-header"/>
+{extend name="public/base"/}
+{block name="body"}
 <div class="wrapper">
-    <include file="public/breadcrumb"/>
     <section class="content">
         <!-- Main content -->
         <div class="container-fluid">
@@ -9,8 +9,8 @@
                 <a href="javascript:history.go(-1)" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="返回"><i class="fa fa-reply"></i></a>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title"><i class="fa fa-list"></i> 提现申请</h3>
+                <div class="panel-heading" style="border: 0;">
+                    <h3 class="panel-title" style="border: 0;"><i class="fa fa-list"></i> 提现申请</h3>
                 </div>
                 <div class="panel-body">
                     <ul class="nav nav-tabs">
@@ -27,13 +27,13 @@
                                 <tr>
                                     <td>用户id</td>
                                     <td>
-                                        <a href="{:U('Admin/user/detail',array('id'=>$data[user_id]))}">{$data[user_id]}</a>
+                                        <a href="{:url('Admin/member/detail',array('id'=>$data['user_id']))}">{$data['user_id']}</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>用户名</td>
                                     <td>
-                                        {$data.user_name}
+                                        <a href="{:url('Admin/member/detail',array('id'=>$data['user_id']))}">{$data.user_name}</a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -75,9 +75,9 @@
                                 <tr>
                                     <td>状态</td>
                                     <td>
-                                        <if condition="$data[status] eq 0">申请中</if>
-                                        <if condition="$data[status] eq 1">申请成功</if>
-                                        <if condition="$data[status] eq 2">申请失败</if>   
+                                        {if condition="$data['status'] eq 0"}申请中{/if}
+                                        {if condition="$data['status'] eq 1"}申请成功{/if}
+                                        {if condition="$data['status'] eq 2"}申请失败{/if}
                                     </td>
                                 </tr>                                                                                   
                                 <tr>
@@ -91,9 +91,8 @@
                                     <td>提现流程:</td>
                                     <td>
                                         1:用户前台申请提现<br/>
-                                        2:管理员审核生成转账记录 ( 生成时自动扣除用户平台余额 ) <br/>
-                                        3:财务线下转账给用户<br/>
-                                        或 2 , 3步可以调换,先转账后生成记录.<br/>
+                                        2:财务线下转账给用户<br/>
+                                        3:管理员点击已确定转账按钮<br/>
                                     </td>
                                 </tr>                                   
                                 </tbody>                                
@@ -103,16 +102,23 @@
                     <div class="pull-right">
                         <input type="hidden" name="id" value="{$data.id}">
                         <input type="hidden" name="user_id" value="{$data.user_id}">
-                        <input type="hidden" id="status" name="status" value="{$data[status]}">
-                        <if condition="in_array($data[status],array(0,2))">
-                            <button class="btn btn-primary" data-toggle="tooltip" type="button" onclick="confirm_withdrawals();">去生成转账记录</button>
-                        </if>                        
-                        <if condition="$data[status] eq 0">
-                            <button class="btn btn-primary" data-toggle="tooltip" type="button" onclick="cancel_withdrawals();">拒绝提现</button>
-                        </if>
-                        <if condition="$data[status] eq 1">
-                            <button class="btn btn-primary" data-toggle="tooltip" type='submit'>修改备注</button>
-                        </if>
+                        <input type="hidden" id="status" name="status" value="{$data['status']}">
+                        <!--{if condition="in_array($data['status'],array(0,2))"}-->
+                            <!--<button class="btn btn-primary" data-toggle="tooltip" type="button" onclick="confirm_withdrawals();">已确定转账</button>-->
+                        <!--{/if}-->
+
+                        {if condition="$data['status'] eq 0"}
+                        <button class="btn btn-primary" data-toggle="tooltip" type="button" onclick="confirm_withdrawals();">已确定转账</button>
+                        {/if}
+                        {if condition="$data['status'] eq 0"}
+                        <button class="btn btn-primary" data-toggle="tooltip" type="button" onclick="cancel_withdrawals();">拒绝提现</button>
+                        {/if}
+                        {if condition="$data['status'] eq 1"}
+                        <button class="btn btn-primary" data-toggle="tooltip" type='submit'>修改备注</button>
+                        {/if}
+                        {if condition="in_array($data['status'],array(1,2))"}
+                        <button class="btn btn-primary" data-toggle="tooltip" type="button" onclick="reset_withdrawals();">重新处理</button>
+                        {/if}
                         
                     </div>
                  </form><!--表单数据-->
@@ -125,7 +131,7 @@
 // 确定提现
 function confirm_withdrawals()
 {
-    if(!confirm("确定将从平台扣除用户余额￥{$data.money},确定吗?"))
+    if(!confirm("确定已经转账给客户账号了吗?"))
         return false;
         
     if($.trim($('#remark').val()).length == 0)
@@ -152,6 +158,14 @@ function cancel_withdrawals()
     $('#status').val('2');    
     $('#editForm').submit();
 }
+// 重新处理
+function reset_withdrawals()
+{
+    if(!confirm('确定要重新处理提现申请吗?'))
+        return false;
+
+    $('#status').val('0');
+    $('#editForm').submit();
+}
 </script>
-</body>
-</html>
+{/block}

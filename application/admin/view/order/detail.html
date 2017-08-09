@@ -16,6 +16,7 @@
                         <tr>
                             <td>订单id</td>
                             <td>订单号</td>
+                            <td>买家昵称</td>
                             <td>订单金额</td>
                             <td>订单 状态</td>
                             <td>下单时间</td>
@@ -27,6 +28,7 @@
                         <tr>
                             <td>{$order.order_id}</td>
                             <td>{$order.order_sn}</td>
+                            <td><a href="{:url('member/detail',array('id'=>$order.user_id))}">{:get_nickname($order.user_id)}</a></td>
                             <td>{$order.order_price}</td>
                             <td id="order-status">{$order_status[$order['order_status']]} / {$pay_status[$order['pay_status']]} </td>
                             <td>{$order.add_time|date='Y-m-d H:i',###}</td>
@@ -81,65 +83,10 @@
                 </div>
             </div>
 
-            <!--订单基本信息-->
-            <div class="panel panel-default">
-                <div class="panel-heading" style="border: 0;">
-                    <h3 class="panel-title text-center" style="border: 0;">会员信息</h3>
-                </div>
-                <div class="panel-body">
-                    <table class="table table-bordered">
-                        <tbody>
-                        <tr>
-                            <td width="120px">微信头像</td>
-                            <td>微信昵称</td>
-                            <td>真实姓名</td>
-                            <td>手机号</td>
-                            <td>目前体重</td>
-                            <td>目标体重</td>
-                        </tr>
-                        <tr>
-                            <td><img src="{$userinfo.head_pic}" alt="" width="120px"></td>
-                            <td><a href="{:url('member/detail',array('id'=>$order.user_id))}" target="_blank">{:get_nickname($order.user_id)}</a></td>
-                            <td>{$userinfo.real_name|default='无'}</td>
-                            <td>{$userinfo.mobile|default='无'}</td>
-                            <td>{$userinfo.present_weight|default='无'}</td>
-                            <td>{$userinfo.target_weight|default='无'}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-
         </div>
 	  </div>
     </div> 
    </section>
 </div>
 </body>
-<script>
-function pay_cancel(obj){
-    var url =  $(obj).attr('data-url');
-    layer.open({
-        type: 2,
-        title: '退款操作',
-        shadeClose: true,
-        shade: 0.8,
-        area: ['45%', '50%'],
-        content: url, 
-    });
-}
-//取消付款
-function pay_callback(s){
-	if(s==1){
-		layer.msg('操作成功', {icon: 1});
-		layer.closeAll('iframe');
-		location.href =	location.href;
-	}else{
-		layer.msg('操作失败', {icon: 3});
-		layer.closeAll('iframe');
-		location.href =	location.href;
-	}
-}
-</script>
 {/block}

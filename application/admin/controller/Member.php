@@ -115,6 +115,49 @@ class Member extends Admin {
                     //推荐顾客数量
                     $count = M('users')->where(array('users_type'=>4,'customer_id'=>$user['user_id']))->count();
             }
+
+            //更新用户总佣金与可提现佣金
+            //公司员工
+            if($user['users_type'] == 1){
+                $map['staff_id'] = $user['user_id'];
+                $fleds = 'SUM(staff_id_commission) total';
+            }
+            //美容院
+            if($user['users_type'] == 2){
+                $map['beauty_id'] = $user['user_id'];
+                $fleds = 'SUM(beauty_id_commission) total';
+            }
+            //美容师
+            if($user['users_type'] == 3){
+                $map['beautician_id'] = $user['user_id'];
+                $fleds = 'SUM(beautician_id_commission) total';
+            }
+            //顾客
+            if($user['users_type'] == 4){
+                $map['customer_id'] = $user['user_id'];
+                $fleds = 'SUM(customer_id_commission) total';
+            }
+            //总佣金
+            $map['order_status'] = 2;
+            $map['pay_status'] =1;
+            $total = M('order')
+                ->where($map)
+                ->field($fleds)
+                ->find();
+            //已提现佣金
+            $have['user_id'] = $user['user_id'];
+            $have['status'] = ['>=',0];
+            $havewithdrawal = M('withdrawals')
+                ->where($have)
+                ->field('SUM(money) money')
+                ->find();
+            //可提现金额
+            $withdrawal = $total['total'] - $havewithdrawal['money'];
+            db('users')->where(array('user_id'=>$user['user_id']))->update(array('user_money'=>$withdrawal,'distribut_money'=>$total['total']));
+
+            $user['user_money'] = $withdrawal;
+            $user['distribut_money'] = $total['total'];
+
             $this->assign('count',$count);
             $this->assign('user',$user);
             $this->setMeta("会员信息");
@@ -341,7 +384,7 @@ class Member extends Admin {
     public function delWithdrawals()
     {
         $model = M("withdrawals");
-        $model->where('id ='.input('id'))->delete();
+        $model->where('id',input('id'))->delete();
         $return_arr = array('status' => 1,'msg' => '操作成功','data'  =>'',);   //$return_arr = array('status' => -1,'msg' => '删除失败','data'  =>'',);
         $this->ajaxReturn($return_arr);
     }
@@ -352,44 +395,27 @@ class Member extends Admin {
     public function editWithdrawals()
     {
         $id = input('id');
-        $withdrawals = DB::name('withdrawals')->where('id',$id)->find();
-        $user = M('users')->where("user_id = {$withdrawals['user_id']}")->find();
+        $withdrawals = M('withdrawals')->where('id',$id)->find();
+        $user = M('users')->where('user_id',$withdrawals['user_id'])->find();
         if (IS_POST) {
             $data = input('post.');
-            // 如果是已经给用户转账 则生成转账流水记录
+            // 确认转账并备注
             if ($data['status'] == 1 && $withdrawals['status'] != 1) {
                 if ($user['user_money'] < $withdrawals['money']) {
                     $this->error("用户余额不足{$withdrawals['money']}，不够提现");
                     exit;
                 }
-                accountLog($withdrawals['user_id'], ($withdrawals['money'] * -1), 0, "平台提现");
-                $remittance = array(
-                    'user_id' => $withdrawals['user_id'],
-                    'bank_name' => $withdrawals['bank_name'],
-                    'account_bank' => $withdrawals['account_bank'],
-                    'account_name' => $withdrawals['account_name'],
-                    'money' => $withdrawals['money'],
-                    'status' => 1,
-                    'create_time' => time(),
-                    'admin_id' => session('admin_id'),
-                    'withdrawals_id' => $withdrawals['id'],
-                    'remark' => $data['remark'],
-                );
-                M('remittance')->add($remittance);
             }
-            DB::name('withdrawals')->update($data);
-            $this->success("操作成功!", url('Admin/User/remittance'), 3);
+            M('withdrawals')->update($data);
+            $this->success("操作成功!", url('Admin/member/withdrawals'), 3);
             exit;
         }
 
         if ($user['nickname'])
             $withdrawals['user_name'] = $user['nickname'];
-        elseif ($user['email'])
-            $withdrawals['user_name'] = $user['email'];
-        elseif ($user['mobile'])
-            $withdrawals['user_name'] = $user['mobile'];
         $this->assign('user', $user);
         $this->assign('data', $withdrawals);
+        $this->setMeta('提现申请详情');
         return $this->fetch();
     }
 

@@ -1,112 +1,40 @@
 {extend name="public/base"/}
 {block name="body"}
-	<body class="root grey-bg">
-		<div class="customer-wrap">
-			<ul class="customer-nav clearfix">
-				<li class="active"><a href="javascript:;">浏览未购买</a></li>
-				<li><a href="javascript:;">下单未付款</a></li>
-				<li><a href="javascript:;">下单已付款</a></li>
-			</ul>
-			<ul class="order-list customer-list">
-				<li class="order-item">
-					<span class="order-num">1.</span>
-					<img class="order-user-img" src="__IMG__/user.jpg" />
-					<div class="order-user-info">
-						<h2 class="order-title">恋鱼的猫</h2>
-					</div>
-					<div class="order-check-wrap">
-						<p class="order-time">2015-08-19</p>
-						<span class="order-time2">12:44</span>
-					</div>
-				</li>
-				<li class="order-item">
-					<span class="order-num">2.</span>
-					<img class="order-user-img" src="__IMG__/user.jpg" />
-					<div class="order-user-info">
-						<h2 class="order-title">恋鱼的猫</h2>
-					</div>
-					<div class="order-check-wrap">
-						<p class="order-time">2015-08-19</p>
-						<span class="order-time2">12:44</span>
-					</div>
-				</li>
-				<li class="order-item">
-					<span class="order-num">3.</span>
-					<img class="order-user-img" src="__IMG__/user.jpg" />
-					<div class="order-user-info">
-						<h2 class="order-title">恋鱼的猫</h2>
-					</div>
-					<div class="order-check-wrap">
-						<p class="order-time">2015-08-19</p>
-						<span class="order-time2">12:44</span>
-					</div>
-				</li>
-				<li class="order-item">
-					<span class="order-num">4.</span>
-					<img class="order-user-img" src="__IMG__/user.jpg" />
-					<div class="order-user-info">
-						<h2 class="order-title">恋鱼的猫</h2>
-					</div>
-					<div class="order-check-wrap">
-						<p class="order-time">2015-08-19</p>
-						<span class="order-time2">12:44</span>
-					</div>
-				</li>
-				<li class="order-item">
-					<span class="order-num">5.</span>
-					<img class="order-user-img" src="__IMG__/user.jpg" />
-					<div class="order-user-info">
-						<h2 class="order-title">恋鱼的猫</h2>
-					</div>
-					<div class="order-check-wrap">
-						<p class="order-time">2015-08-19</p>
-						<span class="order-time2">12:44</span>
-					</div>
-				</li>
-				<li class="order-item">
-					<span class="order-num">6.</span>
-					<img class="order-user-img" src="__IMG__/user.jpg" />
-					<div class="order-user-info">
-						<h2 class="order-title">恋鱼的猫</h2>
-					</div>
-					<div class="order-check-wrap">
-						<p class="order-time">2015-08-19</p>
-						<span class="order-time2">12:44</span>
-					</div>
-				</li>
-				<li class="order-item">
-					<span class="order-num">7.</span>
-					<img class="order-user-img" src="__IMG__/user.jpg" />
-					<div class="order-user-info">
-						<h2 class="order-title">恋鱼的猫</h2>
-					</div>
-					<div class="order-check-wrap">
-						<p class="order-time">2015-08-19</p>
-						<span class="order-time2">12:44</span>
-					</div>
-				</li>
-				<li class="order-item">
-					<span class="order-num">8.</span>
-					<img class="order-user-img" src="__IMG__/user.jpg" />
-					<div class="order-user-info">
-						<h2 class="order-title">恋鱼的猫</h2>
-					</div>
-					<div class="order-check-wrap">
-						<p class="order-time">2015-08-19</p>
-						<span class="order-time2">12:44</span>
-					</div>
-				</li>
-			</ul>
-		</div>
-		
-		<script src="__JS__/jquery-3.2.1.min.js" type="text/javascript"></script>
-		<script type="text/javascript">
-			$(function() {
-				$('.customer-nav li').click(function() {
-					$(this).addClass('active').siblings().removeClass('active');
-				});
-			});
-		</script>
-	</body>
+<body class="root grey-bg">
+<div class="customer-wrap">
+	{if $user.users_type neq '1'}
+	<ul class="customer-nav clearfix">
+		<li {if empty(input('type')) || input('type') == 0}class="active"{/if}><a href="{:url('member/sharelog',array('type'=>0))}">浏览未购买</a></li>
+		<li {if input('type') == 1}class="active"{/if}><a href="{:url('member/sharelog',array('type'=>1))}">下单未付款</a></li>
+		<li {if input('type') == 2}class="active"{/if}><a href="{:url('member/sharelog',array('type'=>2))}">下单已付款</a></li>
+	</ul>
+	{/if}
+	<ul class="order-list customer-list">
+		<?php $i=1;$i++;?>
+		{volist name="userlist" id="vo"}
+		<li class="order-item">
+			<span class="order-num">{$i}.</span>
+			<img class="order-user-img" src="{$vo.head_pic}" />
+			<div class="order-user-info">
+				<h2 class="order-title">{$vo.nickname}</h2>
+			</div>
+			<div class="order-check-wrap">
+				<p class="order-time">{$vo.reg_time|date='Y-m-d',###}</p>
+				<span class="order-time2">{$vo.reg_time|date='H:i',###}</span>
+			</div>
+		</li>
+		{/volist}
+	</ul>
+</div>
+
+<script src="__JS__/jquery-3.2.1.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function() {
+        $('.customer-nav li').click(function() {
+            $(this).addClass('active').siblings().removeClass('active');
+        });
+    });
+</script>
+</body>
 </html>
 {/block}

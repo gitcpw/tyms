@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2017 年 08 月 08 日 19:07
+-- 生成日期: 2017 年 08 月 09 日 21:40
 -- 服务器版本: 5.5.27
 -- PHP 版本: 5.2.17p1
 
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `tyms_action_log` (
   KEY `action_ip_ix` (`action_ip`),
   KEY `action_id_ix` (`action_id`),
   KEY `user_id_ix` (`user_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='行为日志表' AUTO_INCREMENT=47 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='行为日志表' AUTO_INCREMENT=60 ;
 
 --
 -- 转存表中的数据 `tyms_action_log`
@@ -127,7 +127,20 @@ INSERT INTO `tyms_action_log` (`id`, `action_id`, `user_id`, `action_ip`, `model
 (43, 10, 1, 2130706433, 'Menu', 1, '操作url：/admin/menu/add/pid/33.html', 1, 1501211657),
 (44, 10, 1, 2130706433, 'Menu', 42, '操作url：/admin/menu/edit/id/42.html', 1, 1501213372),
 (45, 10, 1, 2130706433, 'Menu', 42, '操作url：/index.php/admin/menu/edit/id/42.html', 1, 1501667313),
-(46, 10, 1, 2130706433, 'Menu', 1, '操作url：/index.php/admin/menu/add/pid/1.html', 1, 1501746767);
+(46, 10, 1, 2130706433, 'Menu', 1, '操作url：/index.php/admin/menu/add/pid/1.html', 1, 1501746767),
+(47, 11, 1, 1032524872, 'category', 1, '操作url：/index.php/admin/category/add.html', 1, 1502269628),
+(48, 11, 1, 1032524872, 'category', 8, '操作url：/index.php/admin/category/edit.html', 1, 1502269645),
+(49, 11, 1, 1032524872, 'category', 1, '操作url：/index.php/admin/category/add.html', 1, 1502269664),
+(50, 11, 1, 1032524872, 'category', 1, '操作url：/index.php/admin/category/add.html', 1, 1502269676),
+(51, 11, 1, 1032524872, 'category', 1, '操作url：/index.php/admin/category/edit.html', 1, 1502269697),
+(52, 11, 1, 1032524872, 'category', 1, '操作url：/index.php/admin/category/edit.html', 1, 1502269702),
+(53, 11, 1, 1032524872, 'category', 8, '操作url：/index.php/admin/category/edit.html', 1, 1502269719),
+(54, 11, 1, 1032524872, 'category', 9, '操作url：/index.php/admin/category/edit.html', 1, 1502269738),
+(55, 11, 1, 1032524872, 'category', 10, '操作url：/index.php/admin/category/edit.html', 1, 1502269754),
+(56, 11, 1, 1032524872, 'category', 1, '操作url：/index.php/admin/category/edit.html', 1, 1502271052),
+(57, 11, 1, 1032524872, 'category', 8, '操作url：/index.php/admin/category/edit.html', 1, 1502271363),
+(58, 11, 1, 1032524872, 'category', 9, '操作url：/index.php/admin/category/edit.html', 1, 1502271380),
+(59, 11, 1, 1032524872, 'category', 10, '操作url：/index.php/admin/category/edit.html', 1, 1502271390);
 
 -- --------------------------------------------------------
 
@@ -156,10 +169,10 @@ CREATE TABLE IF NOT EXISTS `tyms_ad` (
 --
 
 INSERT INTO `tyms_ad` (`id`, `place_id`, `title`, `cover_id`, `photolist`, `url`, `listurl`, `background`, `content`, `create_time`, `update_time`, `status`) VALUES
-(1, 1, '电子商务系统设计与开发', 0, '', '', '', '', '<p>我们为客户提供专业的B2C、C2C、B2B、P2P等电子商务平台开发，同时紧扣企业运营，提供个性化的电子商务平台开发和运营管理平台。 </p>', 1440433466, 1440433466, 1),
-(2, 1, '企业网站设计与开发', 0, '', '', '', '', '<p>我们为您提供更加专业的企业网站建设、企业文化提升以及企业形象包装服务，为您量身打造更加适合当前网络时代的需求服务，让您的公司更加贴近客户。</p>', 1440433531, 1440433531, 1),
-(3, 1, 'WEB应用系统设计与开发', 14, '', '', '', '', '<p>我们为您的企业量身打造专业级别的企业OA系统、CRM系统等，为事、企业单位提供更好更高效的无纸化办公平台环境。</p>', 1440433554, 1462966106, 1),
-(4, 1, '手机APP应用设计与开发', 0, '', 'http://www.yizukeji.cn', '', '', '<p>蚁族科技有限公司专注于手机客户端软件开发，是省内移动客户端开发商的先行者，做到行业内领先地位。 </p>', 1440433571, 1459489811, 1);
+(1, 1, '1', 20, '', '', '', '', '', 1440433466, 1502283612, 1),
+(2, 1, '2', 19, '', '', '', '', '', 1440433531, 1502283648, 1),
+(3, 1, '3', 22, '', '', '', '', '', 1440433554, 1502283747, 1),
+(4, 1, '4', 21, '', 'http://www.yizukeji.cn', '', '', '', 1440433571, 1502283730, 1);
 
 -- --------------------------------------------------------
 
@@ -217,7 +230,7 @@ CREATE TABLE IF NOT EXISTS `tyms_ad_place` (
 --
 
 INSERT INTO `tyms_ad_place` (`id`, `title`, `name`, `show_type`, `show_num`, `start_time`, `end_time`, `create_time`, `update_time`, `template`, `status`) VALUES
-(1, '首页幻灯片', 'banner', 1, 5, 0, 0, 1440433367, 1440433367, '', 1);
+(1, '百问百答广告管理', 'banner', 1, 5, 1970, 1970, 1440433367, 1502270465, '', 1);
 
 -- --------------------------------------------------------
 
@@ -239,14 +252,14 @@ CREATE TABLE IF NOT EXISTS `tyms_article` (
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='百问百答' AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='百问百答' AUTO_INCREMENT=3 ;
 
 --
 -- 转存表中的数据 `tyms_article`
 --
 
 INSERT INTO `tyms_article` (`id`, `title`, `category_id`, `uid`, `cover_id`, `description`, `content`, `status`, `is_top`, `view`, `update_time`, `create_time`) VALUES
-(1, 'asdfsdaf', 2, 0, 0, 'asdf', '<p>asdfdsaf</p>', 1, 0, 0, 1501071706, 1501071706);
+(2, 'asdfsadf ', 1, 0, 7, 'asdfasdf', '<p>asdfdsfasdf</p>', 1, 0, 0, 1502269796, 1502269790);
 
 -- --------------------------------------------------------
 
@@ -473,7 +486,6 @@ CREATE TABLE IF NOT EXISTS `tyms_beauty_salon` (
   `user_id` int(10) unsigned NOT NULL COMMENT '美容院用户id',
   `name` varchar(150) NOT NULL DEFAULT '' COMMENT '美容院名称',
   `description` varchar(255) NOT NULL DEFAULT '' COMMENT '美容院描述',
-  `images` varchar(255) NOT NULL DEFAULT '' COMMENT '美容院封面图',
   `contact` varchar(50) NOT NULL DEFAULT '' COMMENT '联系人',
   `phone` varchar(20) NOT NULL COMMENT '手机号',
   `address` varchar(255) NOT NULL COMMENT '地址',
@@ -484,8 +496,26 @@ CREATE TABLE IF NOT EXISTS `tyms_beauty_salon` (
 -- 转存表中的数据 `tyms_beauty_salon`
 --
 
-INSERT INTO `tyms_beauty_salon` (`user_id`, `name`, `description`, `images`, `contact`, `phone`, `address`, `add_link`) VALUES
-(2589, '春暖花开美容院', '美容院描述', '', '郭雷', '13788692145', '锦江区万达广场11B26楼38号', '');
+INSERT INTO `tyms_beauty_salon` (`user_id`, `name`, `description`, `contact`, `phone`, `address`, `add_link`) VALUES
+(18, '春暖花开美容院', '美容院描述', '郭雷', '13788692145', '锦江区万达广场11B26楼38号', '');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `tyms_beauty_salon_img`
+--
+
+CREATE TABLE IF NOT EXISTS `tyms_beauty_salon_img` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '表id',
+  `user_id` mediumint(8) unsigned NOT NULL COMMENT '美容院用户id',
+  `img` varchar(255) NOT NULL COMMENT '美容院图片',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+
+--
+-- 转存表中的数据 `tyms_beauty_salon_img`
+--
+
 
 -- --------------------------------------------------------
 
@@ -524,16 +554,17 @@ CREATE TABLE IF NOT EXISTS `tyms_category` (
   `groups` varchar(255) NOT NULL DEFAULT '' COMMENT '分组定义',
   PRIMARY KEY (`id`),
   KEY `pid` (`pid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='分类表' AUTO_INCREMENT=8 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='分类表' AUTO_INCREMENT=11 ;
 
 --
 -- 转存表中的数据 `tyms_category`
 --
 
 INSERT INTO `tyms_category` (`id`, `name`, `title`, `pid`, `sort`, `list_row`, `meta_title`, `keywords`, `description`, `template_index`, `template_lists`, `template_detail`, `template_edit`, `model`, `model_sub`, `type`, `link_id`, `allow_publish`, `display`, `reply`, `check`, `reply_model`, `extend`, `create_time`, `update_time`, `status`, `icon`, `groups`) VALUES
-(1, 'news', '新闻动态', 0, 0, 10, '', '', '', '', '', '', '', '', '2', '2,1', 0, 0, 1, 0, 0, '1', 'null', 1379474947, 1463561497, 1, 0, ''),
-(2, 'company_news', '国内新闻', 1, 1, 10, '', '', '', '', '', '', '', '2,3', '2', '2,1,3', 0, 1, 1, 0, 1, '1', '', 1379475028, 1386839751, 1, 0, ''),
-(3, '', '国外新闻', 1, 2, 10, '', '', '', '', '', '', '', '', '', '', 0, 1, 1, 0, 0, '', '', 0, 0, 1, 0, '');
+(1, 'jz', '减脂', 0, 0, 10, '', '', '', '', '', '', '', '', '', '', 0, 1, 1, 0, 0, '', 'null', 1379474947, 1502271052, 1, 14, ''),
+(8, 'dy', '答疑', 0, 0, 10, '', '', '', '', '', '', '', '', '', '', 0, 1, 1, 0, 0, '', NULL, 1502269628, 1502271363, 1, 15, ''),
+(9, 'sk', '食库', 0, 0, 10, '', '', '', '', '', '', '', '', '', '', 0, 1, 1, 0, 0, '', NULL, 1502269664, 1502271380, 1, 16, ''),
+(10, 'al', '案例', 0, 0, 10, '', '', '', '', '', '', '', '', '', '', 0, 1, 1, 0, 0, '', NULL, 1502269676, 1502271390, 1, 17, '');
 
 -- --------------------------------------------------------
 
@@ -1360,7 +1391,7 @@ CREATE TABLE IF NOT EXISTS `tyms_member` (
 --
 
 INSERT INTO `tyms_member` (`uid`, `username`, `password`, `nickname`, `email`, `mobile`, `sex`, `birthday`, `qq`, `score`, `signature`, `pos_province`, `pos_city`, `pos_district`, `pos_community`, `salt`, `login`, `reg_ip`, `reg_time`, `last_login_ip`, `last_login_time`, `status`) VALUES
-(1, 'admin', '7525b1f1d883957e49451843911fd5b2', 'admin', 'admin@admin.com', NULL, 0, '0000-00-00', '123123', 0, '', 0, 0, 0, 0, 'iJhmGg', 21, 0, 1501066646, 1032524820, 1502184280, 1);
+(1, 'admin', '7525b1f1d883957e49451843911fd5b2', 'admin', 'admin@admin.com', NULL, 0, '0000-00-00', '123123', 0, '', 0, 0, 0, 0, 'iJhmGg', 24, 0, 1501066646, 1032524872, 1502282542, 1);
 
 -- --------------------------------------------------------
 
@@ -1574,8 +1605,8 @@ CREATE TABLE IF NOT EXISTS `tyms_order` (
 --
 
 INSERT INTO `tyms_order` (`order_id`, `order_sn`, `user_id`, `order_price`, `add_time`, `pay_time`, `hexiao_time`, `order_status`, `pay_status`, `goods_name`, `goods_description`, `goods_price`, `staff_id`, `staff_id_commission`, `beauty_id`, `beauty_id_commission`, `beautician_id`, `beautician_id_commission`, `customer_id`, `customer_id_commission`, `order_img`) VALUES
-(1, '201708021508', 10, 5000.00, 1501657709, 1502093008, 1502121600, 2, 1, '纤必达21天系统营养塑身套餐', '快速塑身套餐', 100.00, 2, 588.00, 7, 0.00, 9, 388.00, 10, 288.00, '1'),
-(2, '201708071905', 14, 4888.00, 1502103893, 1502105613, 1502208001, 2, 1, '纤必达21天系统营养塑身套餐', '快速塑身套餐', 4888.00, 2, 588.00, 7, 0.00, 9, 388.00, 10, 288.00, '2');
+(1, '201708021508', 18, 5000.00, 1501657709, 1502093008, 1502121600, 2, 1, '纤必达21天系统营养塑身套餐', '快速塑身套餐', 100.00, 2, 588.00, 9, 0.00, 17, 388.00, 0, 0.00, '1'),
+(2, '201708071905', 14, 4888.00, 1502103893, 1502105613, 1502208001, 2, 1, '纤必达21天系统营养塑身套餐', '快速塑身套餐', 4888.00, 2, 588.00, 9, 0.00, 7, 388.00, 10, 288.00, '2');
 
 -- --------------------------------------------------------
 
@@ -1592,7 +1623,7 @@ CREATE TABLE IF NOT EXISTS `tyms_picture` (
   `status` tinyint(2) NOT NULL DEFAULT '0' COMMENT '状态',
   `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=23 ;
 
 --
 -- 转存表中的数据 `tyms_picture`
@@ -1604,7 +1635,23 @@ INSERT INTO `tyms_picture` (`id`, `path`, `url`, `md5`, `sha1`, `status`, `creat
 (3, '/uploads/picture/20170802/c49ef6fd31d2bb82e4ec33e407786923.jpg', '/uploads/picture/20170802/c49ef6fd31d2bb82e4ec33e407786923.jpg', '7286df589338035c7395b51f8a9c43f4', '4a4330cd0274d03eedebb636b6a0371337661556', 1, 1501662114),
 (4, '/uploads/picture/20170802/c01fc7ccef777d162954883fb40caa57.jpg', '/uploads/picture/20170802/c01fc7ccef777d162954883fb40caa57.jpg', '2cf182f0f9e13d019baaeab6d7bef397', 'd37c4d9aad8e29a5267082dff972fe887802d1ea', 1, 1501663712),
 (5, '/uploads/picture/20170802/e6999171c851230e35f3f4a4d6d7d956.jpg', '/uploads/picture/20170802/e6999171c851230e35f3f4a4d6d7d956.jpg', 'c98c7ed8b0d77d4fc39be922d102d019', 'f367be3cd1f5502461728acae14a835ca87413a1', 1, 1501663718),
-(6, '/uploads/picture/20170802/aa424482c2a613e134dd6c0d26776a7a.jpg', '/uploads/picture/20170802/aa424482c2a613e134dd6c0d26776a7a.jpg', '7286df589338035c7395b51f8a9c43f4', '4a4330cd0274d03eedebb636b6a0371337661556', 1, 1501663724);
+(6, '/uploads/picture/20170802/aa424482c2a613e134dd6c0d26776a7a.jpg', '/uploads/picture/20170802/aa424482c2a613e134dd6c0d26776a7a.jpg', '7286df589338035c7395b51f8a9c43f4', '4a4330cd0274d03eedebb636b6a0371337661556', 1, 1501663724),
+(7, '/uploads/picture/20170809/443cf254deeededc4508688127311c23.jpg', '/uploads/picture/20170809/443cf254deeededc4508688127311c23.jpg', 'a2014bc4d474adb5fc7fdb3677668c4f', '87fb2a50621aa07077f0006e4d08c5499b543264', 1, 1502269695),
+(8, '/uploads/picture/20170809/d3ed2f5fcd9ffd07e59d8a32e8e1f192.jpg', '/uploads/picture/20170809/d3ed2f5fcd9ffd07e59d8a32e8e1f192.jpg', '049bae09c809aa5c5162dcf1e9904c07', '3b77da2989920e93f30c78fee14e9cee81cbbcc5', 1, 1502269717),
+(9, '/uploads/picture/20170809/999ec3e8017160e751df3bae7f3ad116.jpg', '/uploads/picture/20170809/999ec3e8017160e751df3bae7f3ad116.jpg', 'e81ebff0b5562b6b1c346ca9214d029f', '918bf1794ee80fd8e3b1ff148f1a18e9df2415c2', 1, 1502269728),
+(10, '/uploads/picture/20170809/58eb803df02f7f5d41f398c8ce4485b9.jpg', '/uploads/picture/20170809/58eb803df02f7f5d41f398c8ce4485b9.jpg', '061edf0dbfaec088fd36eff434bfe038', '66e05f15e8fe483a5bcf4f6a7656d848097a6a49', 1, 1502269753),
+(11, '/uploads/picture/20170809/2b52339d698e943c45de926f86a6084b.jpg', '/uploads/picture/20170809/2b52339d698e943c45de926f86a6084b.jpg', '1edfa3964de67bdd3ed8305e7f4b6690', 'b6645f57c7d122b7cbbcd80fc19c40f2033eb42d', 1, 1502270485),
+(12, '/uploads/picture/20170809/cb2c2da5401f7efae5a3f658a23f40dc.jpg', '/uploads/picture/20170809/cb2c2da5401f7efae5a3f658a23f40dc.jpg', '4242eba8cbbbbc9334fd7a611d5d2c43', '8019668ec338ff635dd8347f6c0576b02e48fba1', 1, 1502270485),
+(13, '/uploads/picture/20170809/e846fe4d94aac53d65bc6627baf11b8d.jpg', '/uploads/picture/20170809/e846fe4d94aac53d65bc6627baf11b8d.jpg', 'de7674dfafdb231939c13d6e74e39b42', 'c7c95473c1f5dcd65fd5c4a558b6fbf1da4366ef', 1, 1502270485),
+(14, '/uploads/picture/20170809/a49cca2282ecff4e73d003be1fb24f19.jpg', '/uploads/picture/20170809/a49cca2282ecff4e73d003be1fb24f19.jpg', 'a2014bc4d474adb5fc7fdb3677668c4f', '87fb2a50621aa07077f0006e4d08c5499b543264', 1, 1502271051),
+(15, '/uploads/picture/20170809/3fe0db0d68a0d05793e1cc447b9bc292.jpg', '/uploads/picture/20170809/3fe0db0d68a0d05793e1cc447b9bc292.jpg', '049bae09c809aa5c5162dcf1e9904c07', '3b77da2989920e93f30c78fee14e9cee81cbbcc5', 1, 1502271362),
+(16, '/uploads/picture/20170809/15ec3f5affaf1d6023c439e714f1b16a.jpg', '/uploads/picture/20170809/15ec3f5affaf1d6023c439e714f1b16a.jpg', 'e81ebff0b5562b6b1c346ca9214d029f', '918bf1794ee80fd8e3b1ff148f1a18e9df2415c2', 1, 1502271379),
+(17, '/uploads/picture/20170809/0996862fc120e4bbc175f582fa5aa7b5.jpg', '/uploads/picture/20170809/0996862fc120e4bbc175f582fa5aa7b5.jpg', '061edf0dbfaec088fd36eff434bfe038', '66e05f15e8fe483a5bcf4f6a7656d848097a6a49', 1, 1502271389),
+(18, '/uploads/picture/20170809/cc35169c1d9b96f2f34ca37efdacd77e.png', '/uploads/picture/20170809/cc35169c1d9b96f2f34ca37efdacd77e.png', 'f0301f11bedd3fc08f95a6dcdfbdc2d6', 'a78669c46cd631d9ccb3a58455bf0f3de52e786a', 1, 1502282554),
+(19, '/uploads/picture/20170809/bd99ad3ffe31a5360cce9384ccebafc6.jpg', '/uploads/picture/20170809/bd99ad3ffe31a5360cce9384ccebafc6.jpg', '4242eba8cbbbbc9334fd7a611d5d2c43', '8019668ec338ff635dd8347f6c0576b02e48fba1', 1, 1502283586),
+(20, '/uploads/picture/20170809/998c40696a154cc4369988bee2c6de0d.jpg', '/uploads/picture/20170809/998c40696a154cc4369988bee2c6de0d.jpg', '4242eba8cbbbbc9334fd7a611d5d2c43', '8019668ec338ff635dd8347f6c0576b02e48fba1', 1, 1502283597),
+(21, '/uploads/picture/20170809/7d4d11e6e8b9dc294860d5a102c2ed27.jpg', '/uploads/picture/20170809/7d4d11e6e8b9dc294860d5a102c2ed27.jpg', '4242eba8cbbbbc9334fd7a611d5d2c43', '8019668ec338ff635dd8347f6c0576b02e48fba1', 1, 1502283729),
+(22, '/uploads/picture/20170809/165460f9695add298c67f1fc02573627.jpg', '/uploads/picture/20170809/165460f9695add298c67f1fc02573627.jpg', '4242eba8cbbbbc9334fd7a611d5d2c43', '8019668ec338ff635dd8347f6c0576b02e48fba1', 1, 1502283745);
 
 -- --------------------------------------------------------
 
@@ -1699,20 +1746,21 @@ CREATE TABLE IF NOT EXISTS `tyms_users` (
   `token` varchar(64) DEFAULT '',
   `qr` varchar(200) DEFAULT NULL COMMENT '用户分享二维码',
   `is_buy` tinyint(1) unsigned DEFAULT '0' COMMENT '是否购买 0未下单 1下单未支付 2已付款',
+  `is_distribut` tinyint(1) unsigned DEFAULT '0' COMMENT '分销权限 0未拥有 1拥有',
   PRIMARY KEY (`user_id`),
   KEY `openid` (`openid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19 ;
 
 --
 -- 转存表中的数据 `tyms_users`
 --
 
-INSERT INTO `tyms_users` (`user_id`, `nickname`, `head_pic`, `openid`, `real_name`, `users_type`, `mobile`, `present_weight`, `target_weight`, `reg_time`, `staff_id`, `beauty_id`, `beautician_id`, `customer_id`, `user_money`, `distribut_money`, `token`, `qr`, `is_buy`) VALUES
-(10, 'Ｅnterゝ', 'http://wx.qlogo.cn/mmopen/zqNia1W9r6dCtNDPJ15bhiaMlylFaDm4UEA01xciagz4tSv8kShpyYqIG7UwapbOQRibe738LpAK0v93XvOjicicDEo51ibYp8iaYGmG/0', 'oip7Ewm8DF1Pa7AawHqUE-GsJqi4', '', 4, NULL, 0, 0, 1502075312, 2, 7, 9, NULL, 0.00, 0.00, '714783487b817b5c8b8c85b4f7d48511', 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQEj8jwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyZWlEN0V4YXVmNDIxMDAwMDAwN2YAAgS32YdZAwQAAAAA', 2),
-(2, '李辰炫', 'http://wx.qlogo.cn/mmopen/CzfePcefza6LmGuubScQVFz55u6adJ8M0H0WQV6IJhPBPMXN9WgEX91AqrXPrh01WgUoQ80SxeWr92xwqszGb9Z42xhGkkE2/0', 'oip7EwhOzxtcuQWlzKAcOQEKKKBo', '', 1, NULL, 0, 0, 1501924895, 0, 0, 0, NULL, 1176.00, 1176.00, '75a5071955d09718cf5f4c98f1c6d709', 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQFf8TwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAybnRoZ0ZwYXVmNDIxMDAwMGcwN1cAAgRKg4VZAwQAAAAA', 0),
-(7, '似曾相识', 'http://wx.qlogo.cn/mmopen/j87acicHZGT7ia71wss07rNeeKI6JMZEP0yow13Ql5LpuKKnlM5qzaAjh1tuvpoohibASJUkRNcZqZgtfn24ESbKtdBejOBuic0y/0', 'oip7EwheRgJ2AuYRCSAwVfXofzNU', '', 2, NULL, 0, 0, 1501926938, 2, 0, 0, NULL, 0.00, 0.00, 'fedae3bd812f243f855222c2607a3177', 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQGv8TwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyV2dnR0VsYXVmNDIxMDAwMHcwN1gAAgQgloVZAwQAAAAA', 0),
-(9, 'mr.chen', 'http://wx.qlogo.cn/mmopen/CzfePcefza4EJ7y57Bj2Y0V280h1LJpEoaGOOq5OLMwqTZaFcCOia5m1Xl0jmq5sWDH9YMpkojWz6MWS5yQcZU8WNAZjetFDR/0', 'oip7EwiZtvDPxo0WcnYoNuA0L2VA', '', 3, NULL, 0, 0, 1502070876, 2, 7, 0, NULL, 388.00, 776.00, '110d9aacea2fb6b55c611a616c906fb0', 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQGd8TwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyTTNvWkZoYXVmNDIxMDAwMDAwN2EAAgRiyIdZAwQAAAAA', 0),
-(14, '(*ΦωΦ*)', 'http://wx.qlogo.cn/mmopen/ajNVdqHZLLBQBw6EM7wSOYFbUpicFTGB2FA3KcMfSc3EMiaNf57TwRdbFfF6tzeLQPAeFVYibZ1uDMrJ1z2UibdojYuUia8XHkt5DGKraG7WgLzU/0', 'oip7EwkIrlqDFALz4FzxLn88pF5I', '黄晴月', 4, '15281812281', 75, 60, 1502096766, 2, 7, 9, 10, 0.00, 0.00, 'a03987b5588f22bb4f6fa5db6fd6b2b9', 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQGo8TwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAycnF2S0YyYXVmNDIxMDAwMGcwN3EAAgSFLYhZAwQAAAAA', 1);
+INSERT INTO `tyms_users` (`user_id`, `nickname`, `head_pic`, `openid`, `real_name`, `users_type`, `mobile`, `present_weight`, `target_weight`, `reg_time`, `staff_id`, `beauty_id`, `beautician_id`, `customer_id`, `user_money`, `distribut_money`, `token`, `qr`, `is_buy`, `is_distribut`) VALUES
+(10, 'Ｅnterゝ', 'http://wx.qlogo.cn/mmopen/zqNia1W9r6dCtNDPJ15bhiaMlylFaDm4UEA01xciagz4tSv8kShpyYqIG7UwapbOQRibe738LpAK0v93XvOjicicDEo51ibYp8iaYGmG/0', 'oip7Ewm8DF1Pa7AawHqUE-GsJqi4', '', 4, NULL, 0, 0, 1502075312, 2, 18, 17, NULL, 288.00, 288.00, '714783487b817b5c8b8c85b4f7d48511', 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQEj8jwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyZWlEN0V4YXVmNDIxMDAwMDAwN2YAAgS32YdZAwQAAAAA', 1, 1),
+(2, '李辰炫', 'http://wx.qlogo.cn/mmopen/CzfePcefza6LmGuubScQVFz55u6adJ8M0H0WQV6IJhPBPMXN9WgEX91AqrXPrh01WgUoQ80SxeWr92xwqszGb9Z42xhGkkE2/0', 'oip7EwhOzxtcuQWlzKAcOQEKKKBo', '', 1, NULL, 0, 0, 1501924895, 0, 0, 0, NULL, 1176.00, 1176.00, '75a5071955d09718cf5f4c98f1c6d709', 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQFf8TwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAybnRoZ0ZwYXVmNDIxMDAwMGcwN1cAAgRKg4VZAwQAAAAA', 0, 1),
+(17, '似曾相识', 'http://wx.qlogo.cn/mmopen/j87acicHZGT7ia71wss07rNeeKI6JMZEP0yow13Ql5LpuKKnlM5qzaAjh1tuvpoohibASJUkRNcZqZgtfn24ESbKtdBejOBuic0y/0', 'oip7EwheRgJ2AuYRCSAwVfXofzNU', '', 3, NULL, 0, 0, 1502276214, 2, 18, 0, 0, 388.00, 388.00, '1f701bb9cb1a1be7889a135c545315bf', 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQH18DwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAycHdpRkVFYXVmNDIxMDAwMGcwN2kAAgR96opZAwQAAAAA', 0, 1),
+(14, '(*ΦωΦ*)', 'http://wx.qlogo.cn/mmopen/ajNVdqHZLLBQBw6EM7wSOYFbUpicFTGB2FA3KcMfSc3EMiaNf57TwRdbFfF6tzeLQPAeFVYibZ1uDMrJ1z2UibdojYuUia8XHkt5DGKraG7WgLzU/0', 'oip7EwkIrlqDFALz4FzxLn88pF5I', '黄晴月', 4, '15281812281', 75, 60, 1502096766, 2, 18, 17, 10, 0.00, 0.00, 'a03987b5588f22bb4f6fa5db6fd6b2b9', 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQGo8TwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAycnF2S0YyYXVmNDIxMDAwMGcwN3EAAgSFLYhZAwQAAAAA', 2, 1),
+(18, 'mr.chen', 'http://wx.qlogo.cn/mmopen/CzfePcefza4EJ7y57Bj2Y0V280h1LJpEoaGOOq5OLMwqTZaFcCOia5m1Xl0jmq5sWDH9YMpkojWz6MWS5yQcZU8WNAZjetFDR/0', 'oip7EwiZtvDPxo0WcnYoNuA0L2VA', '', 4, NULL, 0, 0, 1502277027, 2, 0, 0, 0, 0.00, 0.00, '97b223bd7bb6e202c4773439b4062f93', 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQEi8jwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAya3dXMEY2YXVmNDIxMDAwME0wN2IAAgSp7YpZAwQAAAAA', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -1765,7 +1813,7 @@ CREATE TABLE IF NOT EXISTS `tyms_withdrawals` (
 --
 
 INSERT INTO `tyms_withdrawals` (`id`, `user_id`, `create_time`, `money`, `bank_name`, `account_bank`, `account_name`, `remark`, `status`) VALUES
-(1, 9, 1502182443, 388.00, '建设银行', '62284805068899729', '陈鹏伍', '', 0);
+(1, 9, 1502182443, 388.00, '建设银行', '62284805068899729', '陈鹏伍', '已转账', 1);
 
 -- --------------------------------------------------------
 

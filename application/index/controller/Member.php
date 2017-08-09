@@ -19,7 +19,7 @@ class Member extends Fornt {
 
 
     //个人中心首页
-	public function index() {
+    public function index() {
         //查询会员类型数据
         $this->cominfo();
         $users_type = M('users_type')->where('id',$this->user['users_type'])->find();
@@ -27,7 +27,7 @@ class Member extends Fornt {
         $this->assign('users_type',$users_type);
         $this->setMeta('会员中心');
         return $this->fetch();
-	}
+    }
 
     //我的钱包
     public function wallet(){
@@ -45,7 +45,43 @@ class Member extends Fornt {
 
     //分享记录
     public function sharelog(){
-        $users = db('users')->where(array('user_id' => $this->user['user_id']))->field('nickname')->find();
+        //1浏览未下单 2下单未付款 3已付款
+        $type = input('type');
+        if(empty($type) || $type == 0){
+            $where['is_buy'] = ['=',0];
+        }
+        if($type == 1){
+            $where['is_buy'] = ['=',1];
+        }
+        if($type == 2){
+            $where['is_buy'] = ['=',2];
+        }
+        //公司员工
+        if($this->user['users_type'] == 1){
+            $where['staff_id'] = ['=',$this->user['user_id']];
+            $where['users_type'] = ['=',2];
+            $userlist = M('users')->where($where)->select();
+        }
+        //美容院
+        if($this->user['users_type'] == 2){
+            $where['beauty_id'] = ['=',$this->user['user_id']];
+            $where['users_type'] = ['=',3];
+            $userlist = M('users')->where($where)->select();
+        }
+        //美容师
+        if($this->user['users_type'] == 3){
+            $where['beautician_id'] = ['=',$this->user['user_id']];
+            $where['users_type'] = ['=',4];
+            $userlist = M('users')->where($where)->select();
+        }
+        //顾客
+        if($this->user['users_type'] == 4){
+            $where['customer_id'] = ['=',$this->user['user_id']];
+            $where['users_type'] = ['=',4];
+            $userlist = M('users')->where($where)->select();
+        }
+        $this->assign('userlist',$userlist);
+        $this->assign('user',$this->user);
         $this->setMeta('分享记录');
         return $this->fetch();
     }
@@ -66,10 +102,62 @@ class Member extends Fornt {
 
     //美容院员工管理
     public function staffmanage(){
-        $users = db('users')->where(array('user_id' => $this->user['user_id']))->field('nickname')->find();
+
         $this->setMeta('员工管理');
         return $this->fetch();
     }
+
+    //美容师删除列表
+    public function staffdelete(){
+        $beauticianlist = M('users')->where(array('users_type'=>3,'beauty_id'=>$this->user['user_id'],'is_distribut'=>1))->select();
+        $this->assign('beauticianlist',$beauticianlist);
+        $this->setMeta('美容师删除列表');
+        return $this->fetch();
+    }
+
+
+    //美容师申请列表
+    public function apply(){
+        $beauticianlist = M('users')->where(array('users_type'=>3,'beauty_id'=>$this->user['user_id'],'is_distribut'=>0))->select();
+        $this->assign('beauticianlist',$beauticianlist);
+        $this->setMeta('美容师申请列表');
+        return $this->fetch();
+    }
+
+    //美容师申请同意
+    public function staffagreed(){
+        if(empty(input('uid'))){
+            exit('');
+        }else{
+            $row = M('users')->where('user_id',input('uid'))->update(array('is_distribut'=>1));
+            if($row){
+                exit(json_encode(array('msg'=>'处理成功！','url'=>url('member/apply'))));
+            }else{
+                exit(json_encode(array('msg'=>'处理失败！','url'=>url('member/apply'))));
+            }
+        }
+    }
+
+    //美容师申请拒绝
+    public function staffnoagreed(){
+        if(empty(input('uid'))){
+            exit('');
+        }else{
+            $row = M('users')->where('user_id',input('uid'))->delete();
+            if($row){
+                exit(json_encode(array('msg'=>'处理成功！','url'=>url('member/apply'))));
+            }else{
+                exit(json_encode(array('msg'=>'处理失败！','url'=>url('member/apply'))));
+            }
+        }
+
+    }
+
+
+
+
+
+
 
     //美容院优惠券管理
     public function beautycoupons(){
@@ -80,13 +168,99 @@ class Member extends Fornt {
 
     //美容院信息管理
     public function storeinfo(){
-        $users = db('users')->where(array('user_id' => $this->user['user_id']))->field('nickname')->find();
-        $this->setMeta('美容院信息管理');
-        return $this->fetch();
+        if(IS_POST){
+
+        }else{
+            $info = M('beauty_salon')->where('user_id',$this->user['user_id'])->find();
+            $imagesarr = db('beauty_salon_img')->where('user_id',$this->user['user_id'])->column('img','id');
+            $this->assign('info',$info);
+            $this->assign('imagesarr',$imagesarr);
+            return $this->fetch();
+        }
+    }
+
+    public function upload_img(){
+        $data['user_id'] = $this->user['user_id'];
+        //上传图片
+        $file = $this->upload('file');
+        if(!file_exists($file)){
+            die($file);
+        }
+        $data['img'] = $file;
+        db('beauty_salon_img')->insert($data);
+        exit($file);
+    }
+
+    public function delImg(){
+        $whe['img'] = input('file','trim');
+        $whe['user_id'] = $this->user['user_id'];
+        if(db('beauty_salon_img')->where($whe)->delete()){
+            unlink($whe['img']);
+        }
     }
 
 
 
+    //修改优惠券
+    public function editcoupon(){
+        if(IS_POST){
+
+        }else{
+            return $this->fetch();
+        }
+    }
+
+
+    //顾客我的优惠券
+    public function mycoupon(){
+        return $this->fetch();
+    }
+
+    //顾客我的订单
+    public function myorder(){
+        $order = M('order')->where('user_id',$this->user['user_id'])->field('order_status,pay_status')->find();
+        $this->assign('order',$order);
+        $this->assign('user',$this->user);
+        $this->setMeta('我的订单');
+        return $this->fetch();
+    }
+
+    //顾客百问百答
+    public function news(){
+        $cid = input('id');
+        if(empty($cid)){
+            $cate = M('category')->order('id asc')->find();
+            $cid = $cate['id'];
+            $where['category_id'] = ['=',$cid];
+        }else{
+            $where['category_id'] = ['=',$cid];
+        }
+        $categorys = M('category')->select();
+        //默认出来的文章列表
+        $article = M('article')->where($where)->select();
+        $this->assign('category',$categorys);
+        $this->assign('article',$article);
+        return $this->fetch();
+    }
+
+    //顾客百问百答详情页
+    public function newsdetail(){
+        $id = input('id');
+        if(empty($id)){
+            $this->error('文章不存在');
+        }else{
+            $info = M('article')->where('id',$id)->find();
+            $this->assign('info',$info);
+            $this->setMeta('百问百答详情页');
+            return $this->fetch();
+        }
+    }
+
+
+    //顾客服务商家
+    public function myshop(){
+        return $this->fetch();
+    }
 
 
     //提现申请
@@ -156,14 +330,8 @@ class Member extends Fornt {
         }
         //顾客
         if($this->user['users_type'] == 4){
-            //由别的顾客推荐
-            if($this->user['customer_id'] > 0){
-                $map['customer_id'] = $this->user['user_id'];
-                $fleds = 'SUM(customer_id_commission) total';
-            }else{  //由美容师推荐
-                $map['beautician_id_commission'] = $this->user['user_id'];
-                $fleds = 'SUM(beautician_id_commission_commission) total';
-            }
+            $map['customer_id'] = $this->user['user_id'];
+            $fleds = 'SUM(customer_id_commission) total';
         }
         //总佣金
         $map['order_status'] = 2;
@@ -188,13 +356,6 @@ class Member extends Fornt {
      * 会员首页公共信息
      */
     public function cominfo(){
-        //本日
-        $beginToday = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
-        $endToday =    mktime(23, 59, 59, date('m'), date('d'), date('Y'));
-        //本周
-        $beginWeek =  strtotime(date('Y-m-d', strtotime("this week Monday", time())));
-        $endWeek =   strtotime(date('Y-m-d', strtotime("this week Sunday", time()))) + 24 * 3600 - 1;
-
         switch ($this->user['users_type']){
             case 1:
                 $npmap['staff_id'] = $ipmap['staff_id'] = $tmap['staff_id'] = $tdmap['staff_id'] = $wkmap['staff_id'] = ['=',$this->user['user_id']];
@@ -216,45 +377,46 @@ class Member extends Fornt {
                 }
                 $fleds = 'SUM(customer_id_commission) total';
                 break;
+            default;
         }
-
         //今日收入
-        $tdmap['hexiao_time'] = ['>=',$beginToday] ;
-        $tdmap['hexiao_time'] = ['<=',$endToday] ;
+        $beginToday = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
+        $endToday =    mktime(23, 59, 59, date('m'), date('d'), date('Y'));
         $tdmap['order_status'] = ['=',2];
         $today_income = M('order')
-                        ->where($tdmap)
-                        ->field($fleds)
-                        ->find();
+            ->whereTime('hexiao_time','between',[$beginToday,$endToday])
+            ->where($tdmap)
+            ->field($fleds)
+            ->find();
         //本周收入
-        $wkemap['hexiao_time'] = ['>=',$beginWeek] ;
-        $tdmap['hexiao_time'] = ['<=',$endWeek] ;
-        $tdmap['order_status'] = ['=',2];
+        $beginWeek =  strtotime(date('Y-m-d', strtotime("this week Monday", time())));
+        $endWeek =   strtotime(date('Y-m-d', strtotime("this week Sunday", time()))) + 24 * 3600 - 1;
+        $wkemap['order_status'] = ['=',2];
         $week_income = M('order')
-                        ->where($tdmap)
-                        ->field($fleds)
-                        ->find();
-
-
+            ->whereTime('hexiao_time','between',[$beginWeek,$endWeek])
+            ->where($wkemap)
+            ->field($fleds)
+            ->find();
         //分享量
         $tmap['users_type'] = ['=',4];
         $totalfen = M('users')
-                    ->where($tmap)
-                    ->field('count(user_id) count')
-                    ->find();
+            ->where($tmap)
+            ->field('count(user_id) count')
+            ->find();
         //已下单
         $npmap['users_type'] = ['=',4];
         $npmap['is_buy'] = ['=',1];
         $nopayfen = M('users')
-                    ->where($npmap)
-                    ->field('count(user_id) count')
-                    ->find();
+            ->where($npmap)
+            ->field('count(user_id) count')
+            ->find();
         //已付款
-        $ipmap['users_type'] = ['=',4];        $ipmap['is_buy'] = ['=',2];
+        $ipmap['users_type'] = ['=',4];
+        $ipmap['is_buy'] = ['=',2];
         $ispayfen = M('users')
-                    ->where($ipmap)
-                    ->field('count(user_id) count')
-                    ->find();
+            ->where($ipmap)
+            ->field('count(user_id) count')
+            ->find();
         $this->assign('today_income',$today_income['total']);
         $this->assign('week_income',$week_income['total']);
         $this->assign('totalfen',$totalfen['count']);

@@ -21,13 +21,13 @@
 	position: relative;
 }
 .center-header.center01 {
-	background: #fff url(../images/center-bg01.jpg) no-repeat center top / 100% 110px;
+	background: #fff url(../img/center-bg01.jpg) no-repeat center top / 100% 110px;
 }
 .center-header.center02 {
-	background: #fff url(../images/center-bg02.jpg) no-repeat center top / 100% 110px;
+	background: #fff url(../img/center-bg02.jpg) no-repeat center top / 100% 110px;
 }
 .center-header.center03 {
-	background: #fff url(../images/center-bg03.jpg) no-repeat center top / 100% 110px;
+	background: #fff url(../img/center-bg03.jpg) no-repeat center top / 100% 110px;
 }
 .center-header .mui-icon {
 	color: #fff;
@@ -116,7 +116,7 @@
 	content: '';
 	width: 10px;
 	height: 20px;
-	background: url(../images/icon-right.png) no-repeat;
+	background: url(../img/icon-right.png) no-repeat;
 	background-size: cover;
 	position: absolute;
 	right: 20px;
@@ -219,7 +219,7 @@
 	display: block;
 	width: .44rem;
 	height: .52rem;
-	background: url(../images/location.png) no-repeat left top / cover;
+	background: url(../img/location.png) no-repeat left top / cover;
 	position: absolute;
 	right: .18rem;
 	top: 0;
@@ -407,7 +407,7 @@
 	position: absolute;
 	right: 0;
 	top: -.12rem;
-	background: url(../images/upload.png) no-repeat left top / cover;
+	background: url(../img/upload.png) no-repeat left top / cover;
 }
 .thumb-img {
 	width: .6rem;
@@ -439,10 +439,10 @@
 	height: 2.5rem;
 	align-items: center;
 	margin-bottom: .3rem;
-	background: #fff url(../images/coupon-bg02.jpg) no-repeat left top / 2.5rem 2.5rem;
+	background: #fff url(../img/coupon-bg02.jpg) no-repeat left top / 2.5rem 2.5rem;
 }
 .coupon-cabin.disabled {
-	background: #fff url(../images/coupon-bg01.jpg) no-repeat left top / 2.5rem 2.5rem;
+	background: #fff url(../img/coupon-bg01.jpg) no-repeat left top / 2.5rem 2.5rem;
 }
 .coupon-left {
 	width: 2.5rem;
@@ -508,22 +508,22 @@
 	border-top: 1px solid #e6e6e6;
 }
 .pay-type-list li:nth-child(1) {
-	background: url(../images/wx01.jpg) no-repeat left center / .54rem .54rem;
+	background: url(../img/wx01.jpg) no-repeat left center / .54rem .54rem;
 }
 .pay-type-list li:nth-child(2) {
-	background: url(../images/zfb01.jpg) no-repeat left center / .54rem .54rem;
+	background: url(../img/zfb01.jpg) no-repeat left center / .54rem .54rem;
 }
 .pay-type-list li:nth-child(3) {
-	background: url(../images/yl01.jpg) no-repeat left center / .54rem .54rem;
+	background: url(../img/yl01.jpg) no-repeat left center / .54rem .54rem;
 }
 .pay-type-list li.select:nth-child(1) {
-	background: url(../images/wx02.jpg) no-repeat left center / .54rem .54rem;
+	background: url(../img/wx02.jpg) no-repeat left center / .54rem .54rem;
 }
 .pay-type-list li.select:nth-child(2) {
-	background: url(../images/zfb02.jpg) no-repeat left center / .54rem .54rem;
+	background: url(../img/zfb02.jpg) no-repeat left center / .54rem .54rem;
 }
 .pay-type-list li.select:nth-child(3) {
-	background: url(../images/yl02.jpg) no-repeat left center / .54rem .54rem;
+	background: url(../img/yl02.jpg) no-repeat left center / .54rem .54rem;
 }
 .pay-type-list li span {
 	display: block;
@@ -533,10 +533,10 @@
 	top: 50%;
 	right: 0;
 	margin-top: -.2rem;
-	background: url(../images/check-bg01.jpg) no-repeat left top / cover;
+	background: url(../img/check-bg01.jpg) no-repeat left top / cover;
 }
 .pay-type-list .select span {
-	background: url(../images/check-bg02.jpg) no-repeat left top / cover;
+	background: url(../img/check-bg02.jpg) no-repeat left top / cover;
 }
 .pay-num-wrap {
 	padding: 0 .3rem;
@@ -710,7 +710,7 @@
 .customer-list .order-check-wrap {
 	font-size: .24rem;
 	color: #999;
-	width: 1.5rem;
+	width: 1.6rem;
 	text-align: right;
 }
 .titlebar {
@@ -941,7 +941,7 @@
 .form-group-element > input {
 	flex: 1;
 	padding-right: .8rem;
-	background: url(../images/edit.png) no-repeat;
+	background: url(../img/edit.png) no-repeat;
 	background-position: right .2rem top 0; 
 	background-size: .4rem .4rem;
 	line-height: .4rem;
@@ -953,7 +953,7 @@
 	width: .4rem;
 	height: .4rem;
 	margin-right: .2rem;
-	background: url(../images/upload2.png) no-repeat left top / cover;
+	background: url(../img/upload2.png) no-repeat left top / cover;
 }
 .upload-wrap {
 	width: 100%;
@@ -982,7 +982,7 @@
   display: block;
   width: 17px;
   height: 17px;
-  background: url(../images/pic-close.png) no-repeat;
+  background: url(../img/pic-close.png) no-repeat;
   background-size: 17px 17px;
 }
 .pay-btn-wrap {
@@ -1021,7 +1021,7 @@
 	font-size: .28rem;
 }
 .pop-share-wrap {
-	background: url(../images/pop-share-bg.png) no-repeat right top / cover;
+	background: url(../img/pop-share-bg.png) no-repeat right top / cover;
 }
 .pop-hb-wrap .hb-wrap {
 	position: absolute;
@@ -1031,7 +1031,7 @@
 	margin-left: -2.85rem;
 	height: 9.65rem;
 	padding-top: 4.65rem;
-	background: url(../images/hb-bg.png) no-repeat left top / cover;
+	background: url(../img/hb-bg.png) no-repeat left top / cover;
 }
 .hb-list {
 	padding: 0 .37rem;
@@ -1042,7 +1042,7 @@
 	width: 100%;
 	height: 1.6rem;
 	line-height: 1.6rem;
-	background: url(../images/hb-item-bg.png) no-repeat left top / cover;
+	background: url(../img/hb-item-bg.png) no-repeat left top / cover;
 	text-align: center;
 	margin-bottom: .2rem;
 	font-size: .5rem;

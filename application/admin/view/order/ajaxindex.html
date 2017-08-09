@@ -44,11 +44,11 @@
                                         <td class="text-center">{if $list.pay_time eq 0}N{else}{$list.pay_time|date='Y-m-d H:i',###}{/if}</td>
                                         <td class="text-center">
                                            <a href="{:url('Admin/order/detail',array('order_id'=>$list['order_id']))}" data-toggle="tooltip" title="" class="btn btn-info" data-original-title="查看详情"><i class="fa fa-eye"></i></a>
-                                           {if condition="($list['order_status'] eq 3) or ($list['order_status'] eq 5)"}
-                                                <a href="{:url('Admin/order/delete_order',array('order_id'=>$list['order_id']))}"  data-toggle="tooltip" class="btn btn-danger" title="删除"><i class="fa fa-trash-o"></i></a>
-                                        	{else/}
-                                        		<a href="javascript:void(0)" onclick="alert('该订单不得删除')" data-toggle="tooltip" class="btn btn-default" title="删除"><i class="fa fa-trash-o"></i></a>
-                                        	{/if}
+                                           <!--{if condition="($list['order_status'] eq 3) or ($list['order_status'] eq 5)"}-->
+                                                <!--<a href="{:url('Admin/order/delete_order',array('order_id'=>$list['order_id']))}"  data-toggle="tooltip" class="btn btn-danger" title="删除"><i class="fa fa-trash-o"></i></a>-->
+                                        	<!--{else/}-->
+                                        		<!--<a href="javascript:void(0)" onclick="alert('该订单不得删除')" data-toggle="tooltip" class="btn btn-default" title="删除"><i class="fa fa-trash-o"></i></a>-->
+                                        	<!--{/if}-->
                                         </td>
                                     </tr>
                                 {/volist}

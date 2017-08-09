@@ -270,6 +270,14 @@
                                     </tr>
                                 {/if}
 
+                                <tr>
+                                    <td>是否有分销权限:</td>
+                                    <td>
+                                        <input name="is_distribut" type="radio" value="1" {if condition="$user['is_distribut'] eq 1"}checked{/if} >有
+                                        <input name="is_distribut" type="radio" value="0" {if condition="$user['is_distribut'] eq 0"}checked{/if} >没有
+                                    </td>
+                                    <td></td>
+                                </tr>
 
                                 <tr>
                                     <table  class="table table-bordered">

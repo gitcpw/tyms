@@ -14,19 +14,18 @@ class Fornt extends Base {
     public $session_id;
     public $weixin_config;
 
-	public function _initialize() {
-		parent::_initialize();
-		//判读是否为关闭网站
-		if (\think\Config::get('web_site_close')) {
-			header("Content-type:text/html;charset=utf-8");
-			echo $this->fetch('common@default/public/close');exit();
-		}
-		//设置SEO
-		$this->setSeo();
-		$this->setHoverNav();
-		//主题设置
-		$this->setThemes();
-
+    public function _initialize() {
+        parent::_initialize();
+        //判读是否为关闭网站
+        if (\think\Config::get('web_site_close')) {
+            header("Content-type:text/html;charset=utf-8");
+            echo $this->fetch('common@default/public/close');exit();
+        }
+        //设置SEO
+        $this->setSeo();
+        $this->setHoverNav();
+        //主题设置
+        $this->setThemes();
 
         //微信浏览器
         if(strstr($_SERVER['HTTP_USER_AGENT'],'MicroMessenger')){
@@ -54,31 +53,31 @@ class Fornt extends Base {
             }
         }
 
-	}
+    }
 
-	//当前栏目导航
-	protected function setHoverNav() {
-		//dump($_SERVER['PHP_SELF']);
-	}
+    //当前栏目导航
+    protected function setHoverNav() {
+        //dump($_SERVER['PHP_SELF']);
+    }
 
-	protected function setThemes() {
-		//网站主题设置
-		$themes['mobile'] = config('mobile_themes') ? config('mobile_themes') : 'mobile';
-		$themes['pc']     = config('pc_themes') ? config('pc_themes') : 'default';
-		$view_path        = ($this->isMobile() && config('open_mobile_site') == '1') ? 'template/' . $themes['mobile'] . '/' : 'template/' . $themes['pc'] . '/';
-		$module = $this->request->module();
-		if (!in_array($module, array('index', 'install'))) {
-			$view_path_pre = $module . '/';
-		} else {
-			$view_path_pre = '';
-		}
-		$this->view->config('view_path', $view_path . $view_path_pre)
-			->config('tpl_replace_string',array(
-				'__IMG__' => BASE_PATH . '/' . $view_path . 'static/img',
-				'__JS__'  => BASE_PATH . '/' . $view_path . 'static/js',
-				'__CSS__' => BASE_PATH . '/' . $view_path . 'static/css',
-			));
-	}
+    protected function setThemes() {
+        //网站主题设置
+        $themes['mobile'] = config('mobile_themes') ? config('mobile_themes') : 'mobile';
+        $themes['pc']     = config('pc_themes') ? config('pc_themes') : 'default';
+        $view_path        = ($this->isMobile() && config('open_mobile_site') == '1') ? 'template/' . $themes['mobile'] . '/' : 'template/' . $themes['pc'] . '/';
+        $module = $this->request->module();
+        if (!in_array($module, array('index', 'install'))) {
+            $view_path_pre = $module . '/';
+        } else {
+            $view_path_pre = '';
+        }
+        $this->view->config('view_path', $view_path . $view_path_pre)
+            ->config('tpl_replace_string',array(
+                '__IMG__' => BASE_PATH . '/' . $view_path . 'static/img',
+                '__JS__'  => BASE_PATH . '/' . $view_path . 'static/js',
+                '__CSS__' => BASE_PATH . '/' . $view_path . 'static/css',
+            ));
+    }
 
     // 网页授权登录获取 OpendId
     public function GetOpenid()
@@ -264,6 +263,33 @@ class Fornt extends Base {
     }
     public function ajaxReturn($data){
         exit(json_encode($data));
+    }
+
+
+
+    /**
+     * 图片文件上传
+     * @return array 返回类型
+     * @author xing <fbiufo@vip.qq.com>
+     */
+    protected function upload($file_name = 'image',$ext = 'jpg,png,gif'){
+        // 获取表单上传文件 例如上传了001.jpg
+        $file = request()->file($file_name);
+        if($file == null) return false;
+        // 移动到框架应用根目录/public/uploads/ 目录下
+        $info = $file->validate(['size'=>102400000,'ext'=>$ext])->move(ROOT_PATH . 'public' . DS . 'uploads');
+        if($info){
+            // 成功上传后 获取上传信息
+            // 输出 jpg
+            //echo $info->getExtension();
+            // 输出 20160820/42a79759f284b767dfcb2a0197904287.jpg
+            return 'public/uploads/' . str_replace('\\','/',$info->getSaveName());
+            // 输出 42a79759f284b767dfcb2a0197904287.jpg
+            //echo $info->getFilename();
+        }else{
+            // 上传失败获取错误信息
+            return $file->getError();
+        }
     }
 
 

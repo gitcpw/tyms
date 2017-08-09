@@ -38,7 +38,7 @@ class Datatable {
 		"editor"   => "TEXT",
 		"bind"     => "INT",
 		"image"    => "INT",
-		"images"   => "VARCHAR",
+		"img"   => "VARCHAR",
 		"attach"   => "VARCHAR",
 	);
 

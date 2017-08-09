@@ -166,39 +166,39 @@ body {
 }
 
 .swiper .slide1 {
-  background: url(../images/slide1-bg.jpg) no-repeat center top;
+  background: url(../img/slide1-bg.jpg) no-repeat center top;
   background-size: cover;
 }
 .swiper .slide2 {
-  background: url(../images/slide2-bg.jpg) no-repeat center top;
+  background: url(../img/slide2-bg.jpg) no-repeat center top;
   background-size: cover;
 }
 .swiper .slide3 {
-  background: url(../images/slide3-bg.jpg) no-repeat center top;
+  background: url(../img/slide3-bg.jpg) no-repeat center top;
   background-size: cover;
 }
 .swiper .slide01 {
-  background: url(../images/slide01-bg.jpg) no-repeat center top;
+  background: url(../img/slide01-bg.jpg) no-repeat center top;
   background-size: cover;
 }
 .swiper .slide02 {
-  background: url(../images/slide02-bg.jpg) no-repeat center top;
+  background: url(../img/slide02-bg.jpg) no-repeat center top;
   background-size: cover;
 }
 .swiper .slide03 {
-  background: url(../images/slide03-bg.jpg) no-repeat center top;
+  background: url(../img/slide03-bg.jpg) no-repeat center top;
   background-size: cover;
 }
 /*.swiper .s1 {
-  background: url(../images/share1.jpg) no-repeat center top;
+  background: url(../img/share1.jpg) no-repeat center top;
   background-size: cover;
 }
 .swiper .s2 {
-  background: url(../images/share2.jpg) no-repeat center top;
+  background: url(../img/share2.jpg) no-repeat center top;
   background-size: cover;
 }
 .swiper .s3 {
-  background: url(../images/share3.jpg) no-repeat center top;
+  background: url(../img/share3.jpg) no-repeat center top;
   background-size: cover;
 }*/
 .tese .swiper-slide {

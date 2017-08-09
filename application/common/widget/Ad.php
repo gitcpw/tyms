@@ -26,6 +26,7 @@ class Ad {
 			echo "";return;
 		}
 		$ad   = db('Ad')->where(array('place_id' => $place['id'], 'status' => 1))->select();
+
 		$list = array();
 		foreach ($ad as $key => $value) {
 			if ($value['photolist'] != '') {
@@ -57,7 +58,7 @@ class Ad {
 			break;
 		//图文列表广告
 		case '4':
-			$template = $place['template'] ? $place['template'] : "images";
+			$template = $place['template'] ? $place['template'] : "img";
 			break;
 		//文字列表广告
 		case '5':
