@@ -88,7 +88,18 @@ class Member extends Fornt {
 
     //我要分享
     public function share(){
-        $users = db('users')->where(array('user_id' => $this->user['user_id']))->field('nickname')->find();
+        //公司员工
+        if(($this->user['users_type'] ==  1 || $this->user['users_type'] == 2) && $this->user['is_distribut'] == 0){
+            $this->error('请等待管理员审核您的分享资格！');
+        }
+        //美容师
+        if($this->user['users_type'] == 3 && $this->user['is_distribut'] == 0){
+            $this->error('请等待美容院审核您的员工资格！');
+        }
+        //顾客
+        if($this->user['users_type'] == 4 && $this->user['is_distribut'] == 0){
+            $this->error('您还没有分销资格，请先购买产品！');
+        }
         $this->setMeta('我要分享');
         return $this->fetch();
     }
