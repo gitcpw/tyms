@@ -2,7 +2,7 @@
 {block name="body"}
 <body class="root grey-bg">
 <div class="edits-wrap">
-	<form class="edits-wrap" action="#">
+	<form class="edits-wrap" action="{:url('member/storeinfo')}" method="post" id="storeinfo">
 		<div class="form-group-wrap">
 			<div class="form-group-element">
 				<strong>店铺名称</strong>
@@ -145,6 +145,10 @@
         $.post('{:url("delImg")}',{file:s_file},function(res){
             _this.parent('li').remove();
         });
+    });
+
+    $('.btn-bottom').click(function () {
+        $('#storeinfo').submit();
     });
 </script>
 </body>

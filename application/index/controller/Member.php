@@ -180,6 +180,25 @@ class Member extends Fornt {
     //美容院信息管理
     public function storeinfo(){
         if(IS_POST){
+            $storeinfo = db('beauty_salon')->where('user_id',$this->user['user_id'])->find();
+            $data = input('post.');
+            if(!empty($storeinfo)){
+                $row = db('beauty_salon')->where('user_id',$this->user['user_id'])->update($data);
+                if($row){
+                    $this->success('更新成功！');
+                }else{
+                    $this->error('更新失败！');
+                }
+            }else{
+                $data['uesr_id'] = $this->user['user_id'];
+                $row = db('beauty_salon')->insert($data);
+                if($row){
+                    $this->success('信息添加成功！');
+                }else{
+                    $this->error('信息添加失败！');
+                }
+            }
+            $data = input('post.');
 
         }else{
             $info = M('beauty_salon')->where('user_id',$this->user['user_id'])->find();
@@ -190,6 +209,7 @@ class Member extends Fornt {
         }
     }
 
+    //
     public function upload_img(){
         $data['user_id'] = $this->user['user_id'];
         //上传图片
@@ -270,6 +290,18 @@ class Member extends Fornt {
 
     //顾客服务商家
     public function myshop(){
+        if($this->user['users_type'] !== 4){
+            $this->redirect('member/index');
+        }
+        //美容院信息
+        $beautyinfo = db('beauty_salon')->where('user_id',$this->user['beauty_id'])->find();
+        //美容院背景图片
+        $beautyimgs = db('beauty_salon_img')->where('user_id',$this->user['beauty_id'])->column('img','id');
+        print_r($beautyimgs);
+        exit;
+
+        $this->assign('beautyinfo',$beautyinfo);
+        $this->assign('beautyimgs',$beautyimgs);
         return $this->fetch();
     }
 

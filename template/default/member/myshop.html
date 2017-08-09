@@ -5,30 +5,29 @@
 </head>
 <body class="root grey-bg">
 <div class="shop-gallery">
-	<img src="__IMG__/shop01.jpg"/>
-	<img src="__IMG__/shop01.jpg"/>
-	<img src="__IMG__/shop01.jpg"/>
-	<img src="__IMG__/shop01.jpg"/>
+	{volist name="beautyimgs" id="bimg"}
+	<img src="<?php echo SITE_URL;?>/{$bimg}"/>
+	{/volist}
 	<div class="shop-mask">
-		<h2 class="shop-title">春暖花开美容美发</h2>
+		<h2 class="shop-title">{$beautyinfo.name}</h2>
 		<span class="shop-num"></span>
 	</div>
 </div>
 <div class="shop-desc">
-	商店，一般是指商品开架陈列，顾客自我服务，货款一次结算，以经营生鲜食品、日杂用品为商店，一般是指商品开架陈列，顾客自我服务，货款一次结算，以经营生鲜食品、日杂用品为
+	{$beautyinfo.description}
 </div>
 <ul class="contact-list">
 	<li class="contact-item">
 		<span class="contact-left">联系人</span>
-		<div class="contact-body">郭雷</div>
+		<div class="contact-body">{$beautyinfo.contact}</div>
 	</li>
 	<li class="contact-item">
 		<span class="contact-left">联系方式</span>
-		<div class="contact-body"><a href="tel:13788692145">137 8869 2145</a></div>
+		<div class="contact-body"><a href="tel:{$beautyinfo.phone}">{$beautyinfo.phone}</a></div>
 	</li>
 	<li class="contact-item">
 		<span class="contact-left">地址</span>
-		<div class="contact-body contact-address">锦江区万达广场11B26楼38号<a href="http://map.baidu.com/mobile/webapp/search/search/qt=s&wd=>锦江区万达广场11B26楼38号&newmap=1&ie=utf-8/vt=map"></a></div>
+		<div class="contact-body contact-address">{$beautyinfo.address}<a href="http://map.baidu.com/mobile/webapp/search/search/qt=s&wd=>{$beautyinfo.address}&newmap=1&ie=utf-8/vt=map"></a></div>
 	</li>
 </ul>
 <div class="scan-wrap">
